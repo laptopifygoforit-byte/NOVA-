@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>NOVA+ Demo</title>
+
+<style>
+:root{
+  --bg:#07111f;
+  --panel:#0d1d2e;
+  --green:#18d6a0;
+  --gold:#e8c875;
+  --text:#f5f8fc;
+  --muted:#9aaabd;
+  --line:rgba(255,255,255,.12);
+  --red:#ff8f87;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:#07111f
+}
+
+body{
+  min-height:100vh;
+  font-family:Arial,system-ui,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 80% 10%,rgba(24,214,160,.12),transparent 30%),
+    linear-gradient(145deg,#07111f,#06101d 60%,#0b1a2b)
+}
+
+button,input,select{font-family:inherit}
+button{cursor:pointer;touch-action:manipulation}
+
+.top{
+  width:92%;
+  max-width:1200px;
+  height:76px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between
+}
+
+.logo{
+  font-size:27px;
+  font-weight:900;
+  letter-spacing:2px
+}
+
+.logo span{color:var(--green)}
+
+.top-buttons{
+  display:flex;
+  gap:9px
+}
+
+.icon{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:white;
+  font-size:20px
+}
+
+.home{
+  width:92%;
+  max-width:1200px;
+  margin:auto;
+  text-align:center;
+  padding:32px 0 60px
+}
+
+.home.hidden{display:none!important}
+
+.mark{
+  width:70px;
+  height:70px;
+  margin:auto;
+  border-radius:20px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,var(--green),#0b8d6c);
+  color:#03150f;
+  font-size:24px;
+  font-weight:900
+}
+
+h1{
+  font-size:clamp(36px,6vw,58px);
+  margin:22px 0 12px
+}
+
+h1 span{color:var(--green)}
+
+.home-intro{
+  max-width:600px;
+  margin:auto;
+  color:var(--muted);
+  line-height:1.7
+}
+
+.actions{
+  margin-top:27px;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap
+}
+
+.btn{
+  padding:14px 25px;
+  border-radius:13px;
+  font-weight:800
+}
+
+.primary{
+  border:0;
+  color:#03150f;
+  background:linear-gradient(135deg,var(--green),#0eaf83)
+}
+
+.secondary{
+  color:white;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line)
+}
+
+.plans{margin-top:55px}
+
+.plans h2{
+  margin:0;
+  font-size:29px
+}
+
+.plans-sub{
+  margin:8px 0 28px;
+  color:var(--muted);
+  font-size:13px
+}
+
+.plan-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:14px
+}
+
+.plan-card{
+  position:relative;
+  min-height:285px;
+  padding:22px 16px;
+  border-radius:21px;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,#10243a,#081522);
+  box-shadow:0 15px 40px rgba(0,0,0,.25);
+  cursor:pointer;
+  touch-action:manipulation;
+  user-select:none;
+  -webkit-user-select:none;
+  display:flex;
+  flex-direction:column;
+  text-align:left;
+  z-index:2;
+  transition:.18s
+}
+
+.plan-card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(24,214,160,.55)
+}
+
+.plan-card:active{transform:scale(.97)}
+
+.plan-number{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:bold;
+  letter-spacing:1px
+}
+
+.plan-card h3{
+  margin:9px 0 4px;
+  font-size:17px
+}
+
+.plan-price{
+  margin:8px 0;
+  color:var(--green);
+  font-size:34px;
+  font-weight:900
+}
+
+.reward{
+  color:var(--gold);
+  font-size:13px;
+  font-weight:bold
+}
+
+.plan-info{
+  margin-top:15px;
+  padding-top:13px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.9
+}
+
+.plan-select{
+  width:100%;
+  margin-top:auto;
+  padding:12px;
+  border-radius:11px;
+  border:1px solid rgba(24,214,160,.3);
+  background:rgba(24,214,160,.08);
+  color:#9df1d7;
+  font-weight:bold;
+  text-align:center
+}
+
+.featured{
+  border-color:rgba(232,200,117,.6);
+  background:linear-gradient(145deg,#302b20,#0d1c2b)
+}
+
+.featured .plan-price{color:var(--gold)}
+
+.badge{
+  position:absolute;
+  top:-11px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:5px 13px;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--gold),#c7a64e);
+  color:#241d09;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap
+}
+
+.dashboard{
+  display:none;
+  width:92%;
+  max-width:1200px;
+  margin:auto;
+  padding:20px 0 60px
+}
+
+.dashboard.active{display:block!important}
+
+.dashboard-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:20px
+}
+
+.dashboard-header h2{
+  margin:0;
+  font-size:30px
+}
+
+.dashboard-header p{
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:13px
+}
+
+.back{
+  padding:11px 16px;
+  border-radius:11px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:white
+}
+
+.summary{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:13px
+}
+
+.summary-card{
+  padding:18px;
+  border-radius:17px;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,#10243a,#081522)
+}
+
+.summary-label{
+  color:var(--muted);
+  font-size:11px
+}
+
+.summary-value{
+  margin-top:8px;
+  font-size:23px;
+  font-weight:900
+}
+
+.green{color:var(--green)}
+.gold{color:var(--gold)}
+
+.dash-grid{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:16px
+}
+
+.panel{
+  padding:22px;
+  border-radius:20px;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,#10243a,#081522)
+}
+
+.panel h3{
+  margin:0 0 16px
+}
+
+.progress-bg{
+  height:14px;
+  overflow:hidden;
+  border-radius:20px;
+  background:#06101c;
+  border:1px solid rgba(255,255,255,.05)
+}
+
+.progress{
+  width:0;
+  height:100%;
+  background:linear-gradient(90deg,var(--green),#79e7c8);
+  transition:.4s
+}
+
+.progress-info{
+  margin-top:9px;
+  color:var(--muted);
+  font-size:12px
+}
+
+.reward-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:18px
+}
+
+.reward-box{
+  padding:15px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.035)
+}
+
+.reward-box small{color:var(--muted)}
+
+.reward-box strong{
+  display:block;
+  margin-top:6px;
+  font-size:20px
+}
+
+.notice{
+  margin-top:18px;
+  padding:15px;
+  border-radius:14px;
+  background:rgba(24,214,160,.06);
+  border:1px solid rgba(24,214,160,.18);
+  color:#9df1d7;
+  font-size:12px;
+  line-height:1.6
+}
+
+.dashboard-menu{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+.dash-button{
+  padding:17px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.035);
+  color:white;
+  text-align:left
+}
+
+.dash-button:hover{
+  border-color:rgba(24,214,160,.4)
+}
+
+.dash-button strong{
+  display:block;
+  margin-bottom:5px
+}
+
+.dash-button span{
+  color:var(--muted);
+  font-size:11px
+}
+
+.tasks{
+  margin-top:18px
+}
+
+.task{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:14px;
+  margin-top:10px;
+  border-radius:13px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.035)
+}
+
+.task-left{
+  display:flex;
+  align-items:center;
+  gap:10px
+}
+
+.task-icon{
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:rgba(24,214,160,.09);
+  color:var(--green)
+}
+
+.task small{color:var(--muted)}
+
+.status{
+  padding:6px 10px;
+  border-radius:20px;
+  background:rgba(24,214,160,.08);
+  color:#9df1d7;
+  font-size:10px
+}
+
+.task-action{
+  border:1px solid rgba(24,214,160,.3);
+  background:rgba(24,214,160,.08);
+  color:#9df1d7;
+  padding:8px 12px;
+  border-radius:9px;
+  font-weight:bold;
+  font-size:11px
+}
+
+.task-action.done{
+  opacity:.6;
+  cursor:not-allowed
+}
+
+.layer{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(5px);
+  z-index:100
+}
+
+.layer.open{display:flex}
+
+.modal{
+  width:min(560px,100%);
+  max-height:92vh;
+  overflow:auto;
+  padding:25px;
+  border-radius:24px;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,#10243a,#081522);
+  box-shadow:0 35px 100px rgba(0,0,0,.55)
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px
+}
+
+.modal h2{margin:0}
+
+.sub{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:6px
+}
+
+.close{
+  border:0;
+  background:none;
+  color:white;
+  font-size:28px
+}
+
+.field{margin:13px 0}
+
+.field label{
+  display:block;
+  margin-bottom:7px;
+  color:#aebaca;
+  font-size:12px
+}
+
+.field input,.field select{
+  width:100%;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  outline:none;
+  background:#06121e;
+  color:white
+}
+
+.password-box{
+  display:flex;
+  gap:7px
+}
+
+.password-box input{flex:1}
+
+.eye{
+  width:65px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:white
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+.full{
+  width:100%;
+  margin-top:10px
+}
+
+.link{
+  text-align:right;
+  color:#8df0d0;
+  font-size:12px;
+  cursor:pointer;
+  margin:8px 0
+}
+
+.switch{
+  margin-top:17px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px
+}
+
+.switch button{
+  border:0;
+  background:none;
+  color:#8df0d0;
+  font-weight:bold
+}
+
+.menu button{
+  width:100%;
+  padding:15px;
+  margin:5px 0;
+  text-align:left;
+  border-radius:13px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:white
+}
+
+.code{
+  padding:12px;
+  margin-top:8px;
+  border-radius:12px;
+  background:rgba(24,214,160,.08);
+  border:1px solid rgba(24,214,160,.2);
+  color:#9df1d7;
+  font-size:12px
+}
+
+.match{
+  min-height:16px;
+  margin-top:5px;
+  font-size:11px
+}
+
+.success{
+  padding:15px;
+  border-radius:13px;
+  background:rgba(24,214,160,.08);
+  border:1px solid rgba(24,214,160,.25);
+  color:#9df1d7;
+  line-height:1.6
+}
+
+.error{
+  padding:12px;
+  border-radius:12px;
+  background:rgba(255,90,90,.08);
+  border:1px solid rgba(255,90,90,.2);
+  color:#ffb0aa;
+  font-size:12px;
+  margin-top:10px;
+  display:none
+}
+
+.plan-confirm{text-align:center}
+
+.confirm-icon{
+  width:70px;
+  height:70px;
+  margin:0 auto 18px;
+  display:grid;
+  place-items:center;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--green),#0b8d6c);
+  color:#03150f;
+  font-size:28px;
+  font-weight:900
+}
+
+.confirm-price{
+  font-size:40px;
+  font-weight:900;
+  color:var(--green);
+  margin:15px 0 5px
+}
+
+.confirm-reward{
+  color:var(--gold);
+  font-weight:bold
+}
+
+.confirm-info{
+  margin:20px 0;
+  padding:15px;
+  border-radius:14px;
+  background:rgba(255,255,255,.035);
+  border:1px solid var(--line);
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.8
+}
+
+.deposit-address{
+  margin:14px 0;
+  padding:15px;
+  border-radius:14px;
+  background:#06121e;
+  border:1px solid rgba(24,214,160,.25);
+  word-break:break-all;
+  color:#9df1d7;
+  font-size:12px;
+  line-height:1.6
+}
+
+.copy-btn{
+  margin-top:9px;
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(24,214,160,.3);
+  background:rgba(24,214,160,.08);
+  color:#9df1d7
+}
+
+.status-card{
+  padding:16px;
+  margin-top:14px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.035);
+  line-height:1.7;
+  font-size:12px
+}
+
+.pending{
+  color:#f1d98b
+}
+
+.verified{
+  color:#8df0d0
+}
+
+.locked{
+  opacity:.65;
+  position:relative
+}
+
+.locked::after{
+  content:"🔒";
+  position:absolute;
+  right:15px;
+  top:15px
+}
+
+.admin-badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  background:rgba(232,200,117,.1);
+  color:var(--gold);
+  font-size:10px;
+  font-weight:bold
+}
+
+.admin-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  padding:13px;
+  margin-top:9px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.035)
+}
+
+.small-btn{
+  padding:9px 12px;
+  border-radius:9px;
+  border:1px solid rgba(24,214,160,.3);
+  background:rgba(24,214,160,.08);
+  color:#9df1d7;
+  font-size:11px;
+  font-weight:bold
+}
+
+.disabled-btn{
+  opacity:.5;
+  cursor:not-allowed
+}
+
+.timer{
+  color:var(--gold);
+  font-weight:bold;
+  font-size:12px
+}
+
+@media(max-width:1050px){
+  .plan-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:750px){
+  .plan-grid{grid-template-columns:repeat(2,1fr)}
+  .summary{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:560px){
+  .plan-grid{grid-template-columns:1fr}
+  .dashboard-header{
+    flex-direction:column;
+    align-items:flex-start
+  }
+  .dashboard-menu{grid-template-columns:1fr}
+  .reward-grid,.row{grid-template-columns:1fr}
+  .modal{padding:20px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+  <div class="logo">NOVA<span>+</span></div>
+  <div class="top-buttons">
+    <button class="icon" type="button" id="languageBtn">◎</button>
+    <button class="icon" type="button" id="menuBtn">☰</button>
+  </div>
+</header>
+
+<main class="home" id="home">
+
+  <div class="mark">N+</div>
+
+  <h1>Welcome to <span>NOVA+</span></h1>
+
+  <p class="home-intro">
+    A modern digital experience designed for learning, planning and exploring the NOVA+ platform.
+  </p>
+
+  <div class="actions">
+    <button class="btn primary" type="button" id="loginBtn">Login</button>
+    <button class="btn secondary" type="button" id="signupBtn">Create Account</button>
+  </div>
+
+  <section class="plans">
+
+    <h2>Choose Your NOVA+ Plan</h2>
+
+    <div class="plans-sub">
+      Select a plan to begin the demo payment and verification flow.
+    </div>
+
+    <div class="plan-grid">
+
+      <div class="plan-card" data-plan="1" role="button" tabindex="0">
+        <div class="plan-number">PLAN 1</div>
+        <h3>NOVA+ Basic</h3>
+        <div class="plan-price">$50</div>
+        <div class="reward">Demo Reward: $25</div>
+        <div class="plan-info">
+          ◈ 45-Day Cycle<br>
+          ◈ Demo / Learning Plan<br>
+          ◈ No Real Payment
+        </div>
+        <div class="plan-select">Select $50 Plan →</div>
+      </div>
+
+      <div class="plan-card" data-plan="2" role="button" tabindex="0">
+        <div class="plan-number">PLAN 2</div>
+        <h3>NOVA+ Plus</h3>
+        <div class="plan-price">$100</div>
+        <div class="reward">Demo Reward: $75</div>
+        <div class="plan-info">
+          ◈ 45-Day Cycle<br>
+          ◈ Demo / Learning Plan<br>
+          ◈ No Real Payment
+        </div>
+        <div class="plan-select">Select $100 Plan →</div>
+      </div>
+
+      <div class="plan-card" data-plan="3" role="button" tabindex="0">
+        <div class="plan-number">PLAN 3</div>
+        <h3>NOVA+ Pro</h3>
+        <div class="plan-price">$200</div>
+        <div class="reward">Demo Reward: $150</div>
+        <div class="plan-info">
+          ◈ 45-Day Cycle<br>
+          ◈ Demo / Learning Plan<br>
+          ◈ No Real Payment
+        </div>
+        <div class="plan-select">Select $200 Plan →</div>
+      </div>
+
+      <div class="plan-card" data-plan="4" role="button" tabindex="0">
+        <div class="plan-number">PLAN 4</div>
+        <h3>NOVA+ Premium</h3>
+        <div class="plan-price">$300</div>
+        <div class="reward">Demo Reward: $225</div>
+        <div class="plan-info">
+          ◈ 45-Day Cycle<br>
+          ◈ Demo / Learning Plan<br>
+          ◈ No Real Payment
+        </div>
+        <div class="plan-select">Select $300 Plan →</div>
+      </div>
+
+      <div class="plan-card featured" data-plan="5" role="button" tabindex="0">
+        <div class="badge">CENTER PLAN</div>
+        <div class="plan-number">PLAN 5</div>
+        <h3>NOVA+ Elite</h3>
+        <div class="plan-price">$500</div>
+        <div class="reward">Demo Reward: $375</div>
+        <div class="plan-info">
+          ◈ 45-Day Cycle<br>
+          ◈ Demo / Learning Plan<br>
+          ◈ No Real Payment
+        </div>
+        <div class="plan-select">Select $500 Plan →</div>
+      </div>
+
+    </div>
+  </section>
+
+  <div style="margin-top:28px;color:#718095;font-size:11px">
+    NOVA+ Demo / Learning Prototype — No real payments or financial transactions.
+  </div>
+
+</main>
+
+
+<!-- DASHBOARD -->
+
+<section class="dashboard" id="dashboard">
+
+  <div class="dashboard-header">
+
+    <div>
+      <h2>NOVA+ Customer Dashboard</h2>
+      <p id="dashboardPlanName">NOVA+ Basic</p>
+    </div>
+
+    <button class="back" type="button" id="backBtn">
+      ← Back to Plans
+    </button>
+
+  </div>
+
+  <div class="summary">
+
+    <div class="summary-card">
+      <div class="summary-label">Selected Plan</div>
+      <div class="summary-value green" id="selectedAmount">$50</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">Demo Reward</div>
+      <div class="summary-value gold" id="selectedReward">$25</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">Cycle</div>
+      <div class="summary-value" id="selectedDays">45 Days</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">Progress</div>
+      <div class="summary-value green" id="selectedProgress">0%</div>
+    </div>
+
+  </div>
+
+
+  <div class="dash-grid">
+
+    <div class="panel">
+
+      <h3>Plan Progress</h3>
+
+      <div class="progress-bg">
+        <div class="progress" id="progressBar"></div>
+      </div>
+
+      <div class="progress-info" id="progressText">
+        0 of 45 demo days completed
+      </div>
+
+      <div class="reward-grid">
+
+        <div class="reward-box">
+          <small>Plan Amount</small>
+          <strong id="miniAmount">$50</strong>
+        </div>
+
+        <div class="reward-box">
+          <small>Target Demo Reward</small>
+          <strong class="gold" id="miniReward">$25</strong>
+        </div>
+
+      </div>
+
+      <div class="notice">
+        <b>Demo / Learning Status</b><br>
+        This is a learning prototype. No real payment, deposit, withdrawal or financial transaction is processed.
+      </div>
+
+    </div>
+
+
+    <div class="panel">
+
+      <h3>NOVA+ Sections</h3>
+
+      <div class="dashboard-menu">
+
+        <button class="dash-button" type="button" data-section="Tasks">
+          <strong>✓ Tasks</strong>
+          <span>Daily demo task</span>
+        </button>
+
+        <button class="dash-button" type="button" data-section="Reserve">
+          <strong>◆ Reserve</strong>
+          <span>Demo reserve section</span>
+        </button>
+
+        <button class="dash-button" type="button" data-section="Stake">
+          <strong>◇ Stake</strong>
+          <span>Demo plan information</span>
+        </button>
+
+        <button class="dash-button" type="button" data-section="My Assets">
+          <strong>▣ My Assets</strong>
+          <span>Demo asset balance</span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- PAYMENT STATUS -->
+
+  <div class="panel tasks">
+
+    <h3>Demo Payment Status</h3>
+
+    <div id="paymentStatusBox" class="status-card">
+      <b>Status:</b>
+      <span id="paymentStatusText">No payment request submitted.</span>
+    </div>
+
+    <button class="btn primary full" type="button" id="depositBtn">
+      Open Demo Deposit
+    </button>
+
+  </div>
+
+
+  <!-- DAILY TASK -->
+
+  <div class="panel tasks">
+
+    <h3>Daily Demo Task</h3>
+
+    <div class="task">
+
+      <div class="task-left">
+
+        <div class="task-icon">✓</div>
+
+        <div>
+          <b>Complete Daily NOVA+ Task</b><br>
+          <small id="taskDescription">
+            Your plan must be verified first.
+          </small>
+        </div>
+
+      </div>
+
+      <div>
+        <button class="task-action" id="completeTaskBtn" type="button">
+          Locked
+        </button>
+      </div>
+
+    </div>
+
+    <div id="taskTimer" class="timer" style="margin-top:10px"></div>
+
+  </div>
+
+
+  <!-- REWARD -->
+
+  <div class="panel tasks">
+
+    <h3>Demo Reward Progress</h3>
+
+    <div class="reward-grid">
+
+      <div class="reward-box">
+        <small>Daily Demo Reward</small>
+        <strong id="dailyReward">$0.00</strong>
+      </div>
+
+      <div class="reward-box">
+        <small>Accumulated Demo Reward</small>
+        <strong class="gold" id="earnedReward">$0.00</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- MENU -->
+
+<div class="layer" id="menu">
+
+  <div class="modal">
+
+    <div class="modal-head">
+
+      <div>
+        <h2>Menu</h2>
+        <div class="sub">NOVA+ Navigation</div>
+      </div>
+
+      <but
