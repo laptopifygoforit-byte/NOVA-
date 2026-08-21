@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA+ Demo</title>
+
+<style>
+:root{
+  --bg:#07111f;
+  --panel:#0d1b2d;
+  --panel2:#10243a;
+  --text:#f5f7fb;
+  --muted:#9eb0c4;
+  --green:#20d39a;
+  --gold:#e9c46a;
+  --line:#1d3550;
+  --danger:#ef7777;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 50% 0%,#123653 0%,#07111f 48%,#040a12 100%);
+  color:var(--text);
+}
+
+body{min-height:100vh}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  width:100%;
+  max-width:1100px;
+  margin:auto;
+  padding-bottom:90px;
+}
+
+/* TOP */
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:2px;
+  color:var(--gold);
+}
+
+.globe{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid var(--line);
+  background:#0b1b2c;
+  color:#fff;
+  font-size:20px;
+}
+
+/* HERO */
+
+.hero{
+  text-align:center;
+  padding:15px 18px 25px;
+}
+
+.hero h1{
+  margin:14px 0 10px;
+  font-size:40px;
+}
+
+.hero p{
+  max-width:650px;
+  margin:0 auto 20px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.actions{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.btn{
+  border:none;
+  border-radius:12px;
+  padding:12px 20px;
+  font-weight:800;
+}
+
+.primary{
+  background:var(--green);
+  color:#03130e;
+}
+
+.ghost{
+  background:#0d2033;
+  color:#fff;
+  border:1px solid var(--line);
+}
+
+.danger{
+  background:#32191d;
+  color:#ffaaaa;
+  border:1px solid #653139;
+}
+
+/* MARKET GRAPHIC */
+
+.market{
+  height:155px;
+  max-width:650px;
+  margin:18px auto;
+  position:relative;
+  overflow:hidden;
+  border:1px solid #1b4059;
+  border-radius:24px;
+  background:linear-gradient(145deg,#0c2134,#081522);
+}
+
+.market:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 30px,
+      #15364d 31px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 50px,
+      #15364d 51px
+    );
+  opacity:.45;
+}
+
+.candles{
+  position:absolute;
+  left:35px;
+  right:35px;
+  top:25px;
+  bottom:20px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:18px;
+}
+
+.candle{
+  width:11px;
+  height:55px;
+  position:relative;
+  background:var(--green);
+  border-radius:2px;
+}
+
+.candle:before,
+.candle:after{
+  content:"";
+  position:absolute;
+  left:4px;
+  width:3px;
+  background:#69eac2;
+}
+
+.candle:before{
+  height:22px;
+  top:-19px;
+}
+
+.candle:after{
+  height:18px;
+  bottom:-16px;
+}
+
+.candle:nth-child(2){height:78px}
+.candle:nth-child(3){height:45px;background:#e76f51}
+.candle:nth-child(4){height:94px}
+.candle:nth-child(5){height:62px;background:var(--gold)}
+.candle:nth-child(6){height:110px}
+.candle:nth-child(7){height:86px}
+
+/* SECTIONS */
+
+.section{
+  padding:10px 18px;
+}
+
+.section h2{
+  margin:8px 0 16px;
+}
+
+/* PLANS */
+
+.plans{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px;
+}
+
+.plan{
+  width:100%;
+  min-height:160px;
+  padding:16px;
+  text-align:left;
+  color:#fff;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,#10243a,#091724);
+  transition:.18s;
+}
+
+.plan:hover{
+  transform:translateY(-3px);
+  border-color:var(--green);
+}
+
+.plan:active{
+  transform:scale(.98);
+}
+
+.plan.gold{
+  border-color:#a9863d;
+}
+
+.plan.gold .amount{
+  color:var(--gold);
+}
+
+.amount{
+  font-size:27px;
+  font-weight:900;
+}
+
+.plan-name{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.reward{
+  margin:14px 0 8px;
+  color:#72eac1;
+  font-weight:800;
+}
+
+.plan-note{
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* VIEWS */
+
+.view{
+  padding:18px;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.card{
+  max-width:720px;
+  margin:15px auto;
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:rgba(13,27,45,.96);
+}
+
+.form{
+  max-width:500px;
+}
+
+.form h2{
+  margin-top:0;
+}
+
+.field{
+  margin:12px 0;
+}
+
+.field label{
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:6px;
+}
+
+.field input,
+.field select{
+  width:100%;
+  padding:12px;
+  border-radius:11px;
+  border:1px solid var(--line);
+  outline:none;
+  background:#081522;
+  color:#fff;
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:var(--green);
+}
+
+.form .btn{
+  width:100%;
+  margin-top:8px;
+}
+
+.back{
+  border:none;
+  background:none;
+  color:var(--muted);
+  padding:5px 0;
+}
+
+.notice{
+  padding:12px;
+  margin:12px 0;
+  border-radius:12px;
+  background:#0a2530;
+  color:#91f1d2;
+  font-size:14px;
+  line-height:1.5;
+}
+
+/* DASHBOARD */
+
+.dashboard-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.demo-badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  background:#10362e;
+  color:#76edc5;
+  font-size:11px;
+  font-weight:800;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:15px 0;
+}
+
+.stat{
+  padding:15px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:#0a1828;
+}
+
+.stat small{
+  color:var(--muted);
+}
+
+.stat b{
+  display:block;
+  margin-top:6px;
+  font-size:22px;
+}
+
+.progress{
+  height:11px;
+  overflow:hidden;
+  border-radius:20px;
+  background:#07111b;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:var(--green);
+  transition:width .3s;
+}
+
+.dashboard-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+/* DRAWER */
+
+.drawer{
+  position:fixed;
+  z-index:50;
+  top:0;
+  right:0;
+  bottom:0;
+  width:min(330px,90vw);
+  padding:20px;
+  overflow-y:auto;
+  background:#081523;
+  border-left:1px solid var(--line);
+  box-shadow:-12px 0 35px rgba(0,0,0,.5);
+}
+
+.close{
+  float:right;
+  border:none;
+  background:none;
+  color:#fff;
+  font-size:28px;
+}
+
+.lang{
+  display:flex;
+  justify-content:space-between;
+  padding:13px 4px;
+  border-bottom:1px solid var(--line);
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+  position:fixed;
+  z-index:40;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(5,14,24,.97);
+  border-top:1px solid var(--line);
+}
+
+.nav-inner{
+  max-width:700px;
+  margin:auto;
+  display:flex;
+  justify-content:space-around;
+}
+
+.nav-btn{
+  border:none;
+  background:none;
+  color:#8fa5bb;
+  padding:11px 8px;
+  font-size:12px;
+}
+
+.nav-btn.active{
+  color:var(--green);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:850px){
+
+  .plans{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .plan:last-child{
+    grid-column:1/-1;
+    max-width:48%;
+    margin:auto;
+  }
+
+}
+
+@media(max-width:500px){
+
+  .hero h1{
+    font-size:32px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .plans{
+    grid-template-columns:1fr;
+  }
+
+  .plan:last-child{
+    max-width:none;
+  }
+
+  .candles{
+    gap:12px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="topbar">
+  <div class="logo">NOVA+</div>
+  <button class="globe" onclick="toggleLanguage()">🌐</button>
+</header>
+
+<section id="home">
+
+  <div class="hero">
+
+    <div class="market">
+      <div class="candles">
+        <span class="candle"></span>
+        <span class="candle"></span>
+        <span class="candle"></span>
+        <span class="candle"></span>
+        <span class="candle"></span>
+        <span class="candle"></span>
+        <span class="candle"></span>
+      </div>
+    </div>
+
+    <h1>Welcome to NOVA+</h1>
+
+    <p>
+      A beautiful demo platform for learning modern digital
+      earning workflows. This prototype does not process real money.
+    </p>
+
+    <div class="actions">
+      <button class="btn primary" onclick="showView('login')">
+        Login
+      </button>
+
+      <button class="btn ghost" onclick="showView('signup')">
+        Sign Up
+      </button>
+    </div>
+
+  </div>
+
+  <div class="section">
+
+    <h2>Choose a Demo Plan</h2>
+
+    <div id="plans" class="plans"></div>
+
+  </div>
+
+</section>
+
+<section id="login" class="view hidden">
+
+  <button class="back" onclick="showView('home')">
+    ← Back
+  </button>
+
+  <div class="card form">
+
+    <h2>Login</h2>
+
+    <div class="field">
+      <label>Email or Username</label>
+      <input id="loginUser" placeholder="Enter email or username">
+    </div>
+
+    <div class="field">
+
+      <label>Password</label>
+
+      <div style="display:flex;gap:8px">
+
+        <input
+          id="loginPassword"
+          type="password"
+          placeholder="Password"
+          style="flex:1"
+        >
+
+        <button
+          class="btn ghost"
+          type="button"
+          onclick="togglePassword('loginPassword')"
+        >
+          Show
+        </button>
+
+      </div>
+
+    </div>
+
+    <button class="btn primary" onclick="loginUser()">
+      Login
+    </button>
+
+    <p style="color:var(--muted);font-size:13px">
+      Demo login: enter any non-empty username/email and password.
+    </p>
+
+  </div>
+
+</section>
+
+<section id="signup" class="view hidden">
+
+  <button class="back" onclick="showView('home')">
+    ← Back
+  </button>
+
+  <div class="card form">
+
+    <h2>Create Demo Account</h2>
+
+    <div class="field">
+      <label>Full Name</label>
+      <input id="fullName" placeholder="Full name">
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+      <input id="email" type="email" placeholder="name@example.com">
+    </div>
+
+    <div class="field">
+
+      <label>Country</label>
+
+      <select id="country">
+
+        <option>Pakistan (+92)</option>
+        <option>United Arab Emirates (+971)</option>
+        <option>India (+91)</option>
+        <option>United Kingdom (+44)</option>
+        <option>United States (+1)</option>
+
+      </select>
+
+    </div>
+
+    <div class="field">
+
+      <label>Mobile — without leading zero</label>
+
+      <input
+        id="mobile"
+        inputmode="numeric"
+        placeholder="3001234567"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Password</label>
+
+      <div style="display:flex;gap:8px">
+
+        <input
+          id="signupPassword"
+          type="password"
+          placeholder="Create password"
+          style="flex:1"
+        >
+
+        <button
+          class="btn ghost"
+          type="button"
+          onclick="togglePassword('signupPassword')"
+        >
+          Show
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="notice">
+      ✓ Demo verification enabled.<br>
+      No real email, payment, deposit or withdrawal is processed.
+    </div>
+
+    <button class="btn primary" onclick="createAccount()">
+      Create Account
+    </button>
+
+  </div>
+
+</section>
+
+<section id="dashboard" class="view hidden">
+
+  <div class="card">
+
+    <div class="dashboard-top">
+
+      <div>
+        <small style="color:var(--muted)">
+          NOVA+ Demo Dashboard
+        </small>
+
+        <h2 id="dashboardTitle">
+          Dashboard
+        </h2>
+      </div>
+
+      <span class="demo-badge">
+        DEMO
+      </span>
+
+    </div>
+
+    <div id="dashboardContent"></div>
+
+  </div>
+
+</section>
+
+</div>
+
+<div id="languageDrawer" class="drawer hidden">
+
+  <button class="close" onclick="toggleLanguage()">
+    ×
+  </button>
+
+  <h2>Language</h2>
+
+  <p style="color:var(--muted)">
+    Select your preferred language.
+  </p>
+
+  <div id="languageList"></div>
+
+</div>
+
+<nav class="bottom-nav">
+
+  <div class="nav-inner">
+
+    <button class="nav-btn active" onclick="showView('home')">
+      ⌂<br>Home
+    </button>
+
+    <button class="nav-btn" onclick="openDashboard()">
+      ◈<br>Earn
+    </button>
+
+    <button class="nav-btn" onclick="openDashboard()">
+      ◇<br>Reserve
+    </button>
+
+    <button class="nav-btn" onclick="openDashboard()">
+      ▣<br>Assets
+    </button>
+
+    <button class="nav-btn" onclick="openDashboard()">
+      ◎<br>My
+    </button>
+
+  </div>
+
+</nav>
+
+<script>
+
+const PLANS = [
+  {amount:50,reward:25,name:"Starter"},
+  {amount:100,reward:75,name:"Growth"},
+  {amount:200,reward:150,name:"Pro"},
+  {amount:300,reward:225,name:"Elite"},
+  {amount:500,reward:375,name:"Gold"}
+];
+
+let state = {
+  user:null,
+  plan:null,
+  createdAt:null
+};
+
+try{
+  const saved = localStorage.getItem("NOVA_PLUS_DEMO");
+  if(saved){
+    state = JSON.parse(saved);
+  }
+}catch(error){
+  console.log(error);
+}
+
+function saveState(){
+  localStorage.setItem(
+    "NOVA_PLUS_DEMO",
+    JSON.stringify(state)
+  );
+}
+
+function renderPlans(){
+
+  const container = document.getElementById("plans");
+
+  if(!container) return;
+
+  container.innerHTML = "";
+
+  PLANS.forEach(function(plan,index){
+
+    const button = document.createElement("button");
+
+    button.className =
+      "plan " + (index === 4 ? "gold" : "");
+
+    button.type = "button";
+
+    button.innerHTML = `
+      <div class="amount">$${plan.amount}</div>
+      <div class="plan-name">${plan.name} Demo Plan</div>
+      <div class="reward">Reward Pool +$${plan.reward}</div>
+      <div class="plan-note">45-day demo cycle</div>
+    `;
+
+    button.addEventListener("click",function(){
+      choosePlan(index);
+    });
+
+    container.appendChild(button);
+
+  });
+}
+
+function hideAllViews(){
+
+  const ids = [
+    "home",
+    "login",
+    "signup",
+    "dashboard"
+  ];
+
+  ids.forEach(function(id){
+
+    const element = document.getElementById(id);
+
+    if(element){
+      element.classList.add("hidden");
+    }
+
+  });
+}
+
+function showView(id){
+
+  hideAllViews();
+
+  const element = document.getElementById(id);
+
+  if(!element) return;
+
+  element.classList.remove("hidden");
+
+  window.scrollTo(0,0);
+
+}
+
+function createAccount(){
+
+  const name =
+    document.getElementById("fullName").value.trim();
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const mobile =
+    document.getElementById("mobile").value.trim();
+
+  const password =
+    document.getElementById("signupPassword").value;
+
+  if(!name || !email || !mobile || !password){
+
+    alert("Please complete all required fields.");
+
+    return;
+
+  }
+
+  state.user = {
+    name:name,
+    email:email,
+    mobile:mobile
+  };
+
+  saveState();
+
+  alert("Demo account created successfully.");
+
+  showView("home");
+
+}
+
+function loginUser(){
+
+  const username =
+    document.getElementById("loginUser").value.trim();
+
+  const password =
+    document.getElementById("loginPassword").value;
+
+  if(!username || !password){
+
+    alert("Please enter username/email and password.");
+
+    return;
+
+  }
+
+  state.user = {
+    name:username,
+    email:username
+  };
+
+  saveState();
+
+  alert("Demo login successful.");
+
+  showView("home");
+
+}
+
+function logout(){
+
+  state.user = null;
+  state.plan = null;
+  state.createdAt = null;
+
+  saveState();
+
+  showView("home");
+
+}
+
+function choosePlan(index){
+
+  if(!state.user){
+
+    alert(
+      "Please create a demo account or login first."
+    );
+
+    showView("signup");
+
+    return;
+
+  }
+
+  state.plan = PLANS[index];
+
+  state.createdAt = Date.now();
+
+  saveState();
+
+  renderDashboard();
+
+  showView("dashboard");
+
+}
+
+function getCycleData(){
+
+  if(!state.plan || !state.createdAt){
+    return null;
+  }
+
+  const elapsed =
+    Date.now() - state.createdAt;
+
+  const daysPassed =
+    Math.floor(elapsed / 86400000);
+
+  const day =
+    Math.min(
+      45,
+      Math.max(1,daysPassed + 1)
+    );
+
+  const principalDays =
+    Math.min(day,30);
+
+  const rewardDays =
+    Math.max(0,day - 30);
+
+  const principal =
+    Math.min(
+      state.plan.amount,
+      Math.round(
+        state.plan.amount *
+        (principalDays / 30)
+      )
+    );
+
+  const reward =
+    Math.min(
+      state.plan.reward,
+      Math.round(
+        state.plan.reward *
+        (rewardDays / 15)
+      )
+    );
+
+  const progress =
+    Math.round((day / 45) * 100);
+
+  return {
+    day:day,
+    principal:principal,
+    reward:reward,
+    progress:progress
+  };
+
+}
+
+function renderDashboard(){
+
+  const title =
+    document.getElementById("dashboardTitle");
+
+  const content =
+    document.getElementById("dashboardContent");
+
+  if(!title || !content) return;
+
+  if(!state.user){
+
+    content.innerHTML = `
+      <p style="color:var(--muted)">
+        Please login first.
+      </p>
+
+      <button
+        class="btn primary"
+        onclick="showView('login')"
+      >
+        Login
+      </button>
+    `;
+
+    return;
+
+  }
+
+  if(!state.plan){
+
+    content.innerHTML = `
+      <div class="notice">
+        No demo plan selected yet.
+      </div>
+
+      <button
+        class="btn primary"
+        onclick="showView('home')"
+      >
+        Choose a Plan
+      </button>
+    `;
+
+    return;
+
+  }
+
+  const data = getCycleData();
+
+  title.textContent =
+    "$" +
+    state.plan.amount +
+    " " +
+    state.plan.name +
+    " Plan";
+
+  content.innerHTML = `
+
+    <p style="color:var(--muted)">
+      Welcome,
+      ${
+        state.user.name ||
+        state.user.email ||
+        "Demo User"
+      }
+    </p>
+
+    <div class="stats">
+
+      <div class="stat">
+        <small>Demo Principal</small>
+        <b>$${data.principal}</b>
+      </div>
+
+      <div class="stat">
+        <small>Demo Reward</small>
+        <b>$${data.reward}</b>
+      </div>
+
+      <div class="stat">
+        <small>Cycle Day</small>
+        <b>${data.day}/45</b>
+      </div>
+
+    </div>
+
+    <p>
+      Overall Demo Cycle Progress
+    </p>
+
+    <div class="progress">
+      <div
+        class="progress-bar"
+        style="width:${data.progress}%"
+      ></div>
+    </div>
+
+    <p style="color:var(--muted);line-height:1.6">
+
+      Days 1–30:
+      Demo Principal Phase.<br>
+
+      Days 31–45:
+      Demo Reward Phase.<br>
+
+      Total cycle:
+      45 days.
+
+    </p>
+
+    <div class="dashboard-actions">
+
+      <button
+        class="btn ghost"
+        onclick="demoAction('Stake')"
+      >
+        Stake
+      </button>
+
+      <button
+        class="btn ghost"
+        onclick="demoAction('Earn')"
+      >
+        Earn
+      </button>
+
+      <button
+        class="btn ghost"
+        onclick="demoAction('Reserve')"
+      >
+        Reserve
+      </button>
+
+      <button
+        class="btn ghost"
+        onclick="demoAction('My Assets')"
+      >
+        My Assets
+      </button>
+
+      <button
+        class="btn danger"
+        onclick="demoAction('Withdrawal')"
+      >
+        Withdrawal
+      </button>
+
+      <button
+        class="btn ghost"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
+    </div>
+  `;
+
+}
+
+function demoAction(name){
+
+  alert(
+    name +
+    " is a demo-only feature. " +
+    "No real money is processed."
+  );
+
+}
+
+function togglePassword(id){
+
+  const input = document.getElementById(id);
+
+  if(!input) return;
+
+  input.type =
+    input.type === "password"
+    ? "text"
+    : "password";
+
+}
+
+const LANGUAGES = [
+  "English",
+  "Urdu",
+  "Hindi",
+  "Arabic",
+  "Bengali",
+  "Persian / Farsi",
+  "Spanish",
+  "Russian",
+  "Portuguese",
+  "Korean",
+  "Vietnamese",
+  "Thai",
+  "Turkish",
+  "Malay",
+  "Other"
+];
+
+function renderLanguages(){
+
+  const list =
+    document.getElementById("languageList");
+
+  if(!list) return;
+
+  list.innerHTML = "";
+
+  LANGUAGES.forEach(function(language){
+
+    const row =
+      document.createElement("div");
+
+    row.className = "lang";
+
+    row.innerHTML = `
+      <span>${language}</span>
+      <span>
+        ${language === "English" ? "✓" : ""}
+      </span>
+    `;
+
+    row.onclick = function(){
+
+      alert(
+        language +
+        " selected for demo."
+      );
+
+    };
+
+    list.appendChild(row);
+
+  });
+
+}
+
+function toggleLanguage(){
+
+  const drawer =
+    document.getElementById("languageDrawer");
+
+  if(drawer){
+    drawer.classList.toggle("hidden");
+  }
+
+}
+
+/* Bottom navigation */
+
+function openDashboard(){
+
+  if(!state.user){
+
+    alert(
+      "Please create a demo account or login first."
+    );
+
+    showView("login");
+
+    return;
+
+  }
+
+  renderDashboard();
+
+  showView("dashboard");
+
+}
+
+/* START */
+
+document.addEventListener("DOMContentLoaded",function(){
+
+  renderPlans();
+
+  renderLanguages();
+
+  if(state.user && state.plan){
+    renderDashboard();
+  }
+
+});
+
+setInterval(function(){
+
+  const dashboard =
+    document.getElementById("dashboard");
+
+  if(
+    dashboard &&
+    !dashboard.classList.contains("hidden")
+  ){
+
+    renderDashboard();
+
+  }
+
+},60000);
+
+</script>
+
+</body>
+</html>
