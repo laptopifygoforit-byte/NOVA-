@@ -1,0 +1,3165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NOVA+ Final Demo</title>
+
+<style>
+:root{
+--bg:#07111d;
+--card:#0d1b2a;
+--card2:#102235;
+--line:#20384d;
+--text:#eef6ff;
+--muted:#9db0c3;
+--green:#38d39f;
+--gold:#f4c95d;
+--blue:#58a6ff;
+--danger:#ff6b7a;
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+margin:0;
+min-height:100vh;
+background:
+radial-gradient(circle at top,#17344d 0,#07111d 48%,#050b12 100%);
+color:var(--text);
+font-family:Arial,Helvetica,sans-serif;
+}
+
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed}
+.hidden{display:none!important}
+
+.header{
+position:sticky;
+top:0;
+z-index:20;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 18px;
+background:rgba(5,13,22,.96);
+border-bottom:1px solid var(--line);
+backdrop-filter:blur(14px);
+}
+
+.logo{
+font-size:24px;
+font-weight:900;
+}
+
+.logo span{color:var(--green)}
+
+.header-actions{
+display:flex;
+gap:8px;
+}
+
+.icon-btn{
+background:#0b1826;
+color:var(--text);
+border:1px solid var(--line);
+border-radius:10px;
+padding:9px 12px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:25px 15px 50px;
+}
+
+.hero{
+text-align:center;
+padding:38px 0 32px;
+}
+
+.hero-mark{
+font-size:52px;
+font-weight:900;
+color:var(--green);
+}
+
+.hero h1{
+margin:8px 0;
+font-size:32px;
+}
+
+.hero p{
+max-width:650px;
+margin:auto;
+color:var(--muted);
+line-height:1.7;
+}
+
+.actions{
+display:flex;
+justify-content:center;
+gap:10px;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+.btn{
+border:0;
+border-radius:11px;
+padding:12px 17px;
+font-weight:800;
+}
+
+.primary{
+background:var(--green);
+color:#04110d;
+}
+
+.secondary{
+background:#15283b;
+color:var(--text);
+border:1px solid var(--line);
+}
+
+.btn:disabled{
+opacity:.5;
+}
+
+.full{
+width:100%;
+margin-top:10px;
+}
+
+.section{margin-top:22px}
+
+.panel,.summary-card{
+background:rgba(13,27,42,.94);
+border:1px solid var(--line);
+border-radius:15px;
+padding:17px;
+}
+
+.plans-sub{
+color:var(--muted);
+line-height:1.6;
+}
+
+.plan-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(205px,1fr));
+gap:14px;
+margin-top:20px;
+}
+
+.plan-card{
+position:relative;
+background:linear-gradient(145deg,#102335,#0b1826);
+border:1px solid var(--line);
+border-radius:17px;
+padding:20px;
+transition:.2s;
+}
+
+.plan-card:hover{
+transform:translateY(-3px);
+border-color:#4d7896;
+}
+
+.plan-card.featured{
+border-color:var(--gold);
+}
+
+.badge{
+position:absolute;
+right:10px;
+top:10px;
+background:var(--gold);
+color:#211600;
+padding:4px 8px;
+border-radius:20px;
+font-size:9px;
+font-weight:900;
+}
+
+.plan-number{
+color:var(--muted);
+font-size:11px;
+font-weight:800;
+}
+
+.plan-card h3{
+margin:8px 0;
+}
+
+.plan-price{
+color:var(--green);
+font-size:32px;
+font-weight:900;
+margin:12px 0 4px;
+}
+
+.reward{
+color:var(--gold);
+font-weight:800;
+}
+
+.plan-info{
+color:var(--muted);
+font-size:12px;
+line-height:1.8;
+margin:15px 0;
+}
+
+.plan-select{
+color:#a9ddff;
+font-weight:800;
+}
+
+.summary-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+gap:12px;
+margin:18px 0;
+}
+
+.summary-label{
+color:var(--muted);
+font-size:11px;
+}
+
+.summary-value{
+font-size:23px;
+font-weight:900;
+margin-top:6px;
+}
+
+.green{color:var(--green)}
+.gold{color:var(--gold)}
+.blue{color:var(--blue)}
+
+.progress-bg{
+height:12px;
+background:#07131f;
+border:1px solid var(--line);
+border-radius:20px;
+overflow:hidden;
+}
+
+.progress{
+height:100%;
+width:0;
+background:linear-gradient(90deg,var(--green),#75f2c5);
+transition:.3s;
+}
+
+.progress-info{
+color:var(--muted);
+font-size:12px;
+margin-top:8px;
+}
+
+.dashboard-menu{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+gap:10px;
+}
+
+.dash-button{
+background:#0a1826;
+color:var(--text);
+border:1px solid var(--line);
+border-radius:12px;
+padding:15px;
+text-align:left;
+transition:.2s;
+}
+
+.dash-button:hover{
+border-color:var(--green);
+transform:translateY(-2px);
+}
+
+.dash-button.active{
+border-color:var(--green);
+background:#0d2925;
+}
+
+.dash-button span{
+display:block;
+color:var(--muted);
+font-size:11px;
+margin-top:5px;
+}
+
+.reward-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+margin-top:15px;
+}
+
+.reward-box{
+background:#091623;
+border:1px solid var(--line);
+padding:14px;
+border-radius:12px;
+}
+
+.reward-box small{
+color:var(--muted);
+font-size:11px;
+}
+
+.reward-box strong{
+display:block;
+font-size:19px;
+margin-top:5px;
+}
+
+.notice{
+background:#091623;
+border:1px solid var(--line);
+border-radius:12px;
+padding:14px;
+color:var(--muted);
+font-size:12px;
+line-height:1.7;
+margin-top:14px;
+}
+
+.task{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+background:#091623;
+border:1px solid var(--line);
+border-radius:12px;
+padding:14px;
+}
+
+.task-left{
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.task-icon{
+width:38px;
+height:38px;
+border-radius:50%;
+display:grid;
+place-items:center;
+background:#17362e;
+color:var(--green);
+font-weight:900;
+}
+
+.task-action{
+border:1px solid var(--line);
+background:#13263a;
+color:var(--text);
+padding:9px 12px;
+border-radius:9px;
+font-weight:800;
+}
+
+.task-action:disabled{opacity:.55}
+
+.timer{
+color:var(--gold);
+font-size:12px;
+margin-top:10px;
+}
+
+.detail-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+gap:12px;
+margin-top:15px;
+}
+
+.info-card{
+background:#091623;
+border:1px solid var(--line);
+border-radius:12px;
+padding:15px;
+}
+
+.info-card h4{
+margin:0 0 8px;
+}
+
+.info-card p{
+color:var(--muted);
+font-size:12px;
+line-height:1.6;
+margin:0;
+}
+
+.asset-balance{
+text-align:center;
+padding:25px 10px;
+}
+
+.asset-balance .amount{
+color:var(--green);
+font-size:42px;
+font-weight:900;
+}
+
+.asset-list{
+display:grid;
+gap:10px;
+margin-top:15px;
+}
+
+.asset-row{
+display:flex;
+justify-content:space-between;
+gap:10px;
+background:#091623;
+border:1px solid var(--line);
+border-radius:11px;
+padding:13px;
+}
+
+.modal-wrap{
+position:fixed;
+inset:0;
+z-index:50;
+background:rgba(0,0,0,.75);
+display:none;
+align-items:center;
+justify-content:center;
+padding:15px;
+}
+
+.modal-wrap.show{display:flex}
+
+.modal{
+width:min(560px,100%);
+max-height:92vh;
+overflow:auto;
+background:#0a1725;
+border:1px solid var(--line);
+border-radius:18px;
+padding:20px;
+box-shadow:0 20px 80px rgba(0,0,0,.6);
+}
+
+.modal-head{
+display:flex;
+justify-content:space-between;
+gap:12px;
+margin-bottom:18px;
+}
+
+.close{
+border:0;
+background:#142638;
+color:white;
+width:35px;
+height:35px;
+border-radius:10px;
+font-size:20px;
+}
+
+.field{margin:12px 0}
+
+.field label{
+display:block;
+color:var(--muted);
+font-size:11px;
+margin-bottom:6px;
+}
+
+.field input,.field select{
+width:100%;
+background:#07131f;
+color:var(--text);
+border:1px solid var(--line);
+border-radius:10px;
+padding:11px;
+outline:none;
+}
+
+.field input:focus,.field select:focus{
+border-color:var(--green);
+}
+
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.password-box{
+display:flex;
+gap:7px;
+}
+
+.password-box input{flex:1}
+
+.eye,.copy-btn{
+border:1px solid var(--line);
+background:#142638;
+color:var(--text);
+border-radius:10px;
+padding:0 12px;
+}
+
+.error{
+color:var(--danger);
+font-size:12px;
+min-height:18px;
+margin-top:6px;
+}
+
+.success{
+background:#0c2b25;
+border:1px solid #1e624f;
+color:#bdf7e4;
+padding:15px;
+border-radius:12px;
+line-height:1.6;
+}
+
+.pending{
+border-color:#7b6121!important;
+color:#f8e4a6;
+}
+
+.menu{
+display:grid;
+gap:9px;
+}
+
+.menu button{
+background:#0b1a29;
+color:var(--text);
+border:1px solid var(--line);
+padding:13px;
+border-radius:10px;
+text-align:left;
+}
+
+.deposit-address{
+word-break:break-all;
+background:#07131f;
+border:1px dashed #49677f;
+padding:12px;
+border-radius:10px;
+font-size:12px;
+margin-bottom:8px;
+}
+
+.code{
+margin-top:7px;
+background:#102a25;
+color:var(--green);
+padding:9px;
+border-radius:8px;
+font-weight:900;
+letter-spacing:3px;
+text-align:center;
+}
+
+.network-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:10px;
+}
+
+.network{
+background:#091623;
+border:1px solid var(--line);
+border-radius:11px;
+padding:13px;
+}
+
+.network strong{
+display:block;
+color:var(--blue);
+}
+
+.network small{color:var(--muted)}
+
+.footer{
+text-align:center;
+color:#71869a;
+font-size:11px;
+padding:25px 10px;
+}
+
+.back{
+margin-bottom:14px;
+background:none;
+border:0;
+color:#9fd7ff;
+padding:0;
+}
+
+.switch{
+text-align:center;
+color:var(--muted);
+font-size:12px;
+margin-top:15px;
+}
+
+.switch button{
+border:0;
+background:none;
+color:#9fd7ff;
+font-weight:800;
+}
+
+.logout-btn{
+border-color:#6d2933!important;
+color:#ff9aa5!important;
+}
+
+@media(max-width:600px){
+
+.container{
+padding:20px 12px 40px;
+}
+
+.hero h1{
+font-size:26px;
+}
+
+.row{
+grid-template-columns:1fr;
+}
+
+.reward-grid{
+grid-template-columns:1fr;
+}
+
+.network-grid{
+grid-template-columns:1fr;
+}
+
+.task{
+align-items:flex-start;
+flex-direction:column;
+}
+
+.task-action{
+width:100%;
+}
+
+.header{
+padding:12px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="logo">
+NOVA<span>+</span>
+</div>
+
+<div class="header-actions">
+
+<button class="icon-btn" id="accountBtn">
+Login
+</button>
+
+<button class="icon-btn" id="menuBtn">
+☰
+</button>
+
+</div>
+
+</header>
+
+
+<main class="container">
+
+<section id="homeView">
+
+<div class="hero">
+
+<div class="hero-mark">N+</div>
+
+<h1>Welcome to NOVA+</h1>
+
+<p>
+A modern digital learning prototype for exploring
+plans, tasks, reserve, stake and demo assets.
+</p>
+
+<div class="actions">
+
+<button class="btn primary" id="heroLogin">
+Login
+</button>
+
+<button class="btn secondary" id="heroSignup">
+Create Account
+</button>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Choose Your NOVA+ Plan</h2>
+
+<div class="plans-sub">
+Select a plan to explore the NOVA+ demo dashboard.
+</div>
+
+<div class="plan-grid" id="planGrid"></div>
+
+</div>
+
+</section>
+
+
+<section id="dashboardView" class="hidden">
+
+<button class="back" id="backPlans">
+← Back to Plans
+</button>
+
+<div class="panel">
+
+<h2>NOVA+ Customer Dashboard</h2>
+
+<p id="dashboardPlanName" class="plans-sub"></p>
+
+</div>
+
+<div class="summary-grid">
+
+<div class="summary-card">
+<div class="summary-label">Selected Plan</div>
+<div class="summary-value green" id="selectedAmount">$0</div>
+</div>
+
+<div class="summary-card">
+<div class="summary-label">Demo Reward</div>
+<div class="summary-value gold" id="selectedReward">$0</div>
+</div>
+
+<div class="summary-card">
+<div class="summary-label">Cycle</div>
+<div class="summary-value">45 Days</div>
+</div>
+
+<div class="summary-card">
+<div class="summary-label">Progress</div>
+<div class="summary-value green" id="selectedProgress">0%</div>
+</div>
+
+</div>
+
+
+<div class="panel section">
+
+<h3>Plan Progress</h3>
+
+<div class="progress-bg">
+<div class="progress" id="progressBar"></div>
+</div>
+
+<div class="progress-info" id="progressText">
+0 of 45 demo days completed
+</div>
+
+<div class="reward-grid">
+
+<div class="reward-box">
+<small>Plan Amount</small>
+<strong id="miniAmount">$0</strong>
+</div>
+
+<div class="reward-box">
+<small>Target Demo Reward</small>
+<strong class="gold" id="miniReward">$0</strong>
+</div>
+
+</div>
+
+<div class="notice">
+
+<b>Demo / Learning Status</b>
+
+<br>
+
+This is a learning prototype.
+No real payment, deposit, withdrawal or
+financial transaction is processed.
+
+</div>
+
+</div>
+
+
+<div class="panel section">
+
+<h3>NOVA+ Sections</h3>
+
+<div class="dashboard-menu">
+
+<button class="dash-button" data-section="tasks">
+<strong>✓ Tasks</strong>
+<span>Daily demo task and progress</span>
+</button>
+
+<button class="dash-button" data-section="reserve">
+<strong>◆ Reserve</strong>
+<span>Reserve information</span>
+</button>
+
+<button class="dash-button" data-section="stake">
+<strong>◇ Stake</strong>
+<span>Stake plan information</span>
+</button>
+
+<button class="dash-button" data-section="assets">
+<strong>▣ My Assets</strong>
+<span>Demo asset overview</span>
+</button>
+
+</div>
+
+</div>
+
+
+<div class="panel section">
+
+<h3 id="sectionTitle">Tasks</h3>
+
+<div id="sectionContent"></div>
+
+</div>
+
+
+<div class="panel section">
+
+<h3>Demo Payment Status</h3>
+
+<div class="summary-card">
+
+<b>Status:</b>
+
+<span id="paymentStatusText">
+No payment request submitted.
+</span>
+
+</div>
+
+<button class="btn primary full" id="depositBtn">
+Open Demo Deposit
+</button>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer class="footer">
+NOVA+ Demo / Learning Prototype —
+No real payments or financial transactions.
+</footer>
+
+
+<div class="modal-wrap" id="modalWrap">
+<div class="modal" id="modal"></div>
+</div>
+
+
+<script>
+
+const PLANS=[
+
+{id:1,name:"NOVA+ Basic",amount:50,reward:25},
+{id:2,name:"NOVA+ Plus",amount:100,reward:75},
+{id:3,name:"NOVA+ Pro",amount:200,reward:150},
+{id:4,name:"NOVA+ Premium",amount:300,reward:225},
+{id:5,name:"NOVA+ Elite",amount:500,reward:375}
+
+];
+
+const STORAGE_KEY="NOVA_PLUS_FINAL_V2";
+
+
+const defaultState={
+
+account:null,
+
+loggedIn:false,
+
+selected:null,
+
+status:"none",
+
+tx:"",
+
+active:false,
+
+progress:0,
+
+earned:0,
+
+lastTask:null,
+
+network:"TRC20",
+
+reserve:0,
+
+stake:false
+
+};
+
+
+function loadState(){
+
+try{
+
+const saved=JSON.parse(
+localStorage.getItem(STORAGE_KEY)
+);
+
+return{
+...defaultState,
+...(saved||{})
+};
+
+}catch{
+
+return{...defaultState};
+
+}
+
+}
+
+
+let state=loadState();
+
+
+function $(id){
+return document.getElementById(id);
+}
+
+
+function save(){
+
+localStorage.setItem(
+STORAGE_KEY,
+JSON.stringify(state)
+);
+
+}
+
+
+function getPlan(){
+
+return PLANS.find(
+p=>p.id===Number(state.selected)
+)||PLANS[0];
+
+}
+
+
+function openModal(html){
+
+$("modal").innerHTML=html;
+
+$("modalWrap").classList.add("show");
+
+}
+
+
+function closeModal(){
+
+$("modalWrap").classList.remove("show");
+
+}
+
+
+function bindClose(){
+
+document.querySelectorAll("[data-close]")
+.forEach(btn=>{
+btn.onclick=closeModal;
+});
+
+}
+
+
+/* ================= PLANS ================= */
+
+function renderPlans(){
+
+$("planGrid").innerHTML=PLANS.map(plan=>`
+
+<div class="plan-card ${plan.id===5?"featured":""}"
+data-plan="${plan.id}">
+
+${plan.id===5
+?'<div class="badge">CENTER PLAN</div>'
+:""}
+
+<div class="plan-number">
+PLAN ${plan.id}
+</div>
+
+<h3>${plan.name}</h3>
+
+<div class="plan-price">
+$${plan.amount}
+</div>
+
+<div class="reward">
+Demo Reward: $${plan.reward}
+</div>
+
+<div class="plan-info">
+◈ 45-Day Cycle<br>
+◈ Demo / Learning Plan<br>
+◈ No Real Payment
+</div>
+
+<div class="plan-select">
+Select $${plan.amount} Plan →
+</div>
+
+</div>
+
+`).join("");
+
+
+document.querySelectorAll("[data-plan]")
+.forEach(card=>{
+
+card.onclick=()=>{
+selectPlan(Number(card.dataset.plan));
+};
+
+});
+
+}
+
+
+/* ================= SELECT PLAN ================= */
+
+function selectPlan(id){
+
+state.selected=id;
+state.status="none";
+state.tx="";
+state.active=false;
+state.progress=0;
+state.earned=0;
+state.lastTask=null;
+state.reserve=0;
+state.stake=false;
+
+save();
+
+const plan=getPlan();
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+<h2>Plan Selected</h2>
+<div class="plans-sub">
+NOVA+ Demo Plan
+</div>
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+<div style="text-align:center">
+
+<div style="
+font-size:45px;
+font-weight:900;
+color:var(--green);
+">N+</div>
+
+<h2>${plan.name}</h2>
+
+<div style="
+font-size:38px;
+font-weight:900;
+color:var(--green);
+">
+$${plan.amount}
+</div>
+
+<div class="gold">
+Demo Reward: $${plan.reward}
+</div>
+
+</div>
+
+<div class="notice">
+45-Day Demo Cycle<br>
+No real payment or financial transaction.
+</div>
+
+<button class="btn primary full" id="continueDeposit">
+Continue to Demo Deposit →
+</button>
+
+`);
+
+$("continueDeposit").onclick=openDeposit;
+
+bindClose();
+
+}
+
+
+/* ================= LOGIN ================= */
+
+function openLogin(){
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+<h2>Welcome Back</h2>
+
+<div class="plans-sub">
+Login to your NOVA+ demo account.
+</div>
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+<form id="loginForm">
+
+<div class="field">
+<label>Username / Email</label>
+
+<input id="loginUser"
+required
+placeholder="Username or Email">
+</div>
+
+<div class="field">
+
+<label>Password</label>
+
+<div class="password-box">
+
+<input
+id="loginPassword"
+type="password"
+required
+placeholder="Password">
+
+<button
+type="button"
+class="eye"
+id="loginShow">
+Show
+</button>
+
+</div>
+
+</div>
+
+<div id="loginError" class="error"></div>
+
+<button class="btn primary full" type="submit">
+Login
+</button>
+
+<div class="switch">
+
+Don't have an account?
+
+<button type="button" id="loginSignup">
+Create Account
+</button>
+
+</div>
+
+</form>
+
+`);
+
+
+$("loginShow").onclick=()=>{
+
+const input=$("loginPassword");
+
+input.type=
+input.type==="password"
+?"text"
+:"password";
+
+$("loginShow").textContent=
+input.type==="password"
+?"Show"
+:"Hide";
+
+};
+
+
+$("loginForm").onsubmit=e=>{
+
+e.preventDefault();
+
+if(!state.account){
+
+$("loginError").textContent=
+"No demo account found. Please create an account first.";
+
+return;
+
+}
+
+const user=$("loginUser")
+.value.trim()
+.toLowerCase();
+
+const pass=$("loginPassword").value;
+
+const valid=
+(
+state.account.username.toLowerCase()===user ||
+state.account.email.toLowerCase()===user
+)&&
+state.account.password===pass;
+
+if(valid){
+
+state.loggedIn=true;
+
+save();
+
+closeModal();
+
+updateHeader();
+
+if(state.selected){
+showDashboard();
+}
+
+}else{
+
+$("loginError").textContent=
+"Username/email or password is incorrect.";
+
+}
+
+};
+
+
+$("loginSignup").onclick=openSignup;
+
+bindClose();
+
+}
+
+
+/* ================= SIGNUP ================= */
+
+function openSignup(){
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+<h2>Create Account</h2>
+
+<div class="plans-sub">
+Create your NOVA+ demo profile.
+</div>
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+<form id="signupForm">
+
+<div class="field">
+
+<label>Country</label>
+
+<select id="country">
+
+<option>Pakistan +92</option>
+<option>UAE +971</option>
+<option>Saudi Arabia +966</option>
+<option>United Kingdom +44</option>
+<option>United States +1</option>
+
+</select>
+
+</div>
+
+
+<div class="row">
+
+<div class="field">
+
+<label>Full Name</label>
+
+<input id="fullName"
+required
+placeholder="Full Name">
+
+</div>
+
+<div class="field">
+
+<label>Username</label>
+
+<input id="username"
+required
+placeholder="Username">
+
+</div>
+
+</div>
+
+
+<div class="field">
+
+<label>Email</label>
+
+<input id="email"
+type="email"
+required
+placeholder="name@example.com">
+
+</div>
+
+
+<div class="field">
+
+<label>Mobile</label>
+
+<input id="mobile"
+required
+inputmode="numeric"
+placeholder="3001234567">
+
+</div>
+
+
+<div class="field">
+
+<label>Password</label>
+
+<div class="password-box">
+
+<input id="password"
+type="password"
+minlength="6"
+required
+placeholder="Create Password">
+
+<button
+type="button"
+class="eye"
+id="showPassword">
+Show
+</button>
+
+</div>
+
+</div>
+
+
+<div class="field">
+
+<label>Confirm Password</label>
+
+<div class="password-box">
+
+<input id="confirmPassword"
+type="password"
+minlength="6"
+required
+placeholder="Confirm Password">
+
+<button
+type="button"
+class="eye"
+id="showConfirm">
+Show
+</button>
+
+</div>
+
+</div>
+
+
+<div class="field">
+
+<label>Demo Verification Code</label>
+
+<div class="password-box">
+
+<input id="verification"
+required
+inputmode="numeric"
+placeholder="6-digit code">
+
+<button
+type="button"
+class="eye"
+id="getCodeBtn">
+Get Code
+</button>
+
+</div>
+
+<div id="codeBox"
+class="code"
+style="display:none">
+</div>
+
+</div>
+
+
+<label style="
+display:flex;
+gap:8px;
+color:var(--muted);
+font-size:11px;
+line-height:1.5;
+">
+
+<input id="demoAgree"
+type="checkbox"
+required>
+
+I understand this is a demo / learning
+prototype and no real financial transaction
+is processed.
+
+</label>
+
+
+<div id="signupError" class="error"></div>
+
+
+<button class="btn primary full" type="submit">
+Create NOVA+ Account
+</button>
+
+
+<div class="switch">
+
+Already have an account?
+
+<button
+type="button"
+id="signupLogin">
+Login
+</button>
+
+</div>
+
+</form>
+
+`);
+
+
+let demoCode="";
+
+
+$("getCodeBtn").onclick=()=>{
+
+demoCode=String(
+Math.floor(100000+Math.random()*900000)
+);
+
+$("codeBox").style.display="block";
+
+$("codeBox").textContent=
+"Demo Code: "+demoCode;
+
+};
+
+
+function togglePassword(id,buttonId){
+
+const input=$(id);
+
+input.type=
+input.type==="password"
+?"text"
+:"password";
+
+$(buttonId).textContent=
+input.type==="password"
+?"Show"
+:"Hide";
+
+}
+
+
+$("showPassword").onclick=
+()=>togglePassword(
+"password",
+"showPassword"
+);
+
+
+$("showConfirm").onclick=
+()=>togglePassword(
+"confirmPassword",
+"showConfirm"
+);
+
+
+$("signupForm").onsubmit=e=>{
+
+e.preventDefault();
+
+$("signupError").textContent="";
+
+if(!demoCode){
+
+$("signupError").textContent=
+"Please press Get Code first.";
+
+return;
+
+}
+
+if($("verification").value.trim()!==demoCode){
+
+$("signupError").textContent=
+"Verification code is incorrect.";
+
+return;
+
+}
+
+if($("password").value!==$("confirmPassword").value){
+
+$("signupError").textContent=
+"Passwords do not match.";
+
+return;
+
+}
+
+
+state.account={
+
+fullName:$("fullName").value.trim(),
+
+username:$("username").value.trim(),
+
+email:$("email").value.trim(),
+
+mobile:$("mobile").value.trim(),
+
+country:$("country").value,
+
+password:$("password").value
+
+};
+
+state.loggedIn=false;
+
+save();
+
+showSignupSuccess();
+
+};
+
+
+$("signupLogin").onclick=openLogin;
+
+bindClose();
+
+}
+
+
+/* ================= SIGNUP SUCCESS ================= */
+
+function showSignupSuccess(){
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+<h2>✓ Account Created Successfully</h2>
+
+<div class="plans-sub">
+Registration completed.
+</div>
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+
+<div class="success">
+
+<b>Congratulations!</b>
+
+<br><br>
+
+Your NOVA+ demo account has
+been created successfully.
+
+<br><br>
+
+Your account information has been
+saved on this device.
+
+<br><br>
+
+You can now login using your
+username/email and password.
+
+</div>
+
+
+<button class="btn primary full" id="successLogin">
+Continue to Login
+</button>
+
+
+<button class="btn secondary full" id="successDashboard">
+Go to Dashboard
+</button>
+
+`);
+
+
+$("successLogin").onclick=openLogin;
+
+
+$("successDashboard").onclick=()=>{
+
+if(!state.selected){
+
+closeModal();
+
+return;
+
+}
+
+if(!state.loggedIn){
+
+openLogin();
+
+return;
+
+}
+
+closeModal();
+
+showDashboard();
+
+};
+
+bindClose();
+
+}
+
+
+/* ================= DEPOSIT ================= */
+
+function openDeposit(){
+
+if(!state.selected){
+
+alert("Please select a plan first.");
+
+return;
+
+}
+
+const plan=getPlan();
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+<h2>Demo Deposit</h2>
+
+<div class="plans-sub">
+Demo payment submission
+</div>
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+
+<div class="success">
+
+<b>Selected Plan:</b>
+${plan.name}
+
+<br>
+
+<b>Demo Amount:</b>
+$${plan.amount}
+
+</div>
+
+
+<div class="field">
+
+<label>Network</label>
+
+<select id="networkSelect">
+
+<option value="TRC20">
+TRC20 — Demo Network
+</option>
+
+<option value="BEP20">
+BEP20 — Demo Network
+</option>
+
+</select>
+
+</div>
+
+
+<div class="network-grid">
+
+<div class="network">
+
+<strong>TRC20</strong>
+
+<small>
+TRON / USDT Demo Network
+</small>
+
+</div>
+
+<div class="network">
+
+<strong>BEP20</strong>
+
+<small>
+BNB Smart Chain Demo Network
+</small>
+
+</div>
+
+</div>
+
+
+<div class="field">
+
+<label>Demo Deposit Address</label>
+
+<div class="deposit-address"
+id="demoAddress">
+DEMO-TRC20-ADDRESS-NOT-A-REAL-WALLET
+</div>
+
+<button class="copy-btn" id="copyAddress">
+Copy Demo Address
+</button>
+
+</div>
+
+
+<div class="notice">
+
+<b>Demo Only</b>
+
+<br>
+
+This displayed address is not a real
+cryptocurrency wallet.
+
+<br>
+
+Do not send real cryptocurrency.
+
+</div>
+
+
+<div class="field">
+
+<label>Demo Transaction Reference</label>
+
+<input id="demoTx"
+placeholder="DEMO-TX-123456">
+
+</div>
+
+
+<div id="depositError" class="error"></div>
+
+
+<button class="btn primary full" id="submitPayment">
+Submit Demo Payment
+</button>
+
+`);
+
+
+const addresses={
+
+TRC20:"DEMO-TRC20-ADDRESS-NOT-A-REAL-WALLET",
+
+BEP20:"DEMO-BEP20-ADDRESS-NOT-A-REAL-WALLET"
+
+};
+
+
+$("networkSelect").value=state.network||"TRC20";
+
+$("demoAddress").textContent=
+addresses[$("networkSelect").value];
+
+
+$("networkSelect").onchange=()=>{
+
+state.network=$("networkSelect").value;
+
+$("demoAddress").textContent=
+addresses[state.network];
+
+save();
+
+};
+
+
+$("copyAddress").onclick=async()=>{
+
+const text=$("demoAddress").textContent;
+
+try{
+
+await navigator.clipboard.writeText(text);
+
+$("copyAddress").textContent="Copied ✓";
+
+setTimeout(()=>{
+$("copyAddress").textContent="Copy Demo Address";
+},1500);
+
+}catch{
+
+alert("Please copy the demo address manually.");
+
+}
+
+};
+
+
+$("submitPayment").onclick=()=>{
+
+const tx=$("demoTx").value.trim();
+
+if(!tx){
+
+$("depositError").textContent=
+"Enter a demo transaction reference.";
+
+return;
+
+}
+
+state.status="pending";
+state.tx=tx;
+state.network=$("networkSelect").value;
+
+save();
+
+openPending();
+
+};
+
+bindClose();
+
+}
+
+
+/* ================= PENDING ================= */
+
+function openPending(){
+
+const plan=getPlan();
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+
+<h2>Payment Submitted</h2>
+
+<div class="plans-sub">
+Waiting for demo verification
+</div>
+
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+
+<div class="pending panel">
+
+<b>Pending Verification</b>
+
+<br><br>
+
+Plan: ${plan.name}
+
+<br>
+
+Amount: $${plan.amount}
+
+<br>
+
+Network: ${state.network}
+
+<br>
+
+Reference: ${state.tx}
+
+</div>
+
+
+<div class="notice">
+
+This is a local demo verification flow.
+No blockchain transaction is checked.
+
+</div>
+
+
+<button class="btn primary full" id="adminBtn">
+Open Demo Admin
+</button>
+
+
+<button class="btn secondary full" id="customerBtn">
+Back to Customer
+</button>
+
+`);
+
+
+$("adminBtn").onclick=openAdmin;
+
+
+$("customerBtn").onclick=()=>{
+
+closeModal();
+
+showDashboard();
+
+};
+
+bindClose();
+
+}
+
+
+/* ================= ADMIN ================= */
+
+function openAdmin(){
+
+if(!state.selected){
+
+alert("Please select a plan first.");
+
+return;
+
+}
+
+const plan=getPlan();
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+
+<h2>Admin Demo Panel</h2>
+
+<div class="plans-sub">
+DEMO ADMIN
+</div>
+
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+
+<div class="notice">
+
+Local demo verification only.
+No real blockchain transaction is checked.
+
+</div>
+
+
+<div class="panel section">
+
+${
+state.status==="pending"
+
+?
+
+`
+<b>Pending Request</b>
+
+<br><br>
+
+Plan: ${plan.name}
+
+<br>
+
+Amount: $${plan.amount}
+
+<br>
+
+Network: ${state.network}
+
+<br>
+
+Reference: ${state.tx}
+`
+
+:
+
+state.status==="verified"
+
+?"No pending request. Plan is already verified."
+:"No pending payment request."
+
+}
+
+</div>
+
+
+<button
+class="btn primary full"
+id="verifyBtn"
+${state.status!=="pending"?"disabled":""}
+>
+✓ Verify Demo Payment
+</button>
+
+`);
+
+
+const verifyBtn=$("verifyBtn");
+
+if(verifyBtn){
+
+verifyBtn.onclick=()=>{
+
+state.status="verified";
+state.active=true;
+
+save();
+
+openActivated();
+
+};
+
+}
+
+bindClose();
+
+}
+
+
+/* ================= ACTIVATED ================= */
+
+function openActivated(){
+
+const plan=getPlan();
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+
+<h2>✓ Plan Activated</h2>
+
+<div class="plans-sub">
+Demo verification completed
+</div>
+
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+
+<div class="success">
+
+<b>${plan.name}</b>
+
+<br><br>
+
+Your demo plan is now active.
+
+<br><br>
+
+Tasks, Reserve, Stake and My Assets
+are now available.
+
+</div>
+
+
+<button
+class="btn primary full"
+id="activatedDashboard">
+Open Customer Dashboard →
+</button>
+
+`);
+
+$("activatedDashboard").onclick=()=>{
+
+closeModal();
+
+showDashboard();
+
+};
+
+bindClose();
+
+}
+
+
+/* ================= DASHBOARD ================= */
+
+function showDashboard(){
+
+if(!state.account){
+
+openLogin();
+
+return;
+
+}
+
+if(!state.loggedIn){
+
+openLogin();
+
+return;
+
+}
+
+if(!state.selected){
+
+alert("Please select a plan first.");
+
+return;
+
+}
+
+$("homeView").classList.add("hidden");
+
+$("dashboardView").classList.remove("hidden");
+
+renderDashboard();
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+
+function renderDashboard(){
+
+const plan=getPlan();
+
+const percentage=Math.min(
+100,
+Math.round(state.progress/45*100)
+);
+
+
+$("dashboardPlanName").textContent=plan.name;
+
+$("selectedAmount").textContent="$"+plan.amount;
+
+$("selectedReward").textContent="$"+plan.reward;
+
+$("selectedProgress").textContent=
+percentage+"%";
+
+$("miniAmount").textContent="$"+plan.amount;
+
+$("miniReward").textContent="$"+plan.reward;
+
+$("progressBar").style.width=
+percentage+"%";
+
+$("progressText").textContent=
+`${state.progress} of 45 demo days completed`;
+
+
+$("paymentStatusText").textContent=
+
+state.status==="none"
+?"No payment request submitted."
+
+:
+
+state.status==="pending"
+?"Pending Admin Demo Verification."
+
+:
+"Demo payment verified — plan active.";
+
+
+renderSection("tasks");
+
+}
+
+
+/* ================= SECTIONS ================= */
+
+function renderSection(type){
+
+document.querySelectorAll(".dash-button")
+.forEach(btn=>{
+btn.classList.toggle(
+"active",
+btn.dataset.section===type
+);
+});
+
+
+const title=$("sectionTitle");
+const content=$("sectionContent");
+
+
+if(type==="tasks"){
+
+title.textContent="✓ Daily Tasks";
+
+content.innerHTML=`
+
+<div class="task">
+
+<div class="task-left">
+
+<div class="task-icon">✓</div>
+
+<div>
+
+<b>Complete Daily NOVA+ Task</b>
+
+<br>
+
+<small style="color:var(--muted)">
+
+${
+state.active
+?"Your daily demo task is available."
+:"Verify your plan first."
+}
+
+</small>
+
+</div>
+
+</div>
+
+
+<button
+class="task-action"
+id="completeTaskBtn"
+${
+!state.active||isTaskDone()
+?"disabled"
+:""
+}
+>
+
+${
+!state.active
+?"Locked"
+:isTaskDone()
+?"Completed"
+:"Complete Task"
+}
+
+</button>
+
+</div>
+
+
+<div id="taskTimer" class="timer"></div>
+
+
+<div class="detail-grid">
+
+<div class="info-card">
+
+<h4>Today's Status</h4>
+
+<p>
+
+${
+isTaskDone()
+?"Today's demo task has been completed."
+:"Today's demo task is waiting for completion."
+}
+
+</p>
+
+</div>
+
+
+<div class="info-card">
+
+<h4>Cycle Progress</h4>
+
+<p>
+${state.progress}/45 demo days completed.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="reward-grid">
+
+<div class="reward-box">
+
+<small>Daily Demo Reward</small>
+
+<strong>
+$${(getPlan().reward/45).toFixed(2)}
+</strong>
+
+</div>
+
+
+<div class="reward-box">
+
+<small>Accumulated Demo Reward</small>
+
+<strong class="gold">
+$${state.earned.toFixed(2)}
+</strong>
+
+</div>
+
+</div>
+
+`;
+
+$("completeTaskBtn").onclick=completeTask;
+
+renderTimer();
+
+return;
+
+}
+
+
+if(type==="reserve"){
+
+title.textContent="◆ Reserve";
+
+content.innerHTML=`
+
+<div class="success">
+
+<b>NOVA+ Demo Reserve</b>
+
+<br><br>
+
+Reserve is a protected demo balance
+area used to display your selected
+plan reserve information.
+
+</div>
+
+
+<div class="detail-grid">
+
+<div class="info-card">
+
+<h4>Plan Reserve</h4>
+
+<p>$${getPlan().amount}</p>
+
+</div>
+
+
+<div class="info-card">
+
+<h4>Reserve Status</h4>
+
+<p>
+
+${
+state.active
+?"Active Demo Reserve"
+:"Locked — Verification Required"
+}
+
+</p>
+
+</div>
+
+
+<div class="info-card">
+
+<h4>Reserve Cycle</h4>
+
+<p>45 Demo Days</p>
+
+</div>
+
+</div>
+
+
+<div class="notice">
+
+Reserve values shown here are simulated
+demo values only. No real funds are held.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+if(type==="stake"){
+
+title.textContent="◇ Stake";
+
+content.innerHTML=`
+
+<div class="success">
+
+<b>NOVA+ Demo Stake</b>
+
+<br><br>
+
+This section displays simulated
+staking information for the selected plan.
+
+</div>
+
+
+<div class="detail-grid">
+
+<div class="info-card">
+
+<h4>Stake Status</h4>
+
+<p>
+
+${
+state.stake
+?"Stake Active ✓"
+:state.active
+?"Available"
+:"Locked"
+}
+
+</p>
+
+</div>
+
+
+<div class="info-card">
+
+<h4>Selected Plan</h4>
+
+<p>${getPlan().name}</p>
+
+</div>
+
+
+<div class="info-card">
+
+<h4>Demo Cycle</h4>
+
+<p>45 Days</p>
+
+</div>
+
+</div>
+
+
+${
+state.stake
+
+?
+
+`
+<div class="success" style="margin-top:15px">
+
+<b>✓ Demo Stake Active</b>
+
+<br><br>
+
+Your demo stake is active.
+This status is stored locally on
+this device.
+
+</div>
+`
+
+:
+
+`
+<button
+class="btn primary full"
+id="stakeDemoBtn"
+${!state.active?"disabled":""}
+>
+${
+state.active
+?"Activate Demo Stake"
+:"Locked"
+}
+</button>
+`
+
+}
+
+
+<div class="notice">
+
+Staking shown here is only a UI simulation.
+No cryptocurrency or real investment is processed.
+
+</div>
+
+`;
+
+
+const stakeButton=$("stakeDemoBtn");
+
+if(stakeButton){
+
+stakeButton.onclick=()=>{
+
+if(!state.active)return;
+
+state.stake=true;
+
+save();
+
+renderSection("stake");
+
+};
+
+}
+
+return;
+
+}
+
+
+if(type==="assets"){
+
+title.textContent="▣ My Assets";
+
+const plan=getPlan();
+
+content.innerHTML=`
+
+<div class="asset-balance">
+
+<div style="
+color:var(--muted);
+font-size:12px;
+">
+Total Demo Balance
+</div>
+
+<div class="amount">
+$${(plan.amount+state.earned).toFixed(2)}
+</div>
+
+<div style="
+color:var(--gold);
+font-size:12px;
+">
+Demo / Learning Balance
+</div>
+
+</div>
+
+
+<div class="asset-list">
+
+<div class="asset-row">
+
+<span>Plan Amount</span>
+
+<b>$${plan.amount.toFixed(2)}</b>
+
+</div>
+
+
+<div class="asset-row">
+
+<span>Earned Demo Reward</span>
+
+<b class="gold">
+$${state.earned.toFixed(2)}
+</b>
+
+</div>
+
+
+<div class="asset-row">
+
+<span>Reserve</span>
+
+<b>$${plan.amount.toFixed(2)}</b>
+
+</div>
+
+
+<div class="asset-row">
+
+<span>Network</span>
+
+<b class="blue">
+${state.network}
+</b>
+
+</div>
+
+</div>
+
+
+<div class="notice">
+
+These are simulated values for the NOVA+
+learning prototype. They do not represent
+real financial assets or withdrawable funds.
+
+</div>
+
+`;
+
+}
+
+}
+
+
+/* ================= DAILY TASK ================= */
+
+function getLocalDate(){
+
+const d=new Date();
+
+return[
+d.getFullYear(),
+String(d.getMonth()+1).padStart(2,"0"),
+String(d.getDate()).padStart(2,"0")
+].join("-");
+
+}
+
+
+function isTaskDone(){
+
+return state.lastTask===getLocalDate();
+
+}
+
+
+function completeTask(){
+
+if(
+!state.active||
+isTaskDone()||
+state.progress>=45
+)return;
+
+
+state.lastTask=getLocalDate();
+
+state.progress=Math.min(
+45,
+state.progress+1
+);
+
+
+const plan=getPlan();
+
+state.earned=Math.min(
+plan.reward,
+state.earned+plan.reward/45
+);
+
+state.earned=Number(
+state.earned.toFixed(2)
+);
+
+save();
+
+renderDashboard();
+
+}
+
+
+/* ================= TIMER ================= */
+
+function renderTimer(){
+
+const el=$("taskTimer");
+
+if(!el||!isTaskDone()){
+
+if(el)el.textContent="";
+
+return;
+
+}
+
+const tomorrow=new Date();
+
+tomorrow.setHours(24,0,0,0);
+
+const seconds=Math.max(
+0,
+Math.floor((tomorrow-Date.now())/1000)
+);
+
+const h=Math.floor(seconds/3600);
+
+const m=Math.floor(
+(seconds%3600)/60
+);
+
+const s=seconds%60;
+
+el.textContent=
+`Next demo task available in ${h}h ${m}m ${s}s`;
+
+}
+
+
+/* ================= LOGOUT ================= */
+
+function logout(){
+
+state.loggedIn=false;
+
+save();
+
+closeModal();
+
+$("dashboardView")
+.classList.add("hidden");
+
+$("homeView")
+.classList.remove("hidden");
+
+updateHeader();
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+
+/* ================= MENU ================= */
+
+function openMenu(){
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+
+<h2>NOVA+ Menu</h2>
+
+<div class="plans-sub">
+Navigation
+</div>
+
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+
+<div class="menu">
+
+<button id="homeBtn">
+🏠 Home / Plans
+</button>
+
+<button id="dashBtn">
+▣ Customer Dashboard
+</button>
+
+<button id="loginBtn">
+🔐 Login
+</button>
+
+<button id="signupBtn">
+✦ Create Account
+</button>
+
+<button id="languageBtn">
+◎ Language
+</button>
+
+<button id="adminMenu">
+🛠 Admin Demo
+</button>
+
+${
+state.account&&state.loggedIn
+?
+`
+<button id="logoutBtn" class="logout-btn">
+🚪 Logout
+</button>
+`
+:""
+}
+
+<button id="aboutBtn">
+ℹ About NOVA+
+</button>
+
+</div>
+
+`);
+
+
+$("homeBtn").onclick=()=>{
+
+closeModal();
+
+$("dashboardView").classList.add("hidden");
+
+$("homeView").classList.remove("hidden");
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+};
+
+
+$("dashBtn").onclick=()=>{
+
+closeModal();
+
+showDashboard();
+
+};
+
+
+$("loginBtn").onclick=openLogin;
+
+$("signupBtn").onclick=openSignup;
+
+$("languageBtn").onclick=openLanguage;
+
+$("adminMenu").onclick=openAdmin;
+
+
+if($("logoutBtn")){
+$("logoutBtn").onclick=logout;
+}
+
+
+$("aboutBtn").onclick=()=>{
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+<h2>About NOVA+</h2>
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+
+<div class="success">
+
+NOVA+ is a demo / learning prototype.
+
+<br><br>
+
+No real financial transaction,
+cryptocurrency transfer,
+deposit or withdrawal is processed.
+
+</div>
+
+`);
+
+bindClose();
+
+};
+
+
+bindClose();
+
+}
+
+
+/* ================= LANGUAGE ================= */
+
+function openLanguage(){
+
+openModal(`
+
+<div class="modal-head">
+
+<div>
+
+<h2>Language</h2>
+
+<div class="plans-sub">
+Language selection
+</div>
+
+</div>
+
+<button class="close" data-close>×</button>
+
+</div>
+
+
+<div class="menu">
+
+<button>English ✓</button>
+
+<button>اردو</button>
+
+<button>العربية</button>
+
+<button>বাংলা</button>
+
+<button>فارسی</button>
+
+<button>Español</button>
+
+</div>
+
+`);
+
+bindClose();
+
+}
+
+
+/* ================= HEADER ================= */
+
+function updateHeader(){
+
+if(state.account&&state.loggedIn){
+
+$("accountBtn").textContent="Account";
+
+}else{
+
+$("accountBtn").textContent="Login";
+
+}
+
+}
+
+
+/* ================= MAIN EVENTS ================= */
+
+$("menuBtn").onclick=openMenu;
+
+
+$("accountBtn").onclick=()=>{
+
+if(state.account&&state.loggedIn){
+
+if(state.selected){
+showDashboard();
+}else{
+openMenu();
+}
+
+}else{
+
+openLogin();
+
+}
+
+};
+
+
+$("heroLogin").onclick=openLogin;
+
+$("heroSignup").onclick=openSignup;
+
+
+$("backPlans").onclick=()=>{
+
+$("dashboardView").classList.add("hidden");
+
+$("homeView").classList.remove("hidden");
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+};
+
+
+$("depositBtn").onclick=()=>{
+
+if(!state.loggedIn){
+
+openLogin();
+
+return;
+
+}
+
+openDeposit();
+
+};
+
+
+document.querySelectorAll(".dash-button")
+.forEach(btn=>{
+
+btn.onclick=()=>{
+
+if(!state.loggedIn){
+
+openLogin();
+
+return;
+
+}
+
+if(!state.active){
+
+alert(
+"This section is locked until Admin Demo Verification."
+);
+
+return;
+
+}
+
+renderSection(btn.dataset.section);
+
+};
+
+});
+
+
+$("modalWrap").addEventListener(
+"click",
+e=>{
+
+if(e.target===$("modalWrap")){
+closeModal();
+}
+
+}
+);
+
+
+/* ================= START ================= */
+
+renderPlans();
+
+updateHeader();
+
+
+if(state.loggedIn&&state.selected){
+
+showDashboard();
+
+}else{
+
+$("homeView").classList.remove("hidden");
+
+$("dashboardView").classList.add("hidden");
+
+}
+
+
+setInterval(()=>{
+
+if(
+!$("dashboardView")
+.classList
+.contains("hidden")
+){
+
+renderTimer();
+
+}
+
+},1000);
+
+</script>
+
+</body>
+</html>
