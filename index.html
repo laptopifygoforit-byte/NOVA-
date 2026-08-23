@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>NOVA+ Demo</title>
+  <style>
+:root{
+  --bg:#07111f;--panel:#0d1d2e;--panel2:#10243a;--green:#18d6a0;
+  --gold:#e8c875;--text:#f5f8fc;--muted:#9aaabd;--line:rgba(255,255,255,.12);
+  --danger:#ff8f87;--blue:#78aefc
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg)}
+body{font-family:Arial,system-ui,sans-serif;color:var(--text);background:
+radial-gradient(circle at 80% 10%,rgba(24,214,160,.12),transparent 30%),
+linear-gradient(145deg,#07111f,#06101d 60%,#0b1a2b)}
+button,input,select{font-family:inherit}button{cursor:pointer;touch-action:manipulation}
+button:disabled{cursor:not-allowed}
+.hidden{display:none!important}
+.top{width:92%;max-width:1200px;height:76px;margin:auto;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:27px;font-weight:900;letter-spacing:2px}.logo span{color:var(--green)}
+.top-buttons{display:flex;gap:9px}.icon{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.04);color:white;font-size:20px}
+.home,.dashboard{width:92%;max-width:1200px;margin:auto}
+.home{text-align:center;padding:32px 0 60px}.mark{width:70px;height:70px;margin:auto;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),#0b8d6c);color:#03150f;font-size:24px;font-weight:900}
+h1{font-size:clamp(36px,6vw,58px);margin:22px 0 12px}h1 span{color:var(--green)}
+.home-intro{max-width:600px;margin:auto;color:var(--muted);line-height:1.7}
+.actions{margin-top:27px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.btn{padding:14px 25px;border-radius:13px;font-weight:800}
+.primary{border:0;color:#03150f;background:linear-gradient(135deg,var(--green),#0eaf83)}
+.secondary{color:white;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.plans{margin-top:55px}.plans h2{margin:0;font-size:29px}.plans-sub{margin:8px 0 28px;color:var(--muted);font-size:13px}
+.plan-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.plan-card{position:relative;min-height:300px;padding:22px 16px;border-radius:21px;border:1px solid var(--line);background:linear-gradient(145deg,#10243a,#081522);box-shadow:0 15px 40px rgba(0,0,0,.25);cursor:pointer;user-select:none;display:flex;flex-direction:column;text-align:left;transition:.18s}
+.plan-card:hover{transform:translateY(-5px);border-color:rgba(24,214,160,.55)}.plan-card:active{transform:scale(.97)}
+.plan-number{color:var(--muted);font-size:11px;font-weight:bold;letter-spacing:1px}.plan-card h3{margin:9px 0 4px;font-size:17px}.plan-price{margin:8px 0;color:var(--green);font-size:34px;font-weight:900}.reward{color:var(--gold);font-size:13px;font-weight:bold}
+.plan-info{margin-top:15px;padding-top:13px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.9}.plan-select{width:100%;margin-top:auto;padding:12px;border-radius:11px;border:1px solid rgba(24,214,160,.3);background:rgba(24,214,160,.08);color:#9df1d7;font-weight:bold;text-align:center}
+.featured{border-color:rgba(232,200,117,.6);background:linear-gradient(145deg,#302b20,#0d1c2b)}.featured .plan-price{color:var(--gold)}
+.badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);padding:5px 13px;border-radius:20px;background:linear-gradient(135deg,var(--gold),#c7a64e);color:#241d09;font-size:10px;font-weight:900;white-space:nowrap}
+.disclaimer{margin-top:28px;color:#718095;font-size:11px}
+.dashboard{display:none;padding:20px 0 60px}.dashboard.active{display:block}
+.dashboard-header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.dashboard-header h2{margin:0;font-size:30px}.dashboard-header p{margin:7px 0 0;color:var(--muted);font-size:13px}
+.back{padding:11px 16px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:white}
+.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}.summary-card{padding:18px;border-radius:17px;border:1px solid var(--line);background:linear-gradient(145deg,#10243a,#081522)}
+.summary-label{color:var(--muted);font-size:11px}.summary-value{margin-top:8px;font-size:23px;font-weight:900}.green{color:var(--green)}.gold{color:var(--gold)}
+.dash-grid{margin-top:18px;display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.panel{padding:22px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(145deg,#10243a,#081522)}.panel h3{margin:0 0 16px}
+.progress-bg{height:14px;overflow:hidden;border-radius:20px;background:#06101c;border:1px solid rgba(255,255,255,.05)}.progress{width:0;height:100%;background:linear-gradient(90deg,var(--green),#79e7c8);transition:.4s}.progress-info{margin-top:9px;color:var(--muted);font-size:12px}
+.reward-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.reward-box{padding:15px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.035)}.reward-box small{color:var(--muted)}.reward-box strong{display:block;margin-top:6px;font-size:20px}
+.notice{margin-top:18px;padding:15px;border-radius:14px;background:rgba(24,214,160,.06);border:1px solid rgba(24,214,160,.18);color:#9df1d7;font-size:12px;line-height:1.6}
+.dashboard-menu{display:grid;grid-template-columns:1fr 1fr;gap:10px}.dash-button{padding:17px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.035);color:white;text-align:left}.dash-button:hover{border-color:rgba(24,214,160,.4)}.dash-button strong{display:block;margin-bottom:5px}.dash-button span{color:var(--muted);font-size:11px}
+.task{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px;margin-top:10px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.035)}.task-left{display:flex;align-items:center;gap:10px}.task-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:rgba(24,214,160,.09);color:var(--green)}.task small{color:var(--muted)}
+.task-action{border:1px solid rgba(24,214,160,.3);background:rgba(24,214,160,.08);color:#9df1d7;padding:8px 12px;border-radius:9px;font-weight:bold;font-size:11px}.task-action.done{opacity:.6}.timer{color:var(--gold);font-weight:bold;font-size:12px}
+.status-card{padding:16px;margin-top:14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.035);line-height:1.7;font-size:12px}.pending{color:#f1d98b}.verified{color:#8df0d0}.danger{color:var(--danger)}
+.section-content{margin-top:18px;display:none}.section-content.active{display:block}.asset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.asset{padding:16px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035)}.asset small{color:var(--muted)}.asset strong{display:block;margin-top:7px;font-size:20px}
+.layer{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);z-index:100}.layer.open{display:flex}
+.modal{width:min(560px,100%);max-height:92vh;overflow:auto;padding:25px;border-radius:24px;border:1px solid var(--line);background:linear-gradient(145deg,#10243a,#081522);box-shadow:0 35px 100px rgba(0,0,0,.55)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.modal h2{margin:0}.sub{color:var(--muted);font-size:13px;margin-top:6px}.close{border:0;background:none;color:white;font-size:28px}
+.field{margin:13px 0}.field label{display:block;margin-bottom:7px;color:#aebaca;font-size:12px}.field input,.field select{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);outline:none;background:#06121e;color:white}.password-box{display:flex;gap:7px}.password-box input{flex:1}.eye{width:65px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:white}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{width:100%;margin-top:10px}.link{text-align:right;color:#8df0d0;font-size:12px;cursor:pointer;margin:8px 0}.switch{margin-top:17px;text-align:center;color:var(--muted);font-size:12px}.switch button{border:0;background:none;color:#8df0d0;font-weight:bold}
+.menu button{width:100%;padding:15px;margin:5px 0;text-align:left;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:white}.success{padding:15px;border-radius:13px;background:rgba(24,214,160,.08);border:1px solid rgba(24,214,160,.25);color:#9df1d7;line-height:1.6}
+.code{padding:12px;margin-top:8px;border-radius:12px;background:rgba(24,214,160,.08);border:1px solid rgba(24,214,160,.2);color:#9df1d7;font-size:12px}.match{min-height:16px;margin-top:5px;font-size:11px}.error{padding:12px;border-radius:12px;background:rgba(255,90,90,.08);border:1px solid rgba(255,90,90,.2);color:#ffb0aa;font-size:12px;margin-top:10px;display:none}
+.plan-confirm{text-align:center}.confirm-icon{width:70px;height:70px;margin:0 auto 18px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(135deg,var(--green),#0b8d6c);color:#03150f;font-size:28px;font-weight:900}.confirm-price{font-size:40px;font-weight:900;color:var(--green);margin:15px 0 5px}.confirm-reward{color:var(--gold);font-weight:bold}.confirm-info{margin:20px 0;padding:15px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.8}
+.deposit-address{margin:14px 0;padding:15px;border-radius:14px;background:#06121e;border:1px solid rgba(24,214,160,.25);word-break:break-all;color:#9df1d7;font-size:12px;line-height:1.6}.copy-btn{margin-top:9px;width:100%;padding:10px;border-radius:10px;border:1px solid rgba(24,214,160,.3);background:rgba(24,214,160,.08);color:#9df1d7}
+.admin-badge{display:inline-block;padding:5px 9px;border-radius:20px;background:rgba(232,200,117,.1);color:var(--gold);font-size:10px;font-weight:bold}.disabled-btn{opacity:.5}.admin-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px;margin-top:9px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.035)}
+@media(max-width:1100px){.plan-grid{grid-template-columns:repeat(3,1fr)}.summary{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:750px){.plan-grid{grid-template-columns:repeat(2,1fr)}.summary{grid-template-columns:1fr 1fr}.dash-grid{grid-template-columns:1fr}.reward-grid{grid-template-columns:1fr 1fr}.asset-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.plan-grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr 1fr}.dashboard-header{flex-direction:column;align-items:flex-start}.dashboard-menu,.row,.reward-grid,.asset-grid{grid-template-columns:1fr}.modal{padding:20px}.task{align-items:flex-start;flex-direction:column}.task-action{width:100%}}
+
+/* PART FOUR FRONT DESIGN RESTORED */
+
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#07111f;color:#fff}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+:root{--bg:#07111f;--panel:#0d1d2e;--panel2:#10243a;--green:#18d6a0;--blue:#4da3ff;--red:#ff3048;--gold:#e8c875;--muted:#94a6ba;--border:rgba(255,255,255,.10)}
+.hidden{display:none!important}
+.app{min-height:100vh;background:radial-gradient(circle at 50% 0%,rgba(24,214,160,.09),transparent 28%),radial-gradient(circle at 100% 50%,rgba(77,163,255,.07),transparent 28%),var(--bg)}
+.header{height:70px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(7,17,31,.92);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.logo{font-size:23px;font-weight:900;letter-spacing:.5px}.logo span{color:var(--red)}
+.menuBtn{width:44px;height:44px;border:1px solid var(--border);border-radius:13px;background:var(--panel);color:#fff;font-size:23px}
+.menu{position:absolute;right:15px;top:62px;width:235px;padding:8px;background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.5);display:none}.menu.show{display:block}
+.menu button{width:100%;padding:12px;border:0;border-radius:10px;background:transparent;color:#fff;text-align:left}.menu button:hover{background:rgba(255,255,255,.07)}
+.container{max-width:1100px;margin:auto;padding:25px 16px 110px}
+.hero{text-align:center;max-width:850px;margin:auto;padding:65px 15px 45px}.badge{display:inline-block;padding:7px 13px;border-radius:30px;border:1px solid rgba(24,214,160,.25);background:rgba(24,214,160,.05);color:var(--green);font-size:10px;font-weight:bold;letter-spacing:1px}
+.hero h1{margin:20px 0 15px;font-size:clamp(40px,8vw,70px);line-height:1;letter-spacing:-2px}.white{color:#fff}.green{color:var(--green)}.blue{color:var(--blue)}.red{color:var(--red)}.goldText{color:var(--gold)}
+.hero p{max-width:620px;margin:auto;color:var(--muted);line-height:1.7}.actions{display:flex;justify-content:center;gap:12px;margin-top:28px;flex-wrap:wrap}
+.btn{border:0;border-radius:11px;padding:12px 20px;font-weight:bold}.btn.greenBtn{background:var(--green);color:#06131b}.btn.blueBtn{background:transparent;border:1px solid var(--blue);color:#72b9ff}.btn.darkBtn{background:var(--panel2);border:1px solid var(--border);color:#fff}.btn.redBtn{background:rgba(255,48,72,.12);border:1px solid rgba(255,48,72,.35);color:#ff7282}
+.sectionTitle{text-align:center;margin:20px 0 28px}.sectionTitle h2{margin:0;font-size:30px}
+.planGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:15px}.plan{position:relative;min-height:285px;padding:21px 17px 17px 22px;border-radius:17px;background:#0c1b2d;border:1px solid var(--border);overflow:hidden;transition:.25s}.plan:hover{transform:translateY(-5px)}
+.planBar{position:absolute;left:0;top:0;bottom:0;width:5px}.basic .planBar{background:var(--green)}.plus .planBar{background:var(--blue)}.pro .planBar{background:#ff5363}.premium .planBar{background:#a887ff}.gold .planBar{background:linear-gradient(180deg,#8c641c,#f2d477,#fff0a2,#c2912d)}
+.cardTop{display:flex;justify-content:space-between;align-items:center}.icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05)}.tag{font-size:8px;color:#9baabc;font-weight:bold}
+.plan h3{margin:17px 0 6px;font-size:17px}.planPrice{font-size:29px;font-weight:900}.planPrice small{font-size:9px;color:#71869b;font-weight:normal}.reward{margin-top:7px;color:var(--green);font-size:12px;font-weight:bold}.cycle{margin-top:5px;color:#8395a8;font-size:11px}.plan p{color:#92a3b5;font-size:11px;line-height:1.5}.plan button{width:100%;margin-top:10px}
+.support{position:fixed;right:18px;bottom:18px;width:72px;height:72px;border-radius:50%;border:2px solid rgba(24,214,160,.4);background:#10243a;z-index:300;box-shadow:0 15px 40px rgba(0,0,0,.5);font-size:31px}.support small{position:absolute;bottom:-19px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--green)}
+.panel{max-width:650px;margin:35px auto;padding:25px;background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.25)}.panel.wide{max-width:1050px}.panel h2{margin-top:0}
+.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{margin-bottom:13px}.field.full{grid-column:1/-1}.field label{display:block;margin-bottom:6px;color:#a9b8c9;font-size:11px}.field input,.field select,.field textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);outline:0;background:#081827;color:#fff}.field textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green)}
+.help{color:#71859a;font-size:10px;line-height:1.5}.error{color:#ff7180;font-size:10px;margin-top:4px}.success{color:var(--green);font-size:11px}
+.notice{padding:13px;border-radius:11px;background:rgba(77,163,255,.08);border:1px solid rgba(77,163,255,.18);color:#a8cfff;font-size:12px;line-height:1.5;margin-bottom:15px}.warning{padding:13px;border-radius:11px;background:rgba(232,200,117,.08);border:1px solid rgba(232,200,117,.22);color:#efd98e;font-size:12px;margin-bottom:15px}
+.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:9px;font-weight:bold}.pending{color:#ffd976;background:rgba(232,200,117,.08)}.verified{color:var(--green);background:rgba(24,214,160,.08)}.rejected{color:#ff7482;background:rgba(255,48,72,.08)}
+.gridCards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.stat{padding:18px;background:var(--panel);border:1px solid var(--border);border-radius:15px}.stat small{color:#8193a7;font-size:10px}.stat strong{display:block;margin-top:7px;font-size:23px}
+.navTabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;padding-bottom:5px}.navTabs button{white-space:nowrap;border:1px solid var(--border);background:var(--panel);color:#a9b8c9;padding:9px 13px;border-radius:10px}.navTabs button.active{background:var(--green);color:#06131b}
+.detailBox{padding:15px;background:#081827;border:1px solid var(--border);border-radius:12px;margin:10px 0}.row{display:flex;justify-content:space-between;gap:15px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px}.row:last-child{border-bottom:0}.row span:first-child{color:#8194a8}
+.timer{font-size:34px;font-weight:900;color:var(--green);text-align:center;margin:18px 0}.adminGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.switch{display:flex;justify-content:space-between;align-items:center;padding:14px;background:#081827;border:1px solid var(--border);border-radius:12px}.switch input{width:20px;height:20px}
+.table{width:100%;border-collapse:collapse;font-size:11px}.table th,.table td{padding:10px 7px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left}.table th{color:#8294a7}
+.supportAgent{text-align:center;padding:10px;font-size:52px}.footer{text-align:center;color:#617488;font-size:10px;padding:30px}
+@media(max-width:900px){.planGrid{grid-template-columns:repeat(2,1fr)}.gridCards{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.header{padding:0 13px}.hero{padding-top:48px}.planGrid,.gridCards,.formGrid,.adminGrid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:18px}}
+
+/* Keep current prototype dashboard/layer behavior */
+.layer{z-index:500}
+</style>
+  <style>
+.supportAgentIcon{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#10243a;border:1px solid rgba(24,214,160,.35);font-size:28px;line-height:1;}
+.supportAgentIcon span{display:block}
+</style>
+  <style>.language-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}.language-choice{padding:11px;border-radius:11px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#fff;text-align:left;font-weight:700;cursor:pointer}.language-choice:hover{border-color:rgba(24,214,160,.6)}@media(max-width:560px){.language-grid{grid-template-columns:1fr}}#google_translate_element{display:none!important}.goog-te-banner-frame.skiptranslate{display:none!important}body{top:0!important}</style>
+ </head>
+ <body>
+  <header class="header">
+   <div class="logo" onclick="backToHome()">
+    NOVA<span>+</span>
+   </div>
+   <div style="display:flex;gap:8px;align-items:center">
+    <button type="button" id="globalLanguageBtn" aria-label="Global Language" style="background:transparent;border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:8px 10px;cursor:pointer;font-size:18px">🌐</button>
+    <button class="menuBtn" type="button" id="menuBtn">⋮</button>
+   </div>
+   <div class="menu" id="menu">
+    <button type="button" id="homeMenuBtn">⌂ Home</button>
+    <button type="button" id="menuLoginBtn">⇥ Customer Login</button>
+    <button type="button" id="menuSignupBtn">＋ Create Account</button>
+    <button type="button" id="languageMenuBtn">🌐 Language</button>
+    <button type="button" id="adminMenuBtn">⚙ Admin Demo</button>
+   </div>
+  </header>
+  <main class="container">
+   <section id="home">
+    <div class="hero">
+     <div class="badge">✦ WELCOME TO THE NOVA+ EXPERIENCE</div>
+     <h1><span class="white">Welcome</span> <span class="green">to</span> <span class="blue">NOVA</span><span class="red">+</span></h1>
+     <p>A modern NOVA+ demonstration platform for exploring plans, customer accounts, tasks, support and administration.</p>
+     <div class="actions">
+      <button class="btn greenBtn" type="button" id="loginBtn">Login</button>
+      <button class="btn blueBtn" type="button" id="signupBtn">Create Account</button>
+     </div>
+    </div>
+    <div class="sectionTitle">
+     <h2><span class="white">Choose</span> <span class="blue">Your</span> <span class="goldText">Plans</span></h2>
+    </div>
+    <div class="planGrid" id="planGrid"></div>
+    <button class="support" id="supportBtn" type="button" aria-label="Customer Support">
+     <div class="supportAgentIcon">
+      <span>👩‍💻</span>
+     </div>
+     <small>Support</small>
+    </button>
+    <div class="footer">NOVA+ Demo / Learning Prototype — No real payments or financial transactions.</div>
+   </section>
+  </main>
+  <section class="dashboard" id="dashboard">
+   <div class="dashboard-header">
+    <div>
+     <h2>NOVA+ Customer Dashboard</h2>
+     <p id="dashboardPlanName">NOVA+ Basic</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+     <button class="back" id="logoutBtn">Logout</button>
+     <button class="back" id="backBtn">← Back</button>
+    </div>
+   </div>
+   <div class="summary">
+    <div class="summary-card">
+     <div class="summary-label">Selected Plan</div>
+     <div class="summary-value green" id="selectedAmount">$50</div>
+    </div>
+    <div class="summary-card">
+     <div class="summary-label">Target Reward</div>
+     <div class="summary-value gold" id="selectedReward">$25</div>
+    </div>
+    <div class="summary-card">
+     <div class="summary-label">Cycle</div>
+     <div class="summary-value" id="selectedDays">45 Days</div>
+    </div>
+    <div class="summary-card">
+     <div class="summary-label">Progress</div>
+     <div class="summary-value green" id="selectedProgress">0%</div>
+    </div>
+    <div class="summary-card">
+     <div class="summary-label">Status</div>
+     <div class="summary-value green" id="selectedStatus">Pending</div>
+    </div>
+   </div>
+   <div class="dash-grid">
+    <div class="panel">
+     <h3>Plan Progress</h3>
+     <div class="progress-bg">
+      <div class="progress" id="progressBar"></div>
+     </div>
+     <div class="progress-info" id="progressText">0 of 45 demo days completed</div>
+     <div class="reward-grid">
+      <div class="reward-box">
+       <small>Package Balance</small><strong id="miniPackage">$50.00</strong>
+      </div>
+      <div class="reward-box">
+       <small>Earned Reward</small><strong class="gold" id="miniEarned">$0.00</strong>
+      </div>
+      <div class="reward-box">
+       <small>Total Assets</small><strong class="green" id="miniTotal">$50.00</strong>
+      </div>
+     </div>
+     <div class="notice" id="cycleNotice">
+      <b>Demo cycle:</b> Your package balance and earned reward are tracked separately. At day 45 the full eligible demo balance can be requested.
+     </div>
+    </div>
+    <div class="panel">
+     <h3>NOVA+ Sections</h3>
+     <div class="dashboard-menu">
+      <button class="dash-button" data-section="tasks"><strong>✓ Tasks</strong><span>Daily demo task</span></button>
+      <button class="dash-button" data-section="reserve"><strong>◆ Reserve</strong><span>Demo reserve information</span></button>
+      <button class="dash-button" data-section="stake"><strong>◇ Stake</strong><span>Demo plan information</span></button>
+      <button class="dash-button" data-section="assets"><strong>▣ My Assets</strong><span>Detailed balance</span></button>
+      <button class="dash-button" data-section="payout"><strong>⇧ Payout</strong><span>Withdrawal / payout request</span></button>
+     </div>
+    </div>
+   </div>
+   <div class="panel" style="margin-top:18px">
+    <h3>Demo Payment Status</h3>
+    <div id="paymentStatusBox" class="status-card">
+     <b>Status:</b> <span id="paymentStatusText">No payment request submitted.</span>
+    </div>
+    <button class="btn primary full" id="depositBtn">Open Demo Deposit</button>
+   </div>
+   <div class="panel tasks" id="tasksSection" style="margin-top:18px">
+    <h3>Daily Demo Task</h3>
+    <div class="task">
+     <div class="task-left">
+      <div class="task-icon">✓</div>
+      <div>
+       <b>Complete Daily NOVA+ Task</b>
+       <br>
+       <small id="taskDescription">Your plan must be verified first.</small>
+      </div>
+     </div>
+     <button class="task-action" id="completeTaskBtn">Locked</button>
+    </div>
+    <div id="taskTimer" class="timer" style="margin-top:10px"></div>
+   </div>
+   <div class="panel section-content" id="reserveSection">
+    <h3>Reserve</h3>
+    <div class="notice">Demo Reserve section. No real reserve, transfer or financial transaction occurs.</div>
+   </div>
+   <div class="panel section-content" id="stakeSection">
+    <h3>Stake</h3>
+    <div class="notice">Demo Stake section. No real staking or financial transaction occurs.</div>
+   </div>
+   <div class="panel section-content" id="assetsSection">
+    <h3>My Assets</h3>
+    <div class="asset-grid">
+     <div class="asset">
+      <small>Package / Deposit Balance</small><strong id="assetPlanAmount">$50.00</strong>
+     </div>
+     <div class="asset">
+      <small>Earned Reward</small><strong id="assetEarned">$0.00</strong>
+     </div>
+     <div class="asset">
+      <small>Total Assets</small><strong id="assetTotal">$50.00</strong>
+     </div>
+    </div>
+    <div class="status-card">
+     <b>Daily Reward:</b> <span id="dailyReward">$0.56</span>
+     <br>
+     <b>Cycle Day:</b> <span id="cycleDay">0 / 45</span>
+     <br>
+     <b>Days Remaining:</b> <span id="daysRemaining">45</span>
+     <br>
+     <b>Package State:</b> <span id="packageState">Pending</span>
+     <br>
+     <b>Same-package uses:</b> <span id="packageUses">0 / 2</span>
+    </div>
+    <button class="btn primary full" id="continuePackageBtn" style="display:none">Request Same Package Cycle Again</button>
+   </div>
+   <div class="panel section-content" id="payoutSection">
+    <h3>⇧ Payout / Withdrawal</h3>
+    <div class="status-card">
+     <b>Available Demo Balance:</b> <span id="payoutBalance">$0.00</span>
+     <br>
+     <small>Demo only. No real payout is made.</small>
+    </div>
+    <div class="row">
+     <div class="field">
+      <label>Withdrawal Amount</label><input id="payoutAmount" type="number" min="0.01" step="0.01" placeholder="50.00">
+     </div>
+     <div class="field">
+      <label>Crypto Network / Chain</label><select id="payoutNetwork"><option value="TRC20">USDT — TRC20</option><option value="ERC20">USDT — ERC20</option><option value="BEP20">USDT — BEP20</option><option value="BTC">Bitcoin</option><option value="ETH">Ethereum</option></select>
+     </div>
+    </div>
+    <div class="field">
+     <label>Registered Wallet Address</label><input id="payoutWallet" placeholder="Demo wallet address">
+    </div>
+    <div class="field">
+     <label>Confirm Wallet Address</label><input id="payoutWalletConfirm" placeholder="Re-enter wallet address">
+    </div>
+    <div class="field">
+     <label>Withdrawal Type</label><select id="withdrawalType"><option value="partial">Partial withdrawal</option><option value="earlyExit">Early exit / close package</option></select>
+    </div>
+    <div class="notice">
+     <b>Withdrawal Rules</b>
+     <br>
+     Day 1–15: 50% deduction. Day 16–30: 30%. Day 31–44: 15%. Day 45: 0%. If the requested withdrawal leaves the package balance below its required amount, the package will be frozen until the shortfall is restored and Admin allows access.
+    </div>
+    <button class="btn primary full" id="saveWalletBtn">Save / Update Registered Wallet</button>
+    <button class="btn primary full" id="requestPayoutBtn">Submit Demo Withdrawal Request</button>
+    <div id="payoutError" class="error"></div>
+    <h3 style="margin-top:22px">Withdrawal History</h3>
+    <div id="payoutHistory" class="status-card">No withdrawal requests yet.</div>
+   </div>
+   <div class="panel" style="margin-top:18px">
+    <h3>Cycle / Package Message</h3>
+    <div id="packageMessage" class="notice">Your package status will appear here.</div>
+   </div>
+  </section>
+  <div class="layer" id="menu">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>Menu</h2>
+      <div class="sub">NOVA+ Navigation</div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div class="menu">
+     <button id="homeMenuBtn">🏠 Home / Plans</button>
+     <button id="dashboardMenuBtn">▣ Customer Dashboard</button>
+     <button id="menuLoginBtn">🔐 Login</button>
+     <button id="menuSignupBtn">✦ Create Account</button>
+     <button id="adminMenuBtn">🛠 Admin Demo</button>
+    </div>
+   </div>
+  </div>
+  <div class="layer" id="login">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>Welcome Back</h2>
+      <div class="sub">Login with your demo username or email.</div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <form id="loginForm">
+     <div class="field">
+      <label>Username / Email</label><input id="loginUser" required>
+     </div>
+     <div class="field">
+      <label>Password</label>
+      <div class="password-box">
+       <input id="loginPassword" type="password" required>
+       <button type="button" class="eye" data-password="loginPassword">Show</button>
+      </div>
+     </div>
+     <div id="loginError" class="error"></div>
+     <button class="btn primary full">Login</button>
+     <div class="switch">
+      No demo account?
+      <button type="button" id="loginToSignup">Create Account</button>
+     </div>
+    </form>
+   </div>
+  </div>
+  <div class="layer" id="signup">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>Create Account</h2>
+      <div class="sub">Complete your NOVA+ demo profile.</div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <form id="signupForm">
+     <div class="field">
+      <label>Country</label><select id="country" required></select>
+      <div class="help">Select your country. The calling code changes automatically.</div>
+     </div>
+     <div class="row">
+      <div class="field">
+       <label>Country Code</label><input id="countryCode" readonly>
+      </div>
+      <div class="field">
+       <label>Mobile Number</label><input id="mobile" required inputmode="numeric" autocomplete="tel" placeholder="Mobile number without country code">
+      </div>
+     </div>
+     <div class="row">
+      <div class="field">
+       <label>Full Name</label><input id="fullName" required autocomplete="name">
+      </div>
+      <div class="field">
+       <label>Username</label><input id="username" required autocomplete="username">
+      </div>
+     </div>
+     <div class="field">
+      <label>Email Address</label><input id="email" type="email" required autocomplete="email" placeholder="name@example.com">
+      <div class="help">Use a valid email address. A demo verification code is generated for this email.</div>
+     </div>
+     <div class="field">
+      <label>Language</label><select id="language" required></select>
+     </div>
+     <div class="field">
+      <label>Password</label><input id="password" type="password" minlength="6" required autocomplete="new-password">
+     </div>
+     <div class="field">
+      <label>Confirm Password</label><input id="confirmPassword" type="password" minlength="6" required autocomplete="new-password">
+     </div>
+     <div class="field">
+      <label>Email Verification</label>
+      <div class="password-box">
+       <input id="verification" inputmode="numeric" maxlength="6" required placeholder="6-digit code">
+       <button type="button" class="eye" id="getCodeBtn">Send Code</button>
+      </div>
+      <div id="codeBox" class="code" style="display:none"></div>
+     </div>
+     <label style="display:flex;gap:8px;color:#9aaabd;font-size:11px;line-height:1.5;margin:13px 0"><input id="demoAgree" type="checkbox" required>I understand this is a NOVA+ demo / learning prototype and no real financial transaction is being processed.</label>
+     <div id="signupError" class="error"></div>
+     <button class="btn primary full">Create NOVA+ Account</button>
+    </form>
+   </div>
+  </div>
+  <div class="layer" id="complete">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>✓ Registration Complete</h2>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div class="success">Your demo account has been created on this device.</div>
+    <button class="btn primary full" id="continueLogin">Continue to Login</button>
+   </div>
+  </div>
+  <div class="layer" id="planConfirm">
+   <div class="modal plan-confirm">
+    <div class="modal-head">
+     <div>
+      <h2>Plan Selected</h2>
+      <div class="sub">NOVA+ Demo Plan</div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div class="confirm-icon">N+</div>
+    <h2 id="confirmPlanName">NOVA+ Basic</h2>
+    <div class="confirm-price" id="confirmAmount">$50</div>
+    <div class="confirm-reward" id="confirmReward">Demo Reward: $25</div>
+    <div class="confirm-info">
+     <b id="confirmCycle">45-Day Demo Cycle</b>
+     <br>
+     Demo / Learning Plan
+     <br>
+     No real payment or financial transaction.
+    </div>
+    <button class="btn primary full" id="continueToDeposit">Continue to Demo Deposit →</button>
+   </div>
+  </div>
+  <div class="layer" id="deposit">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>Demo Deposit</h2>
+      <div class="sub">Payment submission simulation</div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div class="success">
+     <b>Selected Plan:</b> <span id="depositPlanName"></span>
+     <br>
+     <b>Required Demo Payment:</b> <span id="depositAmount"></span>
+    </div>
+    <div class="field">
+     <label>Network</label><select id="depositNetwork"><option>TRC20 — Demo Network</option><option>ERC20 — Demo Network</option><option>BEP20 — Demo Network</option></select>
+    </div>
+    <div class="field">
+     <label>Demo Transaction ID / Reference</label><input id="demoTx">
+    </div>
+    <div class="field">
+     <label>Submitted Amount</label><input id="demoSubmittedAmount" type="number" min="0" step="0.01">
+    </div>
+    <div class="field">
+     <label>Payment Reference</label><input id="demoPaymentReference">
+    </div>
+    <div class="notice">Demo only. Admin verification checks that submitted amount is not below the required plan amount.</div>
+    <div id="depositError" class="error"></div>
+    <button class="btn primary full" id="submitPayment">Submit Demo Payment for Verification</button>
+   </div>
+  </div>
+  <div class="layer" id="paymentSubmitted">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>Payment Submitted</h2>
+      <div class="sub">Waiting for Admin Demo Verification</div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div id="pendingPaymentBox" class="status-card pending"></div>
+    <button class="btn primary full" id="goAdmin">Open Admin Demo Panel</button>
+    <button class="btn secondary full" id="backCustomer">Back to Customer</button>
+   </div>
+  </div>
+  <div class="layer" id="support">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>Customer Support</h2>
+      <div class="sub">NOVA+ Support / Helpline</div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div class="supportAgent" aria-label="Female customer support agent with laptop">👩‍💻</div>
+    <div class="notice">
+     <b>How can we help?</b>
+     <br>
+     For this NOVA+ demo, you can use this Support option to review your support request information. No real financial transaction or live support service is connected.
+    </div>
+    <div class="field">
+     <label>Support Message</label><textarea id="supportMessage" placeholder="Write your support question or message..."></textarea>
+    </div>
+    <div id="supportError" class="error"></div>
+    <button class="btn primary full" id="submitSupport">Submit Demo Support Request</button>
+   </div>
+  </div>
+  <div class="layer" id="admin">
+   <div class="modal" style="max-width:1000px">
+    <div class="modal-head">
+     <div>
+      <h2>Admin Demo Panel</h2>
+      <div class="sub">
+       <span class="admin-badge">DEMO ADMIN</span>
+      </div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div class="notice">Local demo administration only. No blockchain transaction or real financial transfer is performed.</div>
+    <div id="adminBadges" class="status-card"></div>
+    <div id="adminRequests"></div>
+    <div id="adminCustomers" style="margin-top:18px"></div>
+    <div id="adminConfig" style="margin-top:18px"></div>
+    <button class="btn secondary full" id="adminLogoutBtn">Admin Logout</button>
+    <button class="btn secondary full" id="adminBackBtn">← Back</button>
+   </div>
+  </div>
+  <div class="layer" id="adminLogin">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>Admin Login</h2>
+      <div class="sub">Demo administration</div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div class="field">
+     <label>Admin Password</label><input id="adminPassword" type="password">
+    </div>
+    <div id="adminLoginError" class="error"></div>
+    <button class="btn primary full" id="adminLoginBtn">Login as Admin</button>
+   </div>
+  </div>
+  <div class="layer" id="globalLanguageModal">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>🌐 Global Language</h2>
+      <div class="sub">Choose your website language</div>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div class="notice">Select a language to translate the NOVA+ demo website. English remains the default language.</div>
+    <div id="globalLanguageOptions" class="language-grid"></div>
+   </div>
+  </div>
+  <div class="layer" id="activated">
+   <div class="modal">
+    <div class="modal-head">
+     <div>
+      <h2>✓ Plan Activated</h2>
+     </div>
+     <button class="close" data-close>×</button>
+    </div>
+    <div id="activatedText" class="success"></div>
+    <button class="btn primary full" id="openActivatedDashboard">Open Customer Dashboard →</button>
+   </div>
+  </div>
+  <div id="google_translate_element"></div>
+  <script>function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,fr,de,es,ar,ru,nl,pt,sw,ha,am,yo,ig,af,zu,so,ur,hi',autoDisplay:false},'google_translate_element');}</script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script>
+'use strict';
+const GLOBAL_LANGUAGES=[['English','en'],['Français','fr'],['Deutsch','de'],['Español','es'],['العربية','ar'],['Русский','ru'],['Nederlands','nl'],['Português','pt'],['Kiswahili','sw'],['Hausa','ha'],['Amharic','am'],['Yorùbá','yo'],['Igbo','ig'],['Afrikaans','af'],['isiZulu','zu'],['Somali','so'],['اردو','ur'],['हिन्दी','hi']];
+function renderGlobalLanguages(){const box=document.getElementById('globalLanguageOptions');if(!box)return;box.innerHTML=GLOBAL_LANGUAGES.map(x=>`<button type="button" class="language-choice" data-lang="${x[1]}">${x[0]}</button>`).join('');box.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>applyGlobalLanguage(b.dataset.lang));}
+function applyGlobalLanguage(lang){const combo=document.querySelector('.goog-te-combo');if(!combo){alert('Translation service is still loading. Please try again in a moment.');return;}combo.value=lang;combo.dispatchEvent(new Event('change'));setTimeout(()=>{const el=document.getElementById('globalLanguageModal');if(el)el.classList.remove('open');},600);}
+const PLAN_DATA={
+  1:{id:1,name:'NOVA+ Basic',short:'Basic',amount:50,reward:25,days:45},
+  2:{id:2,name:'NOVA+ Plus',short:'Plus',amount:100,reward:75,days:45},
+  3:{id:3,name:'NOVA+ Pro',short:'Pro',amount:200,reward:150,days:45},
+  4:{id:4,name:'NOVA+ Premium',short:'Premium',amount:300,reward:225,days:45},
+  5:{id:5,name:'NOVA+ Gold',short:'Gold',amount:500,reward:375,days:45}
+};
+const SETTINGS={cycleDays:45,minWithdrawal:1,earlyExit:{15:0.50,30:0.30,44:0.15,45:0},maxSamePackageCycles:2};
+const USER_KEY='novaPlusUsersV2',SESSION_KEY='novaPlusSessionV2',ADMIN_KEY='novaPlusAdminSessionV2',CONFIG_KEY='novaPlusAdminConfigV2';
+let currentPlan=null,verificationCode='';
+const $=id=>document.getElementById(id);
+const money=n=>'$'+Number(n||0).toFixed(2);
+const nowISO=()=>new Date().toISOString();
+function read(k,fb){try{const v=JSON.parse(localStorage.getItem(k));return v??fb}catch(e){return fb}}
+function write(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function users(){return read(USER_KEY,[])}
+function saveUsers(v){write(USER_KEY,v)}
+function session(){return read(SESSION_KEY,null)}
+function adminSession(){return sessionStorage.getItem(ADMIN_KEY)==='1'}
+function currentUser(){const s=session();return s?users().find(u=>u.username===s.username)||null:null}
+function currentAccount(){const u=currentUser();return u?.account||null}
+function saveAccount(account){const s=session();if(!s)return;const us=users();const i=us.findIndex(u=>u.username===s.username);if(i<0)return;us[i].account=account;saveUsers(us)}
+function defaultAdminConfig(){return {access:{tasks:true,reserve:true,stake:true,assets:true,payout:true},packageAccess:{},earlyExit:{15:.50,30:.30,44:.15},minWithdrawal:1,emailRegistrationLimit:true}}
+function adminConfig(){return {...defaultAdminConfig(),...read(CONFIG_KEY,{})}}
+function saveAdminConfig(c){write(CONFIG_KEY,c)}
+function openLayer(id){closeLayers();$(id)?.classList.add('open')}
+function closeLayers(){document.querySelectorAll('.layer').forEach(x=>x.classList.remove('open'));const m=$('menu');if(m)m.classList.remove('show')}
+function showError(id,msg){$(id).textContent=msg;$(id).style.display='block'}
+function clearError(id){$(id).textContent='';$(id).style.display='none'}
+function setText(id,v){if($(id))$(id).textContent=v}
+function logout(){localStorage.removeItem(SESSION_KEY);currentPlan=null;closeLayers();$('dashboard').classList.remove('active');$('home').classList.remove('hidden');alert('Customer logout complete. Your demo account and saved demo data remain stored on this device.')}
+function adminLogout(){sessionStorage.removeItem(ADMIN_KEY);closeLayers();alert('Admin logout complete.')}
+function requireLogin(){if(!currentUser()){openLayer('login');return false}return true}
+function requireAdmin(){if(!adminSession()){openLayer('adminLogin');return false}return true}
+function getPlan(id){return PLAN_DATA[id]}
+function ensureAccountShape(a){
+  a.plans=a.plans||{};a.payments=a.payments||[];a.withdrawals=a.withdrawals||[];a.supportRequests=a.supportRequests||[];
+  a.registeredWallet=a.registeredWallet||{network:'',address:''};a.emailVerified=a.emailVerified!==false;a.createdAt=a.createdAt||nowISO();
+  Object.values(PLAN_DATA).forEach(p=>{if(!a.plans[p.id])a.plans[p.id]={uses:0,access:true,cycles:[],pendingRepeat:false}});return a;
+}
+function planRecord(a,id){ensureAccountShape(a);return a.plans[id]}
+function packageAccess(a,id){const cfg=adminConfig();const global=cfg.packageAccess?.[a.customerId]?.[id];return global!==false && planRecord(a,id).access!==false}
+function createCycle(plan,deposit){return {id:'CYCLE-'+Date.now(),planId:plan.id,deposit:Number(deposit),packageBalance:Number(deposit),earnedReward:0,completedDays:0,lastTaskAt:null,startAt:nowISO(),endAt:null,status:'active',withdrawals:[]}}
+function activeCycle(a){return a.activePlanId?planRecord(a,a.activePlanId).cycles.find(c=>['active','completed','frozen'].includes(c.status))||null:null}
+function totalAssets(c){return Number(c?.packageBalance||0)+Number(c?.earnedReward||0)}
+function cycleDay(c){if(!c)return 0;return Math.min(PLAN_DATA[c.planId].days,Number(c.completedDays||0))}
+function dailyReward(plan){return plan.reward/plan.days}
+function deductionRate(day){const e=SETTINGS.earlyExit||{};if(day<=15)return Number(e[15]??0);if(day<=30)return Number(e[30]??0);if(day<=44)return Number(e[44]??0);return 0}
+function withdrawalCalc(c,requested,type){const plan=getPlan(c.planId),day=cycleDay(c),assets=totalAssets(c),rate=(day>=plan.days?0:(type==='earlyExit'||requested>Math.max(0,c.packageBalance))?deductionRate(Math.max(1,day)):0);const deduction=requested*rate;return {requested,rate,deduction,net:requested-deduction,assets,day}}
+function renderPlans(){const g=$('planGrid');if(!g)return;g.innerHTML='';Object.values(PLAN_DATA).forEach(p=>{const cls=p.id===1?'basic':p.id===2?'plus':p.id===3?'pro':p.id===4?'premium':'gold';const card=document.createElement('div');card.className='plan plan-card '+cls;card.dataset.plan=p.id;card.innerHTML=`<div class="planBar"></div><div class="cardTop"><div class="icon">${p.id===1?'✦':p.id===2?'◆':p.id===3?'◆':p.id===4?'★':'♛'}</div><div class="tag">45 DAY CYCLE</div></div><h3>${p.name}</h3><div class="planPrice">$${p.amount}<small> deposit</small></div><div class="reward">Reward Target: $${p.reward}</div><div class="cycle">Total Value: $${p.amount+p.reward} • ${p.days} days</div><p>Selected package کے مطابق dashboard اور earning system access ہوگا۔</p><div class="plan-select">Select $${p.amount} Plan →</div></div>`;g.appendChild(card)})}
+function selectPlan(id){if(!requireLogin())return;const a=ensureAccountShape(currentAccount()),p=getPlan(id),r=planRecord(a,id);if(!packageAccess(a,id)){alert('This package is currently disabled for your customer ID by Admin.');return}if(r.uses>=SETTINGS.maxSamePackageCycles){alert(`You have completed the maximum ${SETTINGS.maxSamePackageCycles} uses of ${p.name}. Please move to the next package, subject to Admin access.`);return}const existing=activeCycle(a);if(existing&&existing.status==='frozen'){alert(`Your ${getPlan(existing.planId).name} package is frozen because its package balance is below the required ${money(getPlan(existing.planId).amount)}. Submit the required deposit request and wait for Admin approval.`);return}if(existing&&existing.status==='active'){alert(`Your ${getPlan(existing.planId).name} cycle is still active. Complete or close that cycle before selecting another package.`);return}if(existing&&existing.status==='completed'){alert('Your completed cycle is still holding a package balance. Withdraw or use the package continuation option before selecting another package.');return}if(r.uses>0&&!r.pendingRepeat){r.pendingRepeat=true;saveAccount(a);alert('Repeat package request created. Admin approval is required before this same package can start again.');return}currentPlan=p;openLayer('planConfirm');setText('confirmPlanName',p.name);setText('confirmAmount',money(p.amount));setText('confirmReward','Demo Reward: '+money(p.reward));setText('confirmCycle',p.days+'-Day Demo Cycle')}
+function openDeposit(){if(!requireLogin()||!currentPlan)return;const a=ensureAccountShape(currentAccount()),r=planRecord(a,currentPlan.id);if(r.uses>0&&!r.pendingRepeat){alert('Admin approval is required for a repeat cycle.');return}if(a.activePlanId&&activeCycle(a)){alert('Another package cycle is active.');return}setText('depositPlanName',currentPlan.name);setText('depositAmount',money(currentPlan.amount));$('demoSubmittedAmount').value=currentPlan.amount;$('demoTx').value='';$('demoPaymentReference').value='';clearError('depositError');openLayer('deposit')}
+function submitPayment(){if(!requireLogin()||!currentPlan)return;const a=ensureAccountShape(currentAccount()),p=currentPlan,r=planRecord(a,p.id),submitted=Number($('demoSubmittedAmount').value),tx=$('demoTx').value.trim(),ref=$('demoPaymentReference').value.trim();if(!tx||tx.length<4)return showError('depositError','Enter a valid demo transaction ID/reference.');if(!Number.isFinite(submitted)||submitted<p.amount)return showError('depositError',`Submitted amount must be at least ${money(p.amount)}. Admin cannot verify an underpayment.`);if(!ref)return showError('depositError','Enter a demo payment reference.');const existing=a.payments.find(x=>x.status==='pending');if(existing)return showError('depositError','You already have a pending payment request.');a.payments.push({id:'PAY-'+Date.now(),customerId:a.customerId,planId:p.id,requiredAmount:p.amount,submittedAmount:submitted,network:$('depositNetwork').value,transactionId:tx,reference:ref,status:'pending',createdAt:nowISO()});saveAccount(a);renderPendingPayment(a.payments.at(-1));openLayer('paymentSubmitted')}
+function renderPendingPayment(x){$('pendingPaymentBox').innerHTML=`<b>Pending Payment Request</b><br><br>Customer ID: ${x.customerId}<br>Plan: ${getPlan(x.planId).name}<br>Required: ${money(x.requiredAmount)}<br>Submitted: ${money(x.submittedAmount)}<br>Network: ${x.network}<br>Transaction ID: ${x.transactionId}<br>Reference: ${x.reference}<br>Status: Pending Admin Verification`}
+function verifyPayment(id,approve=true){if(!requireAdmin())return;const a=currentAccount();if(!a)return;const req=a.payments.find(x=>x.id===id&&x.status==='pending');if(!req)return;const p=getPlan(req.planId);if(req.submittedAmount<p.amount){req.status='rejected';req.rejectionReason='Submitted amount is below required package amount.';saveAccount(a);updateAdmin();return}if(!approve){req.status='rejected';req.rejectionReason='Rejected by Admin in demo.';saveAccount(a);updateAdmin();return}const r=planRecord(a,p.id);if(r.uses>=2){req.status='rejected';req.rejectionReason='Maximum two uses of this package reached.';saveAccount(a);updateAdmin();return}r.pendingRepeat=false;r.uses+=1;r.cycles.push(createCycle(p,req.submittedAmount));a.activePlanId=p.id;req.status='verified';req.verifiedAt=nowISO();saveAccount(a);currentPlan=p;setText('activatedText',`${p.name} is now active. Cycle 1/2 (or repeat cycle) has started. Required package balance: ${money(p.amount)}. Daily demo reward: ${money(dailyReward(p))}.`);updateAdmin();closeLayers();openLayer('activated')}
+function showDashboard(){if(!requireLogin())return;const a=ensureAccountShape(currentAccount()),c=activeCycle(a);if(c)currentPlan=getPlan(c.planId);else if(!currentPlan)currentPlan=PLAN_DATA[1];$('home').classList.add('hidden');$('dashboard').classList.add('active');closeLayers();updateDashboard();window.scrollTo(0,0)}
+function backToHome(){closeLayers();$('dashboard').classList.remove('active');$('home').classList.remove('hidden');window.scrollTo(0,0)}
+function updateDashboard(){const a=ensureAccountShape(currentAccount());const c=activeCycle(a);const p=c?getPlan(c.planId):currentPlan||PLAN_DATA[1];currentPlan=p;const rec=planRecord(a,p.id),completed=c?c.completedDays:0,earned=c?c.earnedReward:0,pkg=c?c.packageBalance:0,total=totalAssets(c),active=!!c&&c.status==='active';setText('dashboardPlanName',p.name);setText('selectedAmount',money(p.amount));setText('selectedReward',money(p.reward));setText('selectedDays',p.days+' Days');setText('selectedProgress',Math.round(completed/p.days*100)+'%');setText('selectedStatus',active?(pkg<p.amount?'Frozen':'Active'):(rec.uses>=2?'Completed':'Not Active'));$('selectedStatus').className='summary-value '+(active&&pkg>=p.amount?'green':'gold');setText('miniPackage',money(pkg));setText('miniEarned',money(earned));setText('miniTotal',money(total));$('progressBar').style.width=Math.round(completed/p.days*100)+'%';setText('progressText',completed+' of '+p.days+' demo days completed');setText('assetPlanAmount',money(pkg));setText('assetEarned',money(earned));setText('assetTotal',money(total));setText('dailyReward',money(dailyReward(p)));setText('cycleDay',completed+' / '+p.days);setText('daysRemaining',Math.max(0,p.days-completed));setText('packageState',active?(pkg<p.amount?'FROZEN':'ACTIVE'):(rec.uses>=2?'COMPLETED':'INACTIVE'));setText('packageUses',rec.uses+' / '+SETTINGS.maxSamePackageCycles);setText('payoutBalance',money(total));updateTaskState();updatePaymentStatus();updateWithdrawalHistory(a);updatePackageMessage(a);const cont=$('continuePackageBtn');if(cont){cont.style.display=(c&&c.status==='completed'&&c.packageBalance>=p.amount&&planRecord(a,p.id).uses<2)?'block':'none'}updateAccessVisibility();}
+function updateAccessVisibility(){const c=adminConfig();[['tasks','tasksSection'],['reserve','reserveSection'],['stake','stakeSection'],['assets','assetsSection'],['payout','payoutSection']].forEach(([k,id])=>{const el=$(id);if(el)el.style.display=c.access[k]?'':'none'});document.querySelectorAll('.dash-button').forEach(b=>{const key=b.dataset.section;b.style.display=c.access[key]?'':'none'})}
+function updateTaskState(){const a=currentAccount(),c=a&&activeCycle(a);if(!c){$('completeTaskBtn').disabled=true;$('completeTaskBtn').textContent='Locked';$('taskDescription').textContent='Your plan must be verified first.';return}if(c.packageBalance<getPlan(c.planId).amount){$('completeTaskBtn').disabled=true;$('completeTaskBtn').textContent='Frozen';$('taskDescription').textContent='Package is frozen because required balance is below the package amount.';return}if(c.completedDays>=45){$('completeTaskBtn').disabled=true;$('completeTaskBtn').textContent='Cycle Complete';$('taskDescription').textContent='45-day cycle complete.';return}const last=c.lastTaskAt?Date.parse(c.lastTaskAt):0,wait=86400000;if(!last||Date.now()-last>=wait){$('completeTaskBtn').disabled=false;$('completeTaskBtn').textContent='Complete';$('taskDescription').textContent='One demo task is available today.';$('taskTimer').textContent='Daily task available.'}else{$('completeTaskBtn').disabled=true;$('completeTaskBtn').textContent='Completed';$('taskDescription').textContent="Today's task completed.";$('taskTimer').textContent='Next task in '+formatRemaining(wait-(Date.now()-last))}}
+function formatRemaining(ms){let s=Math.max(0,Math.floor(ms/1000));const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),sec=s%60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
+function completeDailyTask(){const a=currentAccount(),c=a&&activeCycle(a);if(!c)return;const p=getPlan(c.planId);if(c.packageBalance<p.amount)return alert('Package is frozen. Required package balance is not available.');if(c.completedDays>=p.days)return;const last=c.lastTaskAt?Date.parse(c.lastTaskAt):0;if(last&&Date.now()-last<86400000)return alert('Today\'s demo task is already completed.');c.completedDays++;c.earnedReward=Math.min(p.reward,c.earnedReward+dailyReward(p));c.lastTaskAt=nowISO();if(c.completedDays>=p.days)c.endAt=nowISO();saveAccount(a);updateDashboard();if(c.completedDays===45)alert('45-day cycle completed. Full eligible demo balance is now available for withdrawal or an Admin-approved new cycle.');else alert(`Demo task completed. Day ${c.completedDays}/45. Added ${money(dailyReward(p))}.`)}
+function updatePaymentStatus(){const a=currentAccount();const req=a?.payments?.slice().reverse().find(x=>x.status==='pending');const c=a&&activeCycle(a);if(c){$('paymentStatusText').innerHTML='<span class="verified">✓ Verified & Plan Active</span>';$('depositBtn').disabled=true;return}if(req){$('paymentStatusText').innerHTML='<span class="pending">Pending Admin Verification</span>';$('depositBtn').disabled=true;return}$('paymentStatusText').textContent='No pending payment request.';$('depositBtn').disabled=false}
+function updateWithdrawalHistory(a){const box=$('payoutHistory');if(!a?.withdrawals?.length){box.textContent='No withdrawal requests yet.';return}box.innerHTML='';a.withdrawals.slice().reverse().forEach(r=>{const d=document.createElement('div');d.className='admin-row';d.innerHTML=`<div><b>${money(r.requested)} — ${r.status.toUpperCase()}</b><br><small>Net: ${money(r.net)} | Deduction: ${money(r.deduction)} (${Math.round(r.rate*100)}%)<br>${r.network} | ${r.wallet}<br>Request ID: ${r.id}<br>${new Date(r.createdAt).toLocaleString()}${r.rejectionReason?'<br>Reason: '+r.rejectionReason:''}</small></div>`;box.appendChild(d)})}
+function updatePackageMessage(a){const c=activeCycle(a);const p=c&&getPlan(c.planId);if(!c){$('packageMessage').textContent='No active package cycle. Select an available package or complete a required deposit request.';return}if(c.completedDays>=p.days){const r=planRecord(a,p.id);$('packageMessage').textContent=(c.packageBalance>=p.amount)?`You completed ${p.name}. You may withdraw your reward and keep ${money(c.packageBalance)} as the package balance. To start another same-package cycle, Admin approval is required. This ID has ${2-r.uses} use(s) remaining.`:(r.uses<2?`You completed ${p.name}. Your package balance is below ${money(p.amount)}. Restore the shortfall by demo deposit and request Admin approval, or move to the next package.`:`You completed the maximum ${SETTINGS.maxSamePackageCycles} uses of ${p.name}. Please move to the next package, subject to Admin access.`);return}if(c.packageBalance<p.amount){$('packageMessage').textContent=`Package frozen. Your ${p.name} requires ${money(p.amount)} package balance; current package balance is ${money(c.packageBalance)}. Submit a demo deposit request for the ${money(p.amount-c.packageBalance)} shortfall and wait for Admin approval.`;return}$('packageMessage').textContent=`${p.name} is active. Package balance ${money(c.packageBalance)}, earned reward ${money(c.earnedReward)}, total assets ${money(totalAssets(c))}.`}
+function requestRepeatCycle(){const a=ensureAccountShape(currentAccount()),c=activeCycle(a);if(!c)return;const p=getPlan(c.planId),r=planRecord(a,p.id);if(c.status!=='completed'||c.completedDays<p.days)return alert('The current 45-day cycle must be completed first.');if(r.uses>=2)return alert('Maximum two uses of this package reached. Please move to the next package.');if(c.packageBalance<p.amount)return alert(`Package balance is ${money(c.packageBalance)}. Deposit the ${money(p.amount-c.packageBalance)} shortfall first, then request Admin approval.`);r.pendingRepeat=true;saveAccount(a);alert('Same-package continuation request sent to Admin for approval.');updateDashboard();}
+function saveWallet(){const a=ensureAccountShape(currentAccount()),network=$('payoutNetwork').value,address=$('payoutWallet').value.trim(),confirm=$('payoutWalletConfirm').value.trim();if(address.length<6)return showError('payoutError','Enter a demo wallet address.');if(address!==confirm)return showError('payoutError','Wallet confirmation does not match.');a.registeredWallet={network,address};saveAccount(a);clearError('payoutError');alert('Registered demo withdrawal wallet saved. Future demo withdrawals will use this registered network and wallet.');updateDashboard()}
+function requestWithdrawal(){const a=ensureAccountShape(currentAccount()),c=activeCycle(a);clearError('payoutError');if(!c)return showError('payoutError','No active package cycle.');const amount=Number($('payoutAmount').value),wallet=$('payoutWallet').value.trim(),confirm=$('payoutWalletConfirm').value.trim(),network=$('payoutNetwork').value,type=$('withdrawalType').value;const available=totalAssets(c);if(!Number.isFinite(amount)||amount<=0)return showError('payoutError','Enter a valid withdrawal amount.');if(amount>available+0.000001)return showError('payoutError','Withdrawal amount cannot exceed available balance.');if(amount<adminConfig().minWithdrawal)return showError('payoutError',`Minimum demo withdrawal is ${money(adminConfig().minWithdrawal)}.`);if(!wallet||wallet!==confirm)return showError('payoutError','Enter and confirm the registered wallet address.');if(a.registeredWallet.address&&a.registeredWallet.address!==wallet)return showError('payoutError','Withdrawal wallet must match the registered wallet address.');if(a.withdrawals.some(x=>x.status==='pending'))return showError('payoutError','A pending withdrawal already exists. Duplicate pending withdrawals are blocked.');const calc=withdrawalCalc(c,amount,type);const remaining=available-calc.net;if(c.completedDays<45 && type==='partial' && amount>Math.max(0,available-c.packageAmount||0)){/* normal partial can still reduce package and freeze */}
+const pkgBefore=Number(c.packageBalance||0), rewardBefore=Number(c.earnedReward||0);const fromReward=Math.min(rewardBefore,calc.net);const fromPkg=Math.max(0,calc.net-fromReward);c.earnedReward=Math.max(0,rewardBefore-fromReward);c.packageBalance=Math.max(0,pkgBefore-fromPkg);const freezes=c.packageBalance<getPlan(c.planId).amount;const r={id:'WD-'+Date.now(),customerId:a.customerId,planId:c.planId,requested:calc.requested,deduction:calc.deduction,rate:calc.rate,net:calc.net,network,wallet,type,day:c.completedDays,status:'pending',createdAt:nowISO(),freezeIfApproved:freezes,fromReward,fromPackage:fromPkg};a.withdrawals.push(r);saveAccount(a);updateDashboard();alert('Demo withdrawal request submitted. It is pending Admin approval. The demo balance is reserved against this pending request.');}
+function decideWithdrawal(customerId,id,approve){if(!requireAdmin())return;const us=users(),u=us.find(x=>x.account?.customerId===customerId);if(!u)return;const a=ensureAccountShape(u.account),r=a.withdrawals.find(x=>x.id===id);if(!r||r.status!=='pending')return;if(!approve){r.status='rejected';r.rejectionReason=prompt('Enter rejection reason:','Rejected by Admin in demo.')||'Rejected by Admin in demo.'; // restore reserved net
+  const c=activeCycle(a);if(c){c.earnedReward+=Number(r.fromReward||0);c.packageBalance+=Number(r.fromPackage||0);c.status='active';}saveAccountForUser(u,a);updateAdmin();return}
+r.status='approved';r.approvedAt=nowISO();const c=activeCycle(a);if(c&&c.packageBalance<getPlan(c.planId).amount){c.status='frozen';} else if(c&&c.status==='frozen'){c.status='active';}if(c&&c.completedDays>=getPlan(c.planId).days&&r.net>=totalAssets(c)-0.001){c.status='completed';c.endAt=c.endAt||nowISO();a.activePlanId=null}saveAccountForUser(u,a);updateAdmin();if(currentUser()?.customerId===customerId)updateDashboard()}
+function saveAccountForUser(u,a){u.account=a;const us=users();const i=us.findIndex(x=>x.username===u.username);if(i>=0){us[i]=u;saveUsers(us)}}
+function submitSupport(){
+  if(!requireLogin())return;
+  const msg=$('supportMessage').value.trim();
+  if(!msg){showError('supportError','Please enter your support message.');return}
+  const a=ensureAccountShape(currentAccount());
+  a.supportRequests.push({id:'SUP-'+Date.now(),message:msg,status:'pending',createdAt:nowISO()});
+  saveAccount(a);
+  $('supportMessage').value='';
+  $('supportError').textContent='';
+  closeLayers();
+  alert('Demo support request submitted. It is pending Admin review.');
+}
+function pendingCounts(){const out={payment:0,withdrawal:0,support:0};users().forEach(u=>{const a=u.account||{};out.payment+=(a.payments||[]).filter(x=>x.status==='pending').length;out.withdrawal+=(a.withdrawals||[]).filter(x=>x.status==='pending').length;out.support+=(a.supportRequests||[]).filter(x=>x.status==='pending').length});return out}
+function updateAdmin(){if(!adminSession())return;const counts=pendingCounts();$('adminBadges').innerHTML=`<b>Pending Notifications</b><br>🔴 Payment: ${counts.payment} &nbsp; 🟠 Withdrawal: ${counts.withdrawal} &nbsp; 🔵 Support: ${counts.support}`;renderAdminRequests();renderAdminCustomers();renderAdminConfig()}
+function renderAdminRequests(){const box=$('adminRequests');box.innerHTML='<h3>Pending Requests</h3>';users().forEach(u=>{const a=u.account||{};(a.payments||[]).filter(r=>r.status==='pending').forEach(r=>{const d=document.createElement('div');d.className='admin-row';d.innerHTML=`<div><b>🔴 PAYMENT — ${a.customerId}</b><br><small>${a.fullName||u.fullName} | ${u.email}<br>${getPlan(r.planId).name} | Required ${money(r.requiredAmount)} | Submitted ${money(r.submittedAmount)}<br>${r.network} | TX: ${r.transactionId} | Ref: ${r.reference}</small></div><div style="display:flex;gap:5px"><button class="btn primary" onclick="adminPayment('${a.customerId}','${r.id}',true)">Verify</button><button class="btn secondary" onclick="adminPayment('${a.customerId}','${r.id}',false)">Reject</button></div>`;box.appendChild(d)});(a.withdrawals||[]).filter(r=>r.status==='pending').forEach(r=>{const d=document.createElement('div');d.className='admin-row';d.innerHTML=`<div><b>🟠 WITHDRAWAL — ${a.customerId}</b><br><small>${a.fullName||u.fullName} | ${u.email}<br>${getPlan(r.planId).name} | Day ${r.day}<br>Requested ${money(r.requested)} | Deduction ${money(r.deduction)} | Net ${money(r.net)}<br>${r.network} | Wallet: ${r.wallet}<br>Request ID: ${r.id}</small></div><div style="display:flex;gap:5px"><button class="btn primary" onclick="adminWithdrawal('${a.customerId}','${r.id}',true)">Approve</button><button class="btn secondary" onclick="adminWithdrawal('${a.customerId}','${r.id}',false)">Reject</button></div>`;box.appendChild(d)})});if(!box.innerHTML.includes('admin-row'))box.innerHTML+='<div class="notice">No pending payment or withdrawal requests.</div>'}
+function adminPayment(cid,id,ok){const u=users().find(x=>x.account?.customerId===cid);if(!u)return;const a=ensureAccountShape(u.account);const r=a.payments.find(x=>x.id===id);if(!r)return;if(!ok){r.status='rejected';r.rejectionReason='Rejected by Admin in demo.';saveAccountForUser(u,a);updateAdmin();return}verifyPaymentForAccount(u,a,r)}
+function verifyPaymentForAccount(u,a,req){const p=getPlan(req.planId),r=planRecord(a,p.id);if(req.submittedAmount<p.amount||r.uses>=2){req.status='rejected';req.rejectionReason='Verification failed: underpayment or maximum uses reached.';saveAccountForUser(u,a);updateAdmin();return}r.pendingRepeat=false;r.uses++;r.cycles.push(createCycle(p,req.submittedAmount));a.activePlanId=p.id;req.status='verified';req.verifiedAt=nowISO();saveAccountForUser(u,a);updateAdmin();if(currentUser()?.customerId===a.customerId){currentPlan=p;setText('activatedText',`${p.name} activated for ${a.fullName}.`);closeLayers();openLayer('activated')}}
+function adminWithdrawal(cid,id,ok){decideWithdrawal(cid,id,ok)}
+function renderAdminCustomers(){const box=$('adminCustomers');box.innerHTML='<h3>Customers — Complete Profile</h3>';users().forEach(u=>{const a=ensureAccountShape(u.account),c=activeCycle(a);const d=document.createElement('div');d.className='status-card';let packageRows=Object.values(PLAN_DATA).map(p=>{const r=planRecord(a,p.id);const on=packageAccess(a,p.id);return `<div class="admin-row"><div><b>${p.name}</b><br><small>Uses: ${r.uses}/2 | Access: ${on?'ON':'OFF'}${r.pendingRepeat?' | Repeat pending':''}</small></div><button class="btn ${on?'secondary':'primary'}" onclick="togglePackage('${a.customerId}',${p.id})">${on?'Disable':'Enable'}</button>${r.pendingRepeat?`<button class="btn" onclick="approveRepeat('${a.customerId}',${p.id})">Approve Repeat</button>`:''}</div>`}).join('');d.innerHTML=`<b>${a.fullName||u.fullName||'Customer'} — ${a.customerId}</b><br><small>Username: ${u.username}<br>Email: ${u.email}<br>Country: ${u.country||''} | Mobile: ${u.mobile||''}<br>Created: ${new Date(a.createdAt).toLocaleString()}<br>Active Plan: ${c?getPlan(c.planId).name:'None'}<br>Package Balance: ${money(c?.packageBalance)} | Earned: ${money(c?.earnedReward)} | Total: ${money(totalAssets(c))}<br>Cycle Day: ${c?.completedDays||0}/45<br>Registered Wallet: ${a.registeredWallet.network||'—'} | ${a.registeredWallet.address||'—'}</small><div style="margin-top:12px"><b>Individual Package Access</b>${packageRows}</div>`;box.appendChild(d)})}
+function approveRepeat(cid,pid){if(!requireAdmin())return;const u=users().find(x=>x.account?.customerId===cid);if(!u)return;const a=ensureAccountShape(u.account),r=planRecord(a,pid),p=getPlan(pid),c=activeCycle(a);if(!r.pendingRepeat||r.uses>=2)return;if(!c||c.status!=='completed'||c.planId!==pid)return alert('The previous cycle for this package must be completed first.');if(c.packageBalance<p.amount)return alert('Package balance is below the required amount. Customer must restore the shortfall first.');r.pendingRepeat=false;r.uses++;r.cycles.push(createCycle(p,c.packageBalance));a.activePlanId=p.id;saveAccountForUser(u,a);updateAdmin();if(currentUser()?.customerId===cid){currentPlan=p;showDashboard()}alert('Repeat package approved. A new demo cycle has started using the retained package balance.')}
+function togglePackage(cid,pid){if(!requireAdmin())return;const u=users().find(x=>x.account?.customerId===cid);if(!u)return;const a=ensureAccountShape(u.account);const r=planRecord(a,pid);r.access=r.access===false;saveAccountForUser(u,a);updateAdmin()}
+function renderAdminConfig(){const c=adminConfig();$('adminConfig').innerHTML=`<h3>Central Admin Configuration</h3><div class="status-card"><b>Early Exit:</b> Day 1–15 ${c.earlyExit[15]*100}% | Day 16–30 ${c.earlyExit[30]*100}% | Day 31–44 ${c.earlyExit[44]*100}% | Day 45 0%<br><b>Minimum Withdrawal:</b> ${money(c.minWithdrawal)}<br><b>Max Same Package Uses:</b> 2</div><div class="admin-row"><div><b>Section Access</b><br><small>Tasks / Reserve / Stake / Assets</small></div><div style="display:flex;gap:5px;flex-wrap:wrap"><button class="btn secondary" onclick="toggleSection('tasks')">Tasks ${c.access.tasks?'ON':'OFF'}</button><button class="btn secondary" onclick="toggleSection('reserve')">Reserve ${c.access.reserve?'ON':'OFF'}</button><button class="btn secondary" onclick="toggleSection('stake')">Stake ${c.access.stake?'ON':'OFF'}</button><button class="btn secondary" onclick="toggleSection('assets')">Assets ${c.access.assets?'ON':'OFF'}</button></div></div><div class="row"><div class="field"><label>Day 1–15 deduction %</label><input id="cfg15" type="number" value="${c.earlyExit[15]*100}"></div><div class="field"><label>Day 16–30 deduction %</label><input id="cfg30" type="number" value="${c.earlyExit[30]*100}"></div></div><div class="row"><div class="field"><label>Day 31–44 deduction %</label><input id="cfg44" type="number" value="${c.earlyExit[44]*100}"></div><div class="field"><label>Minimum withdrawal</label><input id="cfgMin" type="number" value="${c.minWithdrawal}"></div></div><div class="admin-row"><div><b>Email Registration Limit</b><br><small>ON = one account per email. OFF = unlimited demo accounts per email.</small></div><button class="btn secondary" onclick="toggleEmailRegistrationLimit()">Email Limit ${c.emailRegistrationLimit!==false?'ON':'OFF'}</button></div><button class="btn primary full" onclick="saveConfigFromAdmin()">Save Central Rules</button>`}
+function toggleEmailRegistrationLimit(){if(!requireAdmin())return;const c=adminConfig();c.emailRegistrationLimit=c.emailRegistrationLimit===false;saveAdminConfig(c);updateAdmin();alert(c.emailRegistrationLimit?'Email registration limit is ON. One account per email address.':'Email registration limit is OFF. Unlimited demo accounts per email address are allowed.')}function toggleSection(key){if(!requireAdmin())return;const c=adminConfig();c.access[key]=!c.access[key];saveAdminConfig(c);updateAdmin();if($('dashboard').classList.contains('active'))updateDashboard()}
+function saveConfigFromAdmin(){const c=adminConfig();c.earlyExit={15:Number($('cfg15').value)/100,30:Number($('cfg30').value)/100,44:Number($('cfg44').value)/100};c.minWithdrawal=Number($('cfgMin').value);saveAdminConfig(c);updateAdmin();alert('Central demo rules saved.')}
+function openAdmin(){if(!requireAdmin())return;updateAdmin();openLayer('admin')}
+function adminLogin(){const pw=$('adminPassword').value;if(pw!=='NOVA-DEMO-ADMIN')return showError('adminLoginError','Incorrect demo admin password.');sessionStorage.setItem(ADMIN_KEY,'1');$('adminPassword').value='';clearError('adminLoginError');updateAdmin();openLayer('admin')}
+const COUNTRY_DATA=[
+['Afghanistan','+93'],['Albania','+355'],['Algeria','+213'],['Andorra','+376'],['Angola','+244'],['Antigua and Barbuda','+1-268'],['Argentina','+54'],['Armenia','+374'],['Australia','+61'],['Austria','+43'],['Azerbaijan','+994'],['Bahamas','+1-242'],['Bahrain','+973'],['Bangladesh','+880'],['Barbados','+1-246'],['Belarus','+375'],['Belgium','+32'],['Belize','+501'],['Benin','+229'],['Bhutan','+975'],['Bolivia','+591'],['Bosnia and Herzegovina','+387'],['Botswana','+267'],['Brazil','+55'],['Brunei','+673'],['Bulgaria','+359'],['Burkina Faso','+226'],['Burundi','+257'],['Cabo Verde','+238'],['Cambodia','+855'],['Cameroon','+237'],['Canada','+1'],['Central African Republic','+236'],['Chad','+235'],['Chile','+56'],['China','+86'],['Colombia','+57'],['Comoros','+269'],['Congo, Democratic Republic','+243'],['Congo, Republic','+242'],['Costa Rica','+506'],['Croatia','+385'],['Cuba','+53'],['Cyprus','+357'],['Czechia','+420'],['Denmark','+45'],['Djibouti','+253'],['Dominica','+1-767'],['Dominican Republic','+1-809'],['Ecuador','+593'],['Egypt','+20'],['El Salvador','+503'],['Equatorial Guinea','+240'],['Eritrea','+291'],['Estonia','+372'],['Eswatini','+268'],['Ethiopia','+251'],['Fiji','+679'],['Finland','+358'],['France','+33'],['Gabon','+241'],['Gambia','+220'],['Georgia','+995'],['Germany','+49'],['Ghana','+233'],['Greece','+30'],['Grenada','+1-473'],['Guatemala','+502'],['Guinea','+224'],['Guinea-Bissau','+245'],['Guyana','+592'],['Haiti','+509'],['Honduras','+504'],['Hungary','+36'],['Iceland','+354'],['India','+91'],['Indonesia','+62'],['Iran','+98'],['Iraq','+964'],['Ireland','+353'],['Italy','+39'],['Jamaica','+1-876'],['Japan','+81'],['Jordan','+962'],['Kazakhstan','+7'],['Kenya','+254'],['Kiribati','+686'],['Kuwait','+965'],['Kyrgyzstan','+996'],['Laos','+856'],['Latvia','+371'],['Lebanon','+961'],['Lesotho','+266'],['Liberia','+231'],['Libya','+218'],['Liechtenstein','+423'],['Lithuania','+370'],['Luxembourg','+352'],['Madagascar','+261'],['Malawi','+265'],['Malaysia','+60'],['Maldives','+960'],['Mali','+223'],['Malta','+356'],['Marshall Islands','+692'],['Mauritania','+222'],['Mauritius','+230'],['Mexico','+52'],['Micronesia','+691'],['Moldova','+373'],['Monaco','+377'],['Mongolia','+976'],['Montenegro','+382'],['Morocco','+212'],['Mozambique','+258'],['Myanmar','+95'],['Namibia','+264'],['Nauru','+674'],['Nepal','+977'],['Netherlands','+31'],['New Zealand','+64'],['Nicaragua','+505'],['Niger','+227'],['Nigeria','+234'],['North Korea','+850'],['North Macedonia','+389'],['Norway','+47'],['Oman','+968'],['Pakistan','+92'],['Palau','+680'],['Palestine','+970'],['Panama','+507'],['Papua New Guinea','+675'],['Paraguay','+595'],['Peru','+51'],['Philippines','+63'],['Poland','+48'],['Portugal','+351'],['Qatar','+974'],['Romania','+40'],['Russia','+7'],['Rwanda','+250'],['Saint Kitts and Nevis','+1-869'],['Saint Lucia','+1-758'],['Saint Vincent and the Grenadines','+1-784'],['Samoa','+685'],['San Marino','+378'],['Sao Tome and Principe','+239'],['Saudi Arabia','+966'],['Senegal','+221'],['Serbia','+381'],['Seychelles','+248'],['Sierra Leone','+232'],['Singapore','+65'],['Slovakia','+421'],['Slovenia','+386'],['Solomon Islands','+677'],['Somalia','+252'],['South Africa','+27'],['South Korea','+82'],['South Sudan','+211'],['Spain','+34'],['Sri Lanka','+94'],['Sudan','+249'],['Suriname','+597'],['Sweden','+46'],['Switzerland','+41'],['Syria','+963'],['Taiwan','+886'],['Tajikistan','+992'],['Tanzania','+255'],['Thailand','+66'],['Timor-Leste','+670'],['Togo','+228'],['Tonga','+676'],['Trinidad and Tobago','+1-868'],['Tunisia','+216'],['Turkey','+90'],['Turkmenistan','+993'],['Tuvalu','+688'],['Uganda','+256'],['Ukraine','+380'],['United Arab Emirates','+971'],['United Kingdom','+44'],['United States','+1'],['Uruguay','+598'],['Uzbekistan','+998'],['Vanuatu','+678'],['Vatican City','+379'],['Venezuela','+58'],['Vietnam','+84'],['Yemen','+967'],['Zambia','+260'],['Zimbabwe','+263']
+];
+const LANGUAGE_DATA=['Afrikaans','Albanian','Amharic','Arabic','Armenian','Azerbaijani','Bengali','Bosnian','Bulgarian','Burmese','Catalan','Chinese','Croatian','Czech','Danish','Dutch','English','Estonian','Filipino','Finnish','French','Georgian','German','Greek','Hausa','Hebrew','Hindi','Hungarian','Icelandic','Indonesian','Italian','Japanese','Kazakh','Korean','Kurdish','Latvian','Lithuanian','Malay','Malayalam','Marathi','Norwegian','Persian','Polish','Portuguese','Romanian','Russian','Serbian','Sinhala','Slovak','Slovenian','Somali','Spanish','Swahili','Swedish','Tamil','Telugu','Thai','Turkish','Ukrainian','Urdu','Uzbek','Vietnamese','Yoruba','Zulu'];
+function renderSignupOptions(){const c=$('country'),l=$('language');if(!c||!l)return;c.innerHTML=COUNTRY_DATA.map(([name,code])=>`<option value="${code}" data-name="${name}">${name} ${code}</option>`).join('');l.innerHTML=LANGUAGE_DATA.map(x=>`<option value="${x}">${x}</option>`).join('');c.value='+1';l.value='English';updateCountryCode();}
+function updateCountryCode(){const c=$('country'),out=$('countryCode');if(c&&out)out.value=c.value;}
+function generateCode(){clearError('signupError');const email=$('email').value.trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showError('signupError','Enter a valid email address before requesting verification.');verificationCode=String(Math.floor(100000+Math.random()*900000));$('codeBox').style.display='block';$('codeBox').textContent='Demo email verification code for '+email+': '+verificationCode;}
+function register(e){e.preventDefault();clearError('signupError');const fullName=$('fullName').value.trim(),username=$('username').value.trim(),email=$('email').value.trim().toLowerCase(),mobile=$('mobile').value.trim(),country=$('country').value,countryName=$('country').selectedOptions[0]?.dataset.name||'',language=$('language').value,password=$('password').value,confirm=$('confirmPassword').value,entered=$('verification').value.trim();if(!/^[A-Za-z0-9_.-]{3,30}$/.test(username))return showError('signupError','Username must be 3–30 characters and may use letters, numbers, dot, underscore or hyphen.');if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return showError('signupError','Enter a valid email address.');if(password!==confirm)return showError('signupError','Passwords do not match.');if(!verificationCode||entered!==verificationCode)return showError('signupError','Email verification code is incorrect. Request a new code if needed.');if(!/^\d{7,15}$/.test(mobile))return showError('signupError','Enter a valid mobile number without the country code.');const existingUsers=users();const usernameTaken=existingUsers.some(x=>String(x.username||'').trim().toLowerCase()===username.toLowerCase());const emailTaken=existingUsers.some(x=>String(x.email||'').trim().toLowerCase()===email);if(usernameTaken)return showError('signupError','This username is already registered. Please choose another username.');if(adminConfig().emailRegistrationLimit!==false&&emailTaken)return showError('signupError','You can create only one account with one email address.');const cid='CUST-'+Date.now().toString().slice(-8);const account=ensureAccountShape({customerId:cid,fullName,email,country,countryName,countryCode:country,language,mobile,emailVerified:true,verificationMethod:'demo-email',createdAt:nowISO(),registeredWallet:{network:'',address:''},plans:{}});saveUsers([...users(),{fullName,username,email,mobile,country,countryName,countryCode:country,language,password,account}]);$('signupForm').reset();verificationCode='';$('codeBox').style.display='none';renderSignupOptions();closeLayers();openLayer('complete')}
+function login(e){e.preventDefault();clearError('loginError');const id=$('loginUser').value.trim().toLowerCase(),pw=$('loginPassword').value,u=users().find(x=>x.username.toLowerCase()===id||x.email===id);if(!u||u.password!==pw)return showError('loginError','Username/email or password is incorrect.');write(SESSION_KEY,{username:u.username});currentPlan=activeCycle(u.account)?getPlan(activeCycle(u.account).planId):PLAN_DATA[1];showDashboard()}
+function togglePassword(id,b){const x=$(id);x.type=x.type==='password'?'text':'password';b.textContent=x.type==='password'?'Show':'Hide'}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('globalLanguageBtn')?.addEventListener('click',()=>{renderGlobalLanguages();openLayer('globalLanguageModal')});renderPlans();renderSignupOptions();$('country')?.addEventListener('change',updateCountryCode);$('email')?.addEventListener('input',()=>{verificationCode='';$('codeBox').style.display='none';});document.addEventListener('click',e=>{const card=e.target.closest('.plan-card');if(card)return selectPlan(Number(card.dataset.plan));const sec=e.target.closest('.dash-button');if(sec){document.querySelectorAll('.section-content').forEach(x=>x.classList.remove('active'));const el=$(sec.dataset.section+'Section');if(el){el.classList.add('active');el.scrollIntoView({behavior:'smooth',block:'start'})}}});$('menuBtn').onclick=()=>{const m=$('menu');if(m)m.classList.toggle('show');};$('loginBtn').onclick=()=>openLayer('login');$('supportBtn').onclick=()=>openLayer('support');$('submitSupport').onclick=submitSupport;$('signupBtn').onclick=()=>openLayer('signup');$('logoutBtn').onclick=logout;$('backBtn').onclick=backToHome;$('homeMenuBtn').onclick=backToHome;$('dashboardMenuBtn').onclick=showDashboard;$('menuLoginBtn').onclick=()=>openLayer('login');$('menuSignupBtn').onclick=()=>openLayer('signup');$('languageMenuBtn').onclick=()=>openLayer('globalLanguageModal');$('adminMenuBtn').onclick=()=>openLayer('adminLogin');document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeLayers);document.querySelectorAll('[data-password]').forEach(b=>b.onclick=()=>togglePassword(b.dataset.password,b));$('getCodeBtn').onclick=generateCode;$('loginForm').onsubmit=login;$('signupForm').onsubmit=register;$('loginToSignup').onclick=()=>openLayer('signup');$('continueLogin').onclick=()=>openLayer('login');$('confirmToDeposit');$('continueToDeposit').onclick=openDeposit;$('submitPayment').onclick=submitPayment;$('depositBtn').onclick=openDeposit;$('goAdmin').onclick=()=>openAdmin();$('backCustomer').onclick=showDashboard;$('verifyPaymentBtn')?.addEventListener('click',()=>{});$('openActivatedDashboard').onclick=showDashboard;$('completeTaskBtn').onclick=completeDailyTask;$('saveWalletBtn').onclick=saveWallet;$('requestPayoutBtn').onclick=requestWithdrawal;$('continuePackageBtn').onclick=requestRepeatCycle;$('adminLoginBtn').onclick=adminLogin;$('adminLogoutBtn').onclick=adminLogout;$('adminBackBtn').onclick=()=>{closeLayers();backToHome()};const a=currentAccount();if(a){currentPlan=activeCycle(a)?getPlan(activeCycle(a).planId):PLAN_DATA[1]}setInterval(()=>{if($('dashboard').classList.contains('active'))updateDashboard()},1000)});
+document.addEventListener('click',e=>{const m=$('menu'),b=$('menuBtn');if(m&&b&&!m.contains(e.target)&&!b.contains(e.target))m.classList.remove('show')});
+window.adminPayment=adminPayment;window.adminWithdrawal=adminWithdrawal;window.togglePackage=togglePackage;window.saveConfigFromAdmin=saveConfigFromAdmin;window.approveRepeat=approveRepeat;window.toggleSection=toggleSection;window.toggleEmailRegistrationLimit=toggleEmailRegistrationLimit;
+</script>
+ </body>
+</html>
