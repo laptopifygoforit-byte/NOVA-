@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOVA+ Admin Panel</title>
+<style>
+:root{--bg:#06111c;--panel:#0b1b2a;--panel2:#102437;--border:#20384c;--text:#eef6ff;--muted:#91a6b9;--green:#25e58b;--blue:#5ab4ff;--red:#ff647c;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#06111c,#091725);color:var(--text);font:14px Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}.wrap{max-width:1250px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.logo{font-size:28px;font-weight:800}.logo span{color:var(--red)}
+.btn{border:1px solid var(--border);background:#10283b;color:#fff;padding:10px 14px;border-radius:10px}.btn.primary{background:#1478b9;border-color:#2a9be7}.btn.green{background:#116b4b;border-color:#21bb7b}.btn.red{background:#6f2031;border-color:#b83d56}.btn.small{padding:7px 9px;font-size:12px}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px}.login-card{width:min(420px,100%);background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:28px;box-shadow:0 20px 60px #0008}.login-card h1{margin:0 0 6px}.sub,.muted{color:var(--muted)}.field{margin:15px 0}.field label{display:block;color:#b9cad8;font-size:12px;margin-bottom:7px}.field input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#071522;color:#fff;outline:none}.field input:focus{border-color:var(--blue)}.error{color:#ff8798;min-height:20px;font-size:12px;margin:8px 0}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.stat{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:25px;margin-top:7px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px;margin-top:16px;overflow:auto}.panel h2{margin:0 0 14px;font-size:18px}
+table{width:100%;border-collapse:collapse;min-width:980px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid #1a3042;vertical-align:top}th{color:#9db1c2;font-size:11px;text-transform:uppercase}td{font-size:12px}.pill{display:inline-block;padding:4px 7px;border-radius:999px;background:#183148;color:#bcd2e5}.pill.green{color:#9affca;background:#0c3b2b}.pill.red{color:#ffabb8;background:#421723}.pill.gold{color:#ffe49a;background:#443616}
+.controls{display:flex;flex-wrap:wrap;gap:7px}.toggle{min-width:72px}.toggle.on{background:#0c6243;border-color:#25e58b}.toggle.off{background:#3c1b25;border-color:#ff647c}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.req{padding:12px;border:1px solid var(--border);border-radius:12px;margin:8px 0;background:#091b2b}.req b{color:#fff}.req .meta{color:var(--muted);font-size:11px;line-height:1.6}.req .actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.copy{margin-left:6px}
+.note{font-size:11px;color:var(--muted);line-height:1.5}.tabbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab{border:1px solid var(--border);background:#0d2233;color:#bcd2e5;padding:9px 13px;border-radius:10px;cursor:pointer}.tab.active{background:#1478b9;border-color:#2a9be7;color:#fff}.clickable{cursor:pointer}.clickable:hover{background:#10283b}.badgeDot{display:inline-flex;min-width:19px;height:19px;padding:0 5px;align-items:center;justify-content:center;border-radius:99px;background:var(--red);color:#fff;font-size:10px;margin-left:5px}.noticebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.noticeItem{border:1px solid var(--border);background:#091b2b;border-radius:12px;padding:10px 12px;cursor:pointer}.noticeItem strong{display:block;font-size:12px}.noticeItem small{color:var(--muted)}.modalBack{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modalBack.show{display:flex}.modalBox{width:min(900px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:0 25px 80px #000}.detailGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.detail{padding:11px;border:1px solid var(--border);border-radius:10px;background:#091b2b}.detail small{display:block;color:var(--muted);font-size:10px}.detail b{display:block;margin-top:4px;word-break:break-word}.dangerText{color:#ff8b9b}@media(max-width:650px){.detailGrid{grid-template-columns:1fr}}
+@media(max-width:850px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+<style>
+.forgot-link{display:block;width:100%;margin-top:10px;background:transparent;border:0;color:#8ecbff;padding:6px;text-align:center;font-size:12px}
+.recovery-card{width:min(460px,100%);background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:28px;box-shadow:0 20px 60px #0008}
+.recovery-card h1{margin:0 0 6px}.recovery-card .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.recovery-card .actions .btn{flex:1}
+.info{color:#a8cfff;font-size:12px;min-height:20px;margin:8px 0}.successText{color:#8ff0c0;font-size:12px;min-height:20px;margin:8px 0}
+</style>
+</style>
+</head>
+<body>
+<section id="loginView" class="login">
+<div class="login-card">
+<div class="logo">NOVA<span>+</span> ADMIN</div>
+<h1>Administrator Login</h1>
+<div class="sub">Private administration panel — separate from the public/customer page.</div>
+<form id="adminLoginForm">
+<div class="field"><label>Admin Email</label><input id="adminUsername" type="email" autocomplete="username" required></div>
+<div class="field"><label>Admin Password</label><input id="adminPassword" type="password" autocomplete="current-password" required></div>
+<div id="loginError" class="error"></div>
+<button class="btn primary" style="width:100%" type="submit">Login to Admin Panel</button>
+<button class="forgot-link" id="forgotPasswordBtn" type="button">Forgot password?</button>
+</form>
+</div>
+</section>
+
+<section id="forgotView" class="login hidden">
+<div class="recovery-card">
+<div class="logo">NOVA<span>+</span> ADMIN</div>
+<h1>Reset Admin Password</h1>
+<div class="sub">Enter the administrator email. We will send a secure password reset link.</div>
+<form id="forgotForm">
+<div class="field"><label>Admin Email</label><input id="resetEmail" type="email" autocomplete="email" required></div>
+<div id="resetMessage" class="info"></div>
+<div class="actions"><button class="btn primary" type="submit">Send Reset Link</button><button class="btn" id="backToLoginBtn" type="button">Back to Login</button></div>
+</form>
+</div>
+</section>
+
+<section id="recoveryView" class="login hidden">
+<div class="recovery-card">
+<div class="logo">NOVA<span>+</span> ADMIN</div>
+<h1>Set New Password</h1>
+<div class="sub">Choose a new password for your administrator account.</div>
+<form id="recoveryForm">
+<div class="field"><label>New Password</label><input id="newAdminPassword" type="password" autocomplete="new-password" minlength="6" required></div>
+<div class="field"><label>Confirm New Password</label><input id="confirmAdminPassword" type="password" autocomplete="new-password" minlength="6" required></div>
+<div id="recoveryError" class="error"></div>
+<div id="recoverySuccess" class="successText"></div>
+<div class="actions"><button class="btn primary" type="submit">Update Password</button><button class="btn hidden" id="continueAdminBtn" type="button">Continue to Admin Panel</button></div>
+</form>
+</div>
+</section>
+
+<section id="app" class="hidden">
+<div class="wrap">
+<header class="top">
+<div><div class="logo">NOVA<span>+</span> Admin</div><div class="muted">Customer, payment, withdrawal and access controls</div></div>
+<div><button class="btn" id="refreshBtn">Refresh</button> <button class="btn red" id="logoutBtn">Admin Logout</button></div>
+</header>
+
+<div class="stats">
+<div class="stat"><small>Total Customers</small><strong id="sCustomers">0</strong></div>
+<div class="stat"><small>Active Customers</small><strong id="sActive">0</strong></div>
+<div class="stat"><small>Active Plans</small><strong id="sPlans">0</strong></div>
+<div class="stat"><small>Pending Payments</small><strong id="sPayments">0</strong></div>
+<div class="stat"><small>Pending Withdrawals</small><strong id="sWithdrawals">0</strong></div>
+</div>
+
+<div class="panel">
+<h2>Global Section Controls</h2>
+<div class="controls" id="globalControls"></div>
+<div class="note" style="margin-top:10px">Global OFF hides the relevant customer section. Customer-level controls below can independently enable/disable Tasks, Reserve and Stake for each customer.</div>
+</div>
+
+<div class="panel" id="customersPanel">
+<h2>Advanced Customer Management</h2>
+<div class="tabbar">
+<button class="tab active" data-tab="allCustomers">All Customers <span class="badgeDot" id="tabCustomerCount">0</span></button>
+<button class="tab" data-tab="activeCustomers">Active</button>
+<button class="tab" data-tab="pendingCustomers">Pending</button>
+<button class="tab" data-tab="bannedCustomers">Banned</button>
+</div>
+<div class="note" style="margin-bottom:12px">Click any customer row to open the complete profile. Admin can inspect the bio-data, activate/freeze/ban/delete the account, change plan access, and independently switch Tasks, Reserve and Stake.</div>
+<table><thead><tr><th>Customer</th><th>Contact</th><th>Package / Status</th><th>Tasks</th><th>Reserve</th><th>Stake</th><th>Plan Access</th><th>Actions</th></tr></thead>
+<tbody id="customersBody"></tbody></table>
+</div>
+
+<div class="grid2">
+<div class="panel"><h2>Pending Deposits / Payments</h2><div id="payments"></div></div>
+<div class="panel"><h2>Pending Withdrawals</h2><div id="withdrawals"></div></div>
+</div>
+
+<div class="panel"><h2>Support Requests</h2><div id="support"></div></div>
+</div>
+</section>
+
+<div class="panel">
+<h2>Admin Notifications <span class="badgeDot" id="notificationCount">0</span></h2>
+<div class="noticebar" id="notifications"></div>
+</div>
+
+<div class="modalBack" id="customerModal">
+ <div class="modalBox">
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+   <div><h2 id="detailTitle" style="margin:0">Customer Details</h2><div class="muted" id="detailSubtitle"></div></div>
+   <button class="btn" id="closeCustomerModal">Close</button>
+  </div>
+  <div class="detailGrid" id="detailGrid" style="margin-top:14px"></div>
+  <div class="panel" style="margin-top:14px">
+   <h2>Customer Controls</h2>
+   <div class="controls" id="detailControls"></div>
+  </div>
+  <div class="panel" style="margin-top:14px"><h2>Plan Access</h2><div class="controls" id="detailPlans"></div></div>
+ </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+'use strict';
+const SUPABASE_URL='https://wxprymeeklobldunwmbu.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_wwxyWyRDZjiitje-C97P_g_et_aDTtm';
+const ADMIN_REDIRECT_URL='https://nova-beta-lac-35.vercel.app/admin.html';
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+</script>
+<script>
+'use strict';
+const ADMIN_USER='';
+const ADMIN_PASS='';
+const USER_KEY='novaPlusUsersV2';
+const CONFIG_KEY='novaPlusAdminConfigV2';
+const ADMIN_SESSION='novaPlusStandaloneAdminSessionV1';
+const PLANS={1:{name:'NOVA+ Basic',amount:50},2:{name:'NOVA+ Plus',amount:100},3:{name:'NOVA+ Pro',amount:200},4:{name:'NOVA+ Premium',amount:300},5:{name:'NOVA+ Gold',amount:500}};
+const $=id=>document.getElementById(id);
+const read=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const users=()=>read(USER_KEY,[]);
+const saveUsers=v=>write(USER_KEY,v);
+const defaultConfig=()=>({access:{tasks:true,reserve:true,stake:true,assets:true,payout:true},packageAccess:{},customerAccess:{},minWithdrawal:1,emailRegistrationLimit:true});
+function cfg(){return Object.assign(defaultConfig(),read(CONFIG_KEY,{}),{access:Object.assign(defaultConfig().access,read(CONFIG_KEY,{}).access||{})})}
+function saveCfg(c){write(CONFIG_KEY,c)}
+function money(n){return '$'+Number(n||0).toFixed(2)}
+function accountOf(u){return u.account||{}}
+function activeCycle(a){return (a.cycles||[]).find(c=>c&&c.status==='active')||((a.activePlanId&&a.plans?.[a.activePlanId]?.cycles)||[]).find(c=>c&&c.status==='active')||null}
+function planName(a){const c=activeCycle(a);return c?(PLANS[c.planId]?.name||'Unknown'):a.activePlanId?(PLANS[a.activePlanId]?.name||'Unknown'):'None'}
+function customerAccess(c,id,key){const cgf=cfg();cgf.customerAccess=cgf.customerAccess||{};cgf.customerAccess[c]=cgf.customerAccess[c]||{};return cgf.customerAccess[c][key]!==false}
+function setCustomerAccess(c,key,val){const x=cfg();x.customerAccess=x.customerAccess||{};x.customerAccess[c]=x.customerAccess[c]||{};x.customerAccess[c][key]=val;saveCfg(x);render()}
+function toggleGlobal(key){const x=cfg();x.access[key]=!x.access[key];saveCfg(x);render()}
+function activeStatus(a){const c=activeCycle(a);return c&&c.status==='active'}
+function pendingPaymentItems(){return users().flatMap(u=>(accountOf(u).payments||[]).filter(r=>r.status==='pending').map(r=>({u,r})))}
+function pendingWithdrawalItems(){return users().flatMap(u=>(accountOf(u).withdrawals||[]).filter(r=>r.status==='pending').map(r=>({u,r})))}
+function supportItems(){return users().flatMap(u=>(accountOf(u).supportRequests||[]).filter(r=>r.status==='pending').map(r=>({u,r})))}
+function saveUserAccount(u,a){u.account=a;const list=users();const i=list.findIndex(x=>x.username===u.username);if(i>=0){list[i]=u;saveUsers(list)}}
+function verifyPayment(username,id,approve){
+ const list=users(),u=list.find(x=>x.username===username);if(!u)return;const a=accountOf(u),r=(a.payments||[]).find(x=>x.id===id);if(!r||r.status!=='pending')return;
+ if(!approve){r.status='rejected';r.rejectionReason='Rejected by Administrator.';saveUserAccount(u,a);render();return}
+ const p=PLANS[r.planId]; if(!p||Number(r.submittedAmount)<p.amount){r.status='rejected';r.rejectionReason='Submitted amount is below required plan amount.';saveUserAccount(u,a);render();return}
+ a.plans=a.plans||{};const pr=a.plans[r.planId]||(a.plans[r.planId]={uses:0,access:true,cycles:[],pendingRepeat:false});
+ if(Number(pr.uses||0)>=2){r.status='rejected';r.rejectionReason='Maximum two uses of this package reached.';saveUserAccount(u,a);render();return}
+ pr.uses=Number(pr.uses||0)+1;pr.cycles=pr.cycles||[];pr.cycles.push({id:'CYCLE-'+Date.now(),planId:r.planId,deposit:Number(r.submittedAmount),packageBalance:Number(r.submittedAmount),earnedReward:0,completedDays:0,lastTaskAt:null,startAt:new Date().toISOString(),endAt:null,status:'active',withdrawals:[]});
+ a.activePlanId=r.planId;r.status='verified';r.verifiedAt=new Date().toISOString();saveUserAccount(u,a);render()
+}
+function decideWithdrawal(username,id,approve){
+ const list=users(),u=list.find(x=>x.username===username);if(!u)return;const a=accountOf(u),r=(a.withdrawals||[]).find(x=>x.id===id);if(!r||r.status!=='pending')return;
+ r.status=approve?'approved':'rejected';if(!approve){r.rejectionReason='Rejected by Administrator.'; if(r.fromReward){const c=activeCycle(a);if(c)c.earnedReward=Number(c.earnedReward||0)+Number(r.fromReward)}if(r.fromPackage){const c=activeCycle(a);if(c)c.packageBalance=Number(c.packageBalance||0)+Number(r.fromPackage)}}
+ r.reviewedAt=new Date().toISOString();saveUserAccount(u,a);render()
+}
+function renderGlobal(){
+ const c=cfg();const keys=[['tasks','Tasks'],['reserve','Reserve'],['stake','Stake'],['assets','Assets'],['payout','Payout']];
+ $('globalControls').innerHTML=keys.map(([k,n])=>`<button class="btn toggle ${c.access[k]?'on':'off'}" data-global="${k}">${n}: ${c.access[k]?'ON':'OFF'}</button>`).join('');
+ document.querySelectorAll('[data-global]').forEach(b=>b.onclick=()=>toggleGlobal(b.dataset.global))
+}
+function renderStats(){
+ const us=users(),active=us.filter(u=>activeStatus(accountOf(u))).length,plans=us.filter(u=>accountOf(u).activePlanId).length;
+ $('sCustomers').textContent=us.length;$('sActive').textContent=active;$('sPlans').textContent=plans;$('sPayments').textContent=pendingPaymentItems().length;$('sWithdrawals').textContent=pendingWithdrawalItems().length
+}
+let customerTab='allCustomers';
+let selectedCustomerId=null;
+function customerById(cid){return users().find(u=>String(accountOf(u).customerId||'')===String(cid))}
+function customerBanned(u){return !!accountOf(u).banned}
+function customerPending(u){const a=accountOf(u);return !activeStatus(a)&&((a.payments||[]).some(x=>x.status==='pending')||(a.withdrawals||[]).some(x=>x.status==='pending'))}
+function filteredCustomers(){const us=users();if(customerTab==='activeCustomers')return us.filter(u=>activeStatus(accountOf(u)));if(customerTab==='pendingCustomers')return us.filter(customerPending);if(customerTab==='bannedCustomers')return us.filter(customerBanned);return us}
+function renderCustomers(){
+ const us=filteredCustomers();
+ $('tabCustomerCount').textContent=users().length;
+ $('customersBody').innerHTML=us.length?us.map(u=>{
+   const a=accountOf(u),cid=a.customerId||'—',cw=a.registeredWallet||{},cycles=activeCycle(a),balance=cycles?(Number(cycles.packageBalance||0)+Number(cycles.earnedReward||0)):0;
+   const task=customerAccess(cid,'tasks'),reserve=customerAccess(cid,'reserve'),stake=customerAccess(cid,'stake');
+   const planBtns=Object.values(PLANS).map(p=>{const enabled=cfg().customerAccess?.[cid]?.plans?.[p.id]!==false;return `<button class="btn small toggle ${enabled?'on':'off'}" data-plan="${esc(cid)}|${p.id}">${p.name.replace('NOVA+ ','')}: ${enabled?'ON':'OFF'}</button>`}).join(' ');
+   const status=customerBanned(u)?'<span class="pill red">BANNED</span>':activeStatus(a)?'<span class="pill green">ACTIVE</span>':'<span class="pill">INACTIVE</span>';
+   return `<tr class="clickable" data-open-customer="${esc(cid)}">
+   <td><b>${esc(a.fullName||u.fullName||'')}</b><br><span class="muted">${esc(cid)}</span><br><span class="muted">${esc(u.username||'')}</span></td>
+   <td>${esc(a.email||u.email||'')}<br>${esc(a.mobile||u.mobile||'')}<br>${esc(a.countryName||u.countryName||'')}</td>
+   <td>${esc(planName(a))}<br>${status}<br>${money(balance)}</td>
+   <td><button class="btn small toggle ${task?'on':'off'}" data-cust="${esc(cid)}|tasks">${task?'ON':'OFF'}</button></td>
+   <td><button class="btn small toggle ${reserve?'on':'off'}" data-cust="${esc(cid)}|reserve">${reserve?'ON':'OFF'}</button></td>
+   <td><button class="btn small toggle ${stake?'on':'off'}" data-cust="${esc(cid)}|stake">${stake?'ON':'OFF'}</button></td>
+   <td><div class="controls">${planBtns}</div></td>
+   <td><div class="controls"><button class="btn small primary" data-view="${esc(cid)}">View</button><button class="btn small ${customerBanned(u)?'green':'red'}" data-ban="${esc(cid)}">${customerBanned(u)?'Unban':'Ban'}</button><button class="btn small red" data-delete="${esc(cid)}">Delete</button></div></td></tr>`
+ }).join(''):'<tr><td colspan="8" class="muted">No customers in this category.</td></tr>';
+ document.querySelectorAll('[data-cust]').forEach(b=>{const [cid,key]=b.dataset.cust.split('|');b.onclick=e=>{e.stopPropagation();setCustomerAccess(cid,key,!customerAccess(cid,key))}});
+ document.querySelectorAll('[data-plan]').forEach(b=>{const [cid,id]=b.dataset.plan.split('|');b.onclick=e=>{e.stopPropagation();const x=cfg();x.customerAccess=x.customerAccess||{};x.customerAccess[cid]=x.customerAccess[cid]||{};x.customerAccess[cid].plans=x.customerAccess[cid].plans||{};x.customerAccess[cid].plans[id]=x.customerAccess[cid].plans[id]===false;saveCfg(x);render()}});
+ document.querySelectorAll('[data-open-customer],[data-view]').forEach(b=>b.onclick=e=>{e.stopPropagation();openCustomer(b.dataset.openCustomer||b.dataset.view)});
+ document.querySelectorAll('[data-ban]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleBan(b.dataset.ban)});
+ document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=e=>{e.stopPropagation();deleteCustomer(b.dataset.delete)});
+ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{customerTab=b.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderCustomers()});
+}
+function toggleBan(cid){const u=customerById(cid);if(!u)return;const a=accountOf(u);a.banned=!a.banned;a.status=a.banned?'banned':'active';saveUserAccount(u,a);render();if(selectedCustomerId===cid)openCustomer(cid)}
+function deleteCustomer(cid){const u=customerById(cid);if(!u)return;if(!confirm('Delete customer '+cid+' permanently from this browser demo?'))return;saveUsers(users().filter(x=>String(accountOf(x).customerId||'')!==String(cid)));const c=cfg();if(c.customerAccess)delete c.customerAccess[cid];saveCfg(c);if(selectedCustomerId===cid)closeCustomer();render()}
+function activatePlan(cid,planId){const u=customerById(cid);if(!u)return;const a=accountOf(u);a.plans=a.plans||{};const pr=a.plans[planId]||(a.plans[planId]={uses:0,access:true,cycles:[],pendingRepeat:false});pr.access=true;pr.cycles=pr.cycles||[];if(!activeCycle(a)){pr.cycles.push({id:'ADMIN-CYCLE-'+Date.now(),planId:Number(planId),deposit:Number(PLANS[planId].amount),packageBalance:Number(PLANS[planId].amount),earnedReward:0,completedDays:0,lastTaskAt:null,startAt:new Date().toISOString(),endAt:null,status:'active',adminActivated:true,withdrawals:[]});a.activePlanId=Number(planId)}saveUserAccount(u,a);render();openCustomer(cid)}
+function openCustomer(cid){const u=customerById(cid);if(!u)return;selectedCustomerId=cid;const a=accountOf(u),w=a.registeredWallet||{},c=activeCycle(a);$('detailTitle').textContent=a.fullName||u.fullName||'Customer';$('detailSubtitle').textContent=(a.customerId||cid)+' · '+(u.username||'');
+ const details=[['Customer ID',a.customerId||'—'],['Full Name',a.fullName||u.fullName||'—'],['Username',u.username||'—'],['Email',a.email||u.email||'—'],['Mobile',a.mobile||u.mobile||'—'],['Country',a.countryName||u.countryName||'—'],['Language',a.language||u.language||'—'],['Created',a.createdAt||'—'],['Email Verified',a.emailVerified?'Yes':'No'],['Account Status',a.banned?'BANNED':(activeStatus(a)?'ACTIVE':'INACTIVE')],['Current Plan',planName(a)],['Cycle Day',c?(c.completedDays||0)+' / 45':'—'],['Package Balance',c?money(c.packageBalance):money(0)],['Earned Reward',c?money(c.earnedReward):money(0)],['Total Assets',c?money(Number(c.packageBalance||0)+Number(c.earnedReward||0)):money(0)],['Wallet Network',w.network||'—'],['Wallet Address',w.address||'Not registered']];
+ $('detailGrid').innerHTML=details.map(x=>`<div class="detail"><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join('');
+ $('detailControls').innerHTML=`<button class="btn green" data-detail-activate>Activate Selected Plan</button><button class="btn" data-detail-freeze>${a.frozen?'Unfreeze Account':'Freeze Account'}</button><button class="btn ${a.banned?'green':'red'}" data-detail-ban>${a.banned?'Unban':'Ban Account'}</button><button class="btn red" data-detail-delete>Delete Customer</button>`;
+ $('detailPlans').innerHTML=Object.values(PLANS).map(p=>{const en=cfg().customerAccess?.[cid]?.plans?.[p.id]!==false;return `<button class="btn small toggle ${en?'on':'off'}" data-detail-plan="${p.id}">${p.name}: ${en?'ON':'OFF'}</button>`}).join('');
+ $('detailControls').querySelector('[data-detail-activate]').onclick=()=>{const pick=prompt('Enter plan number to activate: 1 Basic, 2 Plus, 3 Pro, 4 Premium, 5 Gold',String(a.activePlanId||1));if(PLANS[pick])activatePlan(cid,Number(pick))};
+ $('detailControls').querySelector('[data-detail-freeze]').onclick=()=>{a.frozen=!a.frozen;saveUserAccount(u,a);render();openCustomer(cid)};
+ $('detailControls').querySelector('[data-detail-ban]').onclick=()=>toggleBan(cid);
+ $('detailControls').querySelector('[data-detail-delete]').onclick=()=>deleteCustomer(cid);
+ document.querySelectorAll('[data-detail-plan]').forEach(b=>b.onclick=()=>{const id=b.dataset.detailPlan,x=cfg();x.customerAccess=x.customerAccess||{};x.customerAccess[cid]=x.customerAccess[cid]||{};x.customerAccess[cid].plans=x.customerAccess[cid].plans||{};x.customerAccess[cid].plans[id]=x.customerAccess[cid].plans[id]===false;saveCfg(x);openCustomer(cid);renderCustomers()});
+ $('customerModal').classList.add('show')}
+function closeCustomer(){$('customerModal').classList.remove('show');selectedCustomerId=null}
+function renderNotifications(){const p=pendingPaymentItems(),w=pendingWithdrawalItems(),s=supportItems(),total=p.length+w.length+s.length;$('notificationCount').textContent=total;$('notifications').innerHTML=`<div class="noticeItem" data-notice="payments"><strong>💳 New Payment Requests <span class="badgeDot">${p.length}</span></strong><small>Pending deposit/payment verification</small></div><div class="noticeItem" data-notice="withdrawals"><strong>⇧ Withdrawal Requests <span class="badgeDot">${w.length}</span></strong><small>Pending payout approvals</small></div><div class="noticeItem" data-notice="support"><strong>💬 Support Messages <span class="badgeDot">${s.length}</span></strong><small>Pending customer support requests</small></div>`;document.querySelectorAll('[data-notice]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.notice)?.scrollIntoView({behavior:'smooth'}))}
+
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function renderPayments(){
+ const arr=pendingPaymentItems();$('payments').innerHTML=arr.length?arr.map(({u,r})=>{const a=accountOf(u);return `<div class="req"><b>${esc(a.fullName||u.fullName)}</b> <span class="pill">${esc(a.customerId||'')}</span><div class="meta">Email: ${esc(a.email||u.email)}<br>Mobile: ${esc(a.mobile||u.mobile)}<br>Plan: ${esc(PLANS[r.planId]?.name||r.planId)}<br>Amount: ${money(r.submittedAmount)} / Required: ${money(r.requiredAmount||PLANS[r.planId]?.amount)}<br>Network: ${esc(r.network||'—')}<br>Transaction ID: ${esc(r.tx||r.transactionId||'—')}</div><div class="actions"><button class="btn green small" data-pay="${esc(u.username)}|${esc(r.id)}|1">Verify</button><button class="btn red small" data-pay="${esc(u.username)}|${esc(r.id)}|0">Reject</button></div></div>`}).join(''):'<div class="muted">No pending payments.</div>';
+ document.querySelectorAll('[data-pay]').forEach(b=>{const [u,id,a]=b.dataset.pay.split('|');b.onclick=()=>verifyPayment(u,id,a==='1')})
+}
+function renderWithdrawals(){
+ const arr=pendingWithdrawalItems();$('withdrawals').innerHTML=arr.length?arr.map(({u,r})=>{const a=accountOf(u);const wallet=r.wallet||a.registeredWallet?.address||'';return `<div class="req"><b>${esc(a.fullName||u.fullName)}</b> <span class="pill">${esc(a.customerId||r.customerId||'')}</span><div class="meta">Email: ${esc(a.email||u.email)}<br>Mobile: ${esc(a.mobile||u.mobile)}<br>Network: ${esc(r.network||a.registeredWallet?.network||'—')}<br>Wallet: <span id="w-${esc(r.id)}">${esc(wallet)}</span><button class="btn small copy" data-copy="${esc(wallet)}">Copy Address</button><br>Requested: ${money(r.requested)} | Deduction: ${money(r.deduction)} | Net: ${money(r.net)}<br>Day: ${esc(r.day??'—')}</div><div class="actions"><button class="btn green small" data-wd="${esc(u.username)}|${esc(r.id)}|1">Approve</button><button class="btn red small" data-wd="${esc(u.username)}|${esc(r.id)}|0">Reject</button></div></div>`}).join(''):'<div class="muted">No pending withdrawals.</div>';
+ document.querySelectorAll('[data-wd]').forEach(b=>{const [u,id,a]=b.dataset.wd.split('|');b.onclick=()=>decideWithdrawal(u,id,a==='1')});
+ document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='Copied ✓';setTimeout(()=>b.textContent='Copy Address',1200)}catch(e){alert('Copy failed. Select the address manually.')}})
+}
+function renderSupport(){
+ const arr=supportItems();$('support').innerHTML=arr.length?arr.map(({u,r})=>{const a=accountOf(u);return `<div class="req"><b>${esc(a.fullName||u.fullName)}</b> <span class="pill">${esc(a.customerId||'')}</span><div class="meta">Email: ${esc(a.email||u.email)}<br>Mobile: ${esc(a.mobile||u.mobile)}<br>Plan: ${esc(planName(a))}<br>Message: ${esc(r.message||r.text||'—')}</div><div class="actions"><button class="btn primary small" data-support="${esc(u.username)}|${esc(r.id)}">Mark Reviewed</button></div></div>`}).join(''):'<div class="muted">No pending support requests.</div>';
+ document.querySelectorAll('[data-support]').forEach(b=>b.onclick=()=>{const [u,id]=b.dataset.support.split('|');const list=users(),usr=list.find(x=>x.username===u);if(!usr)return;const a=accountOf(usr),r=(a.supportRequests||[]).find(x=>x.id===id);if(r){r.status='reviewed';r.reviewedAt=new Date().toISOString();saveUserAccount(usr,a);render()}})
+}
+function render(){renderStats();renderGlobal();renderCustomers();renderPayments();renderWithdrawals();renderSupport();renderNotifications()}
+async function enterAdminFromSession(user){
+  if(!user)return false;
+  const {data:adminRow,error:adminError}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();
+  if(adminError||!adminRow){await supabaseClient.auth.signOut();return false}
+  localStorage.removeItem(ADMIN_SESSION);
+  $('loginView').classList.add('hidden');
+  $('forgotView').classList.add('hidden');
+  $('recoveryView').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  render();
+  return true;
+}
+function showLogin(){
+  $('app').classList.add('hidden');
+  $('forgotView').classList.add('hidden');
+  $('recoveryView').classList.add('hidden');
+  $('loginView').classList.remove('hidden');
+}
+$('adminLoginForm').onsubmit=async e=>{
+  e.preventDefault();
+  const email=$('adminUsername').value.trim().toLowerCase(),p=$('adminPassword').value;
+  if(!email||!p){$('loginError').textContent='Admin email and password are required.';return}
+  $('loginError').textContent='';
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:p});
+  if(error||!data.user){$('loginError').textContent=error?.message||'Admin login failed.';return}
+  const ok=await enterAdminFromSession(data.user);
+  if(!ok)$('loginError').textContent='This account is not authorized as an administrator.';
+};
+$('forgotPasswordBtn').onclick=()=>{
+  $('loginView').classList.add('hidden');
+  $('resetEmail').value=$('adminUsername').value.trim();
+  $('resetMessage').textContent='';
+  $('forgotView').classList.remove('hidden');
+};
+$('backToLoginBtn').onclick=showLogin;
+$('forgotForm').onsubmit=async e=>{
+  e.preventDefault();
+  const email=$('resetEmail').value.trim().toLowerCase();
+  if(!email){$('resetMessage').textContent='Enter the admin email address.';return}
+  $('resetMessage').textContent='Sending reset link…';
+  const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:ADMIN_REDIRECT_URL});
+  $('resetMessage').textContent=error?error.message:'Reset link sent. Check your email and open “Reset password” to return here.';
+};
+$('recoveryForm').onsubmit=async e=>{
+  e.preventDefault();
+  const p=$('newAdminPassword').value,c=$('confirmAdminPassword').value;
+  $('recoveryError').textContent='';$('recoverySuccess').textContent='';
+  if(p.length<6){$('recoveryError').textContent='Password must be at least 6 characters.';return}
+  if(p!==c){$('recoveryError').textContent='Passwords do not match.';return}
+  const {data,error}=await supabaseClient.auth.updateUser({password:p});
+  if(error){$('recoveryError').textContent=error.message;return}
+  $('newAdminPassword').value='';$('confirmAdminPassword').value='';
+  $('recoverySuccess').textContent='Password updated successfully.';
+  $('continueAdminBtn').classList.remove('hidden');
+  if(data?.user) $('continueAdminBtn').onclick=async()=>{const ok=await enterAdminFromSession(data.user);if(!ok)showLogin()};
+};
+$('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();localStorage.removeItem(ADMIN_SESSION);showLogin();$('adminPassword').value=''};
+$('refreshBtn').onclick=render;$('closeCustomerModal').onclick=closeCustomer;$('customerModal').onclick=e=>{if(e.target.id==='customerModal')closeCustomer()};
+function showRecovery(){
+  $('loginView').classList.add('hidden');
+  $('forgotView').classList.add('hidden');
+  $('app').classList.add('hidden');
+  $('recoveryView').classList.remove('hidden');
+}
+function isRecoveryUrl(){
+  const raw=(window.location.hash||'')+'\u0026'+(window.location.search||'');
+  return /(?:^|[?#&])type=recovery(?:[&#]|$)/i.test(raw);
+}
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+  if(event==='PASSWORD_RECOVERY') showRecovery();
+});
+(async()=>{
+  // TEMPORARY TEST MODE: open the existing Admin dashboard directly.
+  // No other dashboard logic, layout, or sections are changed.
+  $('loginView').classList.add('hidden');
+  $('forgotView').classList.add('hidden');
+  $('recoveryView').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  render();
+})();
+</script>
+</body>
+</html>
