@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOVA+ Supabase Connection Test</title>
+<style>
+body{margin:0;background:#06111b;color:#eaf5f3;font-family:Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{width:min(92%,520px);background:#0d2030;border:1px solid #234158;border-radius:22px;padding:28px;box-sizing:border-box;box-shadow:0 15px 50px #0008}
+h1{margin:0 0 8px;font-size:24px}.sub{color:#9db2c2;margin-bottom:24px}
+button{width:100%;padding:15px;border:0;border-radius:12px;background:#18d6a0;color:#03120e;font-size:17px;font-weight:700}
+#status{margin-top:20px;padding:16px;border-radius:12px;background:#081824;white-space:pre-wrap;line-height:1.55;word-break:break-word}
+.ok{border:1px solid #18d6a0}.bad{border:1px solid #e45d78}
+.small{margin-top:16px;color:#8198a9;font-size:13px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>NOVA+ Supabase Connection Test</h1>
+  <div class="sub">یہ صرف connection test ہے۔ NOVA+ کے اصل design یا database data میں کوئی تبدیلی نہیں کرے گا۔</div>
+  <button id="test">Test Supabase Connection</button>
+  <div id="status">Test شروع کرنے کے لیے button دبائیں۔</div>
+  <div class="small">Project: ffmjzohsosxjbkjgatxp</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://ffmjzohsosxjbkjgatxp.supabase.co';
+const SUPABASE_KEY='sb_publishable_qlcwhpSs4TE-VLj8pJDS0Q_q_QPjcix';
+
+const statusBox=document.getElementById('status');
+const button=document.getElementById('test');
+
+function show(msg,ok){
+  statusBox.textContent=msg;
+  statusBox.className=ok?'ok':'bad';
+}
+
+button.onclick=async()=>{
+  button.disabled=true;
+  button.textContent='Testing...';
+  show('Supabase connection test جاری ہے...',true);
+
+  try{
+    if(!window.supabase || !window.supabase.createClient){
+      throw new Error('Supabase JavaScript library load نہیں ہوئی۔');
+    }
+
+    const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+    const started=Date.now();
+    const {data,error}=await client
+      .from('nova_customer_records')
+      .select('customer_id')
+      .limit(1);
+
+    const ms=Date.now()-started;
+
+    if(error){
+      show(
+        '❌ Supabase server تک connection ہو گیا، لیکن database query میں مسئلہ ہے۔\n\n'+
+        'Error: '+(error.message||error)+'\n'+
+        'Code: '+(error.code||'N/A')+'\n'+
+        'Time: '+ms+' ms',
+        false
+      );
+    }else{
+      show(
+        '✅ SUPABASE CONNECTION SUCCESSFUL\n\n'+
+        'Project: ffmjzohsosxjbkjgatxp\n'+
+        'Table: nova_customer_records\n'+
+        'Query: SELECT customer_id LIMIT 1\n'+
+        'Rows returned: '+(data?.length||0)+'\n'+
+        'Response time: '+ms+' ms\n\n'+
+        'اس کا مطلب ہے کہ browser سے Supabase صحیح connect ہو رہا ہے۔',
+        true
+      );
+    }
+  }catch(e){
+    show(
+      '❌ CONNECTION FAILED\n\n'+
+      'Error: '+(e?.message||String(e))+'\n\n'+
+      'اس کا مطلب ہے کہ browser سے Supabase تک connection قائم نہیں ہو سکا، یا Supabase JavaScript library load نہیں ہوئی۔',
+      false
+    );
+  }finally{
+    button.disabled=false;
+    button.textContent='Test Again';
+  }
+};
+</script>
+</body>
+</html>
