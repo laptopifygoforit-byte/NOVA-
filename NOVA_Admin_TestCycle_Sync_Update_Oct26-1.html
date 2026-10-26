@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOVA+ Admin Panel</title>
+<style>
+:root{--bg:#06111c;--panel:#0b1b2a;--panel2:#102437;--border:#20384c;--text:#eef6ff;--muted:#91a6b9;--green:#25e58b;--blue:#5ab4ff;--red:#ff647c;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#06111c,#091725);color:var(--text);font:14px Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}.wrap{max-width:1250px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.logo{font-size:28px;font-weight:800}.logo span{color:var(--red)}
+.btn{border:1px solid var(--border);background:#10283b;color:#fff;padding:10px 14px;border-radius:10px}.btn.primary{background:#1478b9;border-color:#2a9be7}.btn.green{background:#116b4b;border-color:#21bb7b}.btn.red{background:#6f2031;border-color:#b83d56}.btn.small{padding:7px 9px;font-size:12px}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px}.login-card{width:min(420px,100%);background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:28px;box-shadow:0 20px 60px #0008}.login-card h1{margin:0 0 6px}.sub,.muted{color:var(--muted)}.field{margin:15px 0}.field label{display:block;color:#b9cad8;font-size:12px;margin-bottom:7px}.field input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#071522;color:#fff;outline:none}.field input:focus{border-color:var(--blue)}.error{color:#ff8798;min-height:20px;font-size:12px;margin:8px 0}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.stat{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:25px;margin-top:7px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px;margin-top:16px;overflow:auto}.panel h2{margin:0 0 14px;font-size:18px}
+table{width:100%;border-collapse:collapse;min-width:980px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid #1a3042;vertical-align:top}th{color:#9db1c2;font-size:11px;text-transform:uppercase}td{font-size:12px}.pill{display:inline-block;padding:4px 7px;border-radius:999px;background:#183148;color:#bcd2e5}.pill.green{color:#9affca;background:#0c3b2b}.pill.red{color:#ffabb8;background:#421723}.pill.gold{color:#ffe49a;background:#443616}
+.controls{display:flex;flex-wrap:wrap;gap:7px}.toggle{min-width:72px}.toggle.on{background:#0c6243;border-color:#25e58b}.toggle.off{background:#3c1b25;border-color:#ff647c}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.req{padding:12px;border:1px solid var(--border);border-radius:12px;margin:8px 0;background:#091b2b}.req b{color:#fff}.req .meta{color:var(--muted);font-size:11px;line-height:1.6}.req .actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.copy{margin-left:6px}
+.note{font-size:11px;color:var(--muted);line-height:1.5}.tabbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab{border:1px solid var(--border);background:#0d2233;color:#bcd2e5;padding:9px 13px;border-radius:10px;cursor:pointer}.tab.active{background:#1478b9;border-color:#2a9be7;color:#fff}.clickable{cursor:pointer}.clickable:hover{background:#10283b}.badgeDot{display:inline-flex;min-width:19px;height:19px;padding:0 5px;align-items:center;justify-content:center;border-radius:99px;background:var(--red);color:#fff;font-size:10px;margin-left:5px}.noticebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.noticeItem{border:1px solid var(--border);background:#091b2b;border-radius:12px;padding:10px 12px;cursor:pointer}.noticeItem strong{display:block;font-size:12px}.noticeItem small{color:var(--muted)}.modalBack{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modalBack.show{display:flex}.modalBox{width:min(900px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:0 25px 80px #000}.detailGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.detail{padding:11px;border:1px solid var(--border);border-radius:10px;background:#091b2b}.detail small{display:block;color:var(--muted);font-size:10px}.detail b{display:block;margin-top:4px;word-break:break-word}.dangerText{color:#ff8b9b}@media(max-width:650px){.detailGrid{grid-template-columns:1fr}}
+@media(max-width:850px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+<style>
+.forgot-link{display:block;width:100%;margin-top:10px;background:transparent;border:0;color:#8ecbff;padding:6px;text-align:center;font-size:12px}
+.recovery-card{width:min(460px,100%);background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:28px;box-shadow:0 20px 60px #0008}
+.recovery-card h1{margin:0 0 6px}.recovery-card .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.recovery-card .actions .btn{flex:1}
+.info{color:#a8cfff;font-size:12px;min-height:20px;margin:8px 0}.successText{color:#8ff0c0;font-size:12px;min-height:20px;margin:8px 0}
+</style>
+</style>
+</head>
+<body>
+<section id="loginView" class="login">
+<div class="login-card">
+<div class="logo">NOVA<span>+</span> ADMIN</div>
+<h1>Administrator Login</h1>
+<div class="sub">Private administration panel — separate from the public/customer page.</div>
+<form id="adminLoginForm">
+<div class="field"><label>Admin Username</label><input id="adminUsername" type="text" autocomplete="username" required></div>
+<div class="field"><label>Admin Password</label><input id="adminPassword" type="password" autocomplete="current-password" required></div>
+<div id="loginError" class="error"></div>
+<button class="btn primary" style="width:100%" type="submit">Login to Admin Panel</button>
+<button class="forgot-link" id="forgotPasswordBtn" type="button">Forgot password?</button>
+</form>
+</div>
+</section>
+
+<section id="forgotView" class="login hidden">
+<div class="recovery-card">
+<div class="logo">NOVA<span>+</span> ADMIN</div>
+<h1>Reset Admin Password</h1>
+<div class="sub">Enter the administrator email. We will send a secure password reset link.</div>
+<form id="forgotForm">
+<div class="field"><label>Admin Email</label><input id="resetEmail" type="email" autocomplete="email" required></div>
+<div id="resetMessage" class="info"></div>
+<div class="actions"><button class="btn primary" type="submit">Send Reset Link</button><button class="btn" id="backToLoginBtn" type="button">Back to Login</button></div>
+</form>
+</div>
+</section>
+
+<section id="recoveryView" class="login hidden">
+<div class="recovery-card">
+<div class="logo">NOVA<span>+</span> ADMIN</div>
+<h1>Set New Password</h1>
+<div class="sub">Choose a new password for your administrator account.</div>
+<form id="recoveryForm">
+<div class="field"><label>New Password</label><input id="newAdminPassword" type="password" autocomplete="new-password" minlength="6" required></div>
+<div class="field"><label>Confirm New Password</label><input id="confirmAdminPassword" type="password" autocomplete="new-password" minlength="6" required></div>
+<div id="recoveryError" class="error"></div>
+<div id="recoverySuccess" class="successText"></div>
+<div class="actions"><button class="btn primary" type="submit">Update Password</button><button class="btn hidden" id="continueAdminBtn" type="button">Continue to Admin Panel</button></div>
+</form>
+</div>
+</section>
+
+<section id="app" class="hidden">
+<div class="wrap">
+<header class="top">
+<div><div class="logo">NOVA<span>+</span> Admin</div><div class="muted">Customer, payment, withdrawal and access controls</div></div>
+<div><button class="btn" id="refreshBtn">Refresh</button> <button class="btn red" id="logoutBtn">Admin Logout</button></div>
+</header>
+
+<div class="stats">
+<div class="stat"><small>Total Customers</small><strong id="sCustomers">0</strong></div>
+<div class="stat"><small>Active Customers</small><strong id="sActive">0</strong></div>
+<div class="stat"><small>Active Plans</small><strong id="sPlans">0</strong></div>
+<div class="stat"><small>Pending Payments</small><strong id="sPayments">0</strong></div>
+<div class="stat"><small>Pending Withdrawals</small><strong id="sWithdrawals">0</strong></div>
+</div>
+
+<div class="panel">
+<h2>Global Section Controls</h2>
+<div class="controls" id="globalControls"></div>
+<div class="note" style="margin-top:10px">Global OFF hides the relevant customer section. Customer-level controls below can independently enable/disable Tasks, Reserve and Stake for each customer.</div>
+</div>
+
+<div class="panel" id="customersPanel">
+<h2>Advanced Customer Management</h2>
+<div class="tabbar">
+<button class="tab active" data-tab="allCustomers">All Customers <span class="badgeDot" id="tabCustomerCount">0</span></button>
+<button class="tab" data-tab="activeCustomers">Active</button>
+<button class="tab" data-tab="pendingCustomers">Pending</button>
+<button class="tab" data-tab="bannedCustomers">Banned</button>
+</div>
+<div class="note" style="margin-bottom:12px">Click any customer row to open the complete profile. Admin can inspect the bio-data, activate/freeze/ban/delete the account, change plan access, and independently switch Tasks, Reserve and Stake.</div>
+<table><thead><tr><th>Customer</th><th>Contact</th><th>Package / Status</th><th>Tasks</th><th>Reserve</th><th>Stake</th><th>Plan Access</th><th>Actions</th></tr></thead>
+<tbody id="customersBody"></tbody></table>
+</div>
+
+<div class="grid2">
+<div class="panel"><h2>Pending Deposits / Payments</h2><div id="payments"></div></div>
+<div class="panel"><h2>Pending Withdrawals</h2><div id="withdrawals"></div></div>
+</div>
+
+<div class="panel"><h2>Test Accounts</h2><div class="note">Browser-demo test controls only. Test designation is stored in this browser account data and is not a server-side payout lock.</div><div id="testAccounts"></div></div>
+<div class="panel"><h2>Support Requests</h2><div id="support"></div></div>
+</div>
+</section>
+
+<div class="panel">
+<h2>Admin Notifications <span class="badgeDot" id="notificationCount">0</span></h2>
+<div class="noticebar" id="notifications"></div>
+</div>
+
+<div class="modalBack" id="customerModal">
+ <div class="modalBox">
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+   <div><h2 id="detailTitle" style="margin:0">Customer Details</h2><div class="muted" id="detailSubtitle"></div></div>
+   <button class="btn" id="closeCustomerModal">Close</button>
+  </div>
+  <div class="detailGrid" id="detailGrid" style="margin-top:14px"></div>
+  <div class="panel" style="margin-top:14px">
+   <h2>Customer Controls</h2>
+   <div class="controls" id="detailControls"></div>
+  </div>
+  <div class="panel" style="margin-top:14px"><h2>Plan Access</h2><div class="controls" id="detailPlans"></div></div>
+ </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+'use strict';
+const SUPABASE_URL='https://ffmjzohsosxjbkjgatxp.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_qlcwhpSs4TE-VLj8pJDS0Q_q_QPjcix';
+const ADMIN_REDIRECT_URL='https://nova-beta-lac-35.vercel.app/admin.html';
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+</script>
+<script>
+'use strict';
+const ADMIN_USER='admin';
+const ADMIN_PASS='NOVA ADMIN';
+const USER_KEY='novaPlusUsersV2';
+const CONFIG_KEY='novaPlusAdminConfigV2';
+const ADMIN_SESSION='novaPlusStandaloneAdminSessionV1';
+const PLANS={1:{name:'NOVA+ Basic',amount:50},2:{name:'NOVA+ Plus',amount:100},3:{name:'NOVA+ Pro',amount:200},4:{name:'NOVA+ Premium',amount:300},5:{name:'NOVA+ Gold',amount:500}};
+const $=id=>document.getElementById(id);
+const read=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const users=()=>read(USER_KEY,[]);
+const saveUsers=v=>write(USER_KEY,v);
+const defaultConfig=()=>({access:{tasks:true,reserve:true,stake:true,assets:true,payout:true},packageAccess:{},customerAccess:{},minWithdrawal:1,emailRegistrationLimit:true});
+function cfg(){return Object.assign(defaultConfig(),read(CONFIG_KEY,{}),{access:Object.assign(defaultConfig().access,read(CONFIG_KEY,{}).access||{})})}
+function saveCfg(c){write(CONFIG_KEY,c)}
+function money(n){return '$'+Number(n||0).toFixed(2)}
+function accountOf(u){return u.account||{}}
+function activeCycle(a){return (a.cycles||[]).find(c=>c&&c.status==='active')||((a.activePlanId&&a.plans?.[a.activePlanId]?.cycles)||[]).find(c=>c&&c.status==='active')||null}
+function planName(a){const c=activeCycle(a);return c?(PLANS[c.planId]?.name||'Unknown'):a.activePlanId?(PLANS[a.activePlanId]?.name||'Unknown'):'None'}
+function customerAccess(c,id,key){const cgf=cfg();cgf.customerAccess=cgf.customerAccess||{};cgf.customerAccess[c]=cgf.customerAccess[c]||{};return cgf.customerAccess[c][key]!==false}
+function setCustomerAccess(c,key,val){const x=cfg();x.customerAccess=x.customerAccess||{};x.customerAccess[c]=x.customerAccess[c]||{};x.customerAccess[c][key]=val;saveCfg(x);render()}
+function toggleGlobal(key){const x=cfg();x.access[key]=!x.access[key];saveCfg(x);render()}
+function activeStatus(a){const c=activeCycle(a);return c&&c.status==='active'}
+function pendingPaymentItems(){return users().flatMap(u=>(accountOf(u).payments||[]).filter(r=>r.status==='pending').map(r=>({u,r,source:'local'})))}
+let dbPendingPayments=[];
+let dbPendingPaymentsLoaded=false;
+async function loadDbPendingPayments(){
+ try{
+  const {data,error}=await supabaseClient.from('deposit_requests').select('*').eq('status','pending').order('created_at',{ascending:false}).limit(100);
+  if(error)throw error;
+  dbPendingPayments=Array.isArray(data)?data:[];
+  dbPendingPaymentsLoaded=true;
+  if(typeof renderStats==='function')renderStats();
+  if(typeof renderNotifications==='function')renderNotifications();
+  return dbPendingPayments;
+ }catch(e){
+  console.warn('NOVA+ database pending payments:',e.message||e);
+  dbPendingPaymentsLoaded=false;
+  dbPendingPayments=[];
+  return [];
+ }
+}
+function mergedPendingPayments(){
+ const local=pendingPaymentItems();
+ const out=[];const seen=new Set();
+ for(const x of local){
+  const key=x.r.dbRequestId?'db:'+String(x.r.dbRequestId):'tx:'+String(x.r.transactionId||x.r.tx||x.r.id);
+  if(!seen.has(key)){seen.add(key);out.push(x)}
+ }
+ for(const row of dbPendingPayments){
+  const key='db:'+String(row.id);
+  if(seen.has(key))continue;
+  const u=users().find(user=>String(accountOf(user).customerId||'')===String(row.customer_id||''));
+  const localReq=u&&((accountOf(u).payments||[]).find(r=>String(r.dbRequestId||'')===String(row.id||'')||String(r.transactionId||'')===String(row.transaction_reference||'')));
+  out.push({u:u||null,r:localReq||{id:'DB-'+row.id,dbRequestId:row.id,customerId:row.customer_id,planId:row.plan_id,requiredAmount:row.amount,submittedAmount:row.amount,network:row.network,transactionId:row.transaction_reference,status:row.status,createdAt:row.created_at,depositAddress:row.deposit_address},db:row,source:'database'});
+ }
+ return out;
+}
+function pendingWithdrawalItems(){return users().flatMap(u=>(accountOf(u).withdrawals||[]).filter(r=>r.status==='pending').map(r=>({u,r})))}
+function supportItems(){return [];} // Support is loaded from the shared Supabase customer records below.
+function saveUserAccount(u,a){u.account=a;const list=users();const i=list.findIndex(x=>x.username===u.username);if(i>=0){list[i]=u;saveUsers(list)}}
+async function verifyPayment(username,id,approve,dbRequestId){
+ const list=users(),u=username?list.find(x=>String(x.username||'')===String(username)):null;
+ const a=u?accountOf(u):null;
+ const r=a&&((a.payments||[]).find(x=>String(x.id||'')===String(id||'')));
+ const requestId=dbRequestId||(r&&r.dbRequestId)||(!String(id||'').startsWith('PAY-')?id:null);
+ try{
+  if(requestId){
+   const {error}=await supabaseClient.from('deposit_requests').update({status:approve?'approved':'rejected'}).eq('id',requestId);
+   if(error)throw error;
+  }else if(!r){throw new Error('Database request ID was not found.')}
+  if(r&&u){
+   if(!approve){r.status='rejected';r.rejectionReason='Rejected by Administrator.';saveUserAccount(u,a);await loadDbPendingPayments();render();return}
+   const p=PLANS[r.planId];
+   if(!p||Number(r.submittedAmount)<p.amount){r.status='rejected';r.rejectionReason='Submitted amount is below required plan amount.';saveUserAccount(u,a);await loadDbPendingPayments();render();return}
+   r.status='verified';r.verifiedAt=new Date().toISOString();saveUserAccount(u,a);
+  }
+  await loadDbPendingPayments();render();
+ }catch(e){console.error('NOVA+ payment verification:',e);alert('Payment verification could not be completed: '+(e.message||e));}
+}
+function decideWithdrawal(username,id,approve,selectedRate){
+ const list=users();
+ const u=list.find(x=>String(x.username||'')===String(username||''));
+ if(!u){alert('Customer account could not be found.');return false;}
+ const a=accountOf(u);
+ const withdrawals=Array.isArray(a.withdrawals)?a.withdrawals:[];
+ const r=withdrawals.find(x=>String(x.id||'')===String(id||''));
+ if(!r){alert('Withdrawal request could not be found.');return false;}
+ if(r.status!=='pending'){render();return false;}
+
+ const isTest=!!(a.isTestAccount||r.isTestAccount||r.testWithdrawal);
+ if(isTest&&approve){alert('TEST ACCOUNT — TEST WITHDRAWAL: approval is blocked in this browser demo. Reject the request instead. This is not a server-side financial security control.');return false;}
+ const wasApproved=approve===true;
+ if(wasApproved){
+   const rate=Number.isFinite(Number(selectedRate))?Math.max(0,Math.min(0.10,Number(selectedRate))):Number(r.rate||0);
+   const gross=Number(r.requested||0);
+   r.rate=rate;r.deduction=Math.round(gross*rate*100)/100;r.net=Math.round((gross-r.deduction)*100)/100;
+   r.adminSelectedRate=true;r.adminGross=gross;r.adminNet=r.net;
+ }
+ r.status=wasApproved?'approved':'rejected';
+ r.reviewedAt=new Date().toISOString();
+ r.paymentStatus=wasApproved?'approved_awaiting_manual_payment':'rejected';
+
+ if(!wasApproved){
+   r.rejectionReason='Rejected by Administrator.';
+   const c=activeCycle(a);
+   if(c&&r.fromReward)c.earnedReward=Number(c.earnedReward||0)+Number(r.fromReward);
+   if(c&&r.fromPackage)c.packageBalance=Number(c.packageBalance||0)+Number(r.fromPackage);
+ }
+
+ saveUserAccount(u,a);
+ render();
+ return true;
+}
+function renderGlobal(){
+ const c=cfg();const keys=[['tasks','Tasks'],['reserve','Reserve'],['stake','Stake'],['assets','Assets'],['payout','Payout']];
+ $('globalControls').innerHTML=keys.map(([k,n])=>`<button class="btn toggle ${c.access[k]?'on':'off'}" data-global="${k}">${n}: ${c.access[k]?'ON':'OFF'}</button>`).join('');
+ document.querySelectorAll('[data-global]').forEach(b=>b.onclick=()=>toggleGlobal(b.dataset.global))
+}
+function renderStats(){
+ const us=users(),active=us.filter(u=>activeStatus(accountOf(u))).length,plans=us.filter(u=>accountOf(u).activePlanId).length;
+ $('sCustomers').textContent=us.length;$('sActive').textContent=active;$('sPlans').textContent=plans;$('sPayments').textContent=(dbPendingPaymentsLoaded?mergedPendingPayments():pendingPaymentItems()).length;$('sWithdrawals').textContent=pendingWithdrawalItems().length
+}
+let customerTab='allCustomers';
+let selectedCustomerId=null;
+function customerById(cid){return users().find(u=>String(accountOf(u).customerId||'')===String(cid))}
+function customerBanned(u){return !!accountOf(u).banned}
+function customerPending(u){const a=accountOf(u);return !activeStatus(a)&&((a.payments||[]).some(x=>x.status==='pending')||(a.withdrawals||[]).some(x=>x.status==='pending'))}
+function filteredCustomers(){const us=users();if(customerTab==='activeCustomers')return us.filter(u=>activeStatus(accountOf(u)));if(customerTab==='pendingCustomers')return us.filter(customerPending);if(customerTab==='bannedCustomers')return us.filter(customerBanned);return us}
+function renderCustomers(){
+ const us=filteredCustomers();
+ $('tabCustomerCount').textContent=users().length;
+ $('customersBody').innerHTML=us.length?us.map(u=>{
+   const a=accountOf(u),cid=a.customerId||'—',cw=a.registeredWallet||{},cycles=activeCycle(a),balance=cycles?(Number(cycles.packageBalance||0)+Number(cycles.earnedReward||0)):0;
+   const task=customerAccess(cid,'tasks'),reserve=customerAccess(cid,'reserve'),stake=customerAccess(cid,'stake');
+   const planBtns=Object.values(PLANS).map(p=>{const enabled=cfg().customerAccess?.[cid]?.plans?.[p.id]!==false;return `<button class="btn small toggle ${enabled?'on':'off'}" data-plan="${esc(cid)}|${p.id}">${p.name.replace('NOVA+ ','')}: ${enabled?'ON':'OFF'}</button>`}).join(' ');
+   const status=customerBanned(u)?'<span class="pill red">BANNED</span>':activeStatus(a)?'<span class="pill green">ACTIVE</span>':'<span class="pill">INACTIVE</span>';
+   return `<tr class="clickable" data-open-customer="${esc(cid)}">
+   <td><b>${esc(a.fullName||u.fullName||'')}</b><br><span class="muted">${esc(cid)}</span><br><span class="muted">${esc(u.username||'')}</span></td>
+   <td>${esc(a.email||u.email||'')}<br>${esc(a.mobile||u.mobile||'')}<br>${esc(a.countryName||u.countryName||'')}</td>
+   <td>${esc(planName(a))}<br>${status}<br>${money(balance)}</td>
+   <td><button class="btn small toggle ${task?'on':'off'}" data-cust="${esc(cid)}|tasks">${task?'ON':'OFF'}</button></td>
+   <td><button class="btn small toggle ${reserve?'on':'off'}" data-cust="${esc(cid)}|reserve">${reserve?'ON':'OFF'}</button></td>
+   <td><button class="btn small toggle ${stake?'on':'off'}" data-cust="${esc(cid)}|stake">${stake?'ON':'OFF'}</button></td>
+   <td><div class="controls">${planBtns}</div></td>
+   <td><div class="controls"><button class="btn small primary" data-view="${esc(cid)}">View</button><button class="btn small ${customerBanned(u)?'green':'red'}" data-ban="${esc(cid)}">${customerBanned(u)?'Unban':'Ban'}</button><button class="btn small red" data-delete="${esc(cid)}">Delete</button></div></td></tr>`
+ }).join(''):'<tr><td colspan="8" class="muted">No customers in this category.</td></tr>';
+ document.querySelectorAll('[data-cust]').forEach(b=>{const [cid,key]=b.dataset.cust.split('|');b.onclick=e=>{e.stopPropagation();setCustomerAccess(cid,key,!customerAccess(cid,key))}});
+ document.querySelectorAll('[data-plan]').forEach(b=>{const [cid,id]=b.dataset.plan.split('|');b.onclick=e=>{e.stopPropagation();const x=cfg();x.customerAccess=x.customerAccess||{};x.customerAccess[cid]=x.customerAccess[cid]||{};x.customerAccess[cid].plans=x.customerAccess[cid].plans||{};x.customerAccess[cid].plans[id]=x.customerAccess[cid].plans[id]===false;saveCfg(x);render()}});
+ document.querySelectorAll('[data-open-customer],[data-view]').forEach(b=>b.onclick=e=>{e.stopPropagation();openCustomer(b.dataset.openCustomer||b.dataset.view)});
+ document.querySelectorAll('[data-ban]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleBan(b.dataset.ban)});
+ document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=e=>{e.stopPropagation();deleteCustomer(b.dataset.delete)});
+ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{customerTab=b.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderCustomers()});
+}
+function toggleBan(cid){const u=customerById(cid);if(!u)return;const a=accountOf(u);a.banned=!a.banned;a.status=a.banned?'banned':'active';saveUserAccount(u,a);render();if(selectedCustomerId===cid)openCustomer(cid)}
+function deleteCustomer(cid){const u=customerById(cid);if(!u)return;if(!confirm('Delete customer '+cid+' permanently from this browser demo?'))return;saveUsers(users().filter(x=>String(accountOf(x).customerId||'')!==String(cid)));const c=cfg();if(c.customerAccess)delete c.customerAccess[cid];saveCfg(c);if(selectedCustomerId===cid)closeCustomer();render()}
+function activatePlan(cid,planId){const u=customerById(cid);if(!u)return;const a=accountOf(u);a.plans=a.plans||{};const pr=a.plans[planId]||(a.plans[planId]={uses:0,access:true,cycles:[],pendingRepeat:false});pr.access=true;pr.cycles=pr.cycles||[];if(!activeCycle(a)){pr.cycles.push({id:'ADMIN-CYCLE-'+Date.now(),planId:Number(planId),deposit:Number(PLANS[planId].amount),packageBalance:Number(PLANS[planId].amount),earnedReward:0,completedDays:0,lastTaskAt:null,startAt:new Date().toISOString(),endAt:null,status:'active',adminActivated:true,withdrawals:[]});a.activePlanId=Number(planId)}saveUserAccount(u,a);render();openCustomer(cid)}
+function openCustomer(cid){const u=customerById(cid);if(!u)return;selectedCustomerId=cid;const a=accountOf(u),w=a.registeredWallet||{},c=activeCycle(a);$('detailTitle').textContent=a.fullName||u.fullName||'Customer';$('detailSubtitle').textContent=(a.customerId||cid)+' · '+(u.username||'');
+ const details=[['Customer ID',a.customerId||'—'],['Full Name',a.fullName||u.fullName||'—'],['Username',u.username||'—'],['Email',a.email||u.email||'—'],['Mobile',a.mobile||u.mobile||'—'],['Country',a.countryName||u.countryName||'—'],['Language',a.language||u.language||'—'],['Created',a.createdAt||'—'],['Email Verified',a.emailVerified?'Yes':'No'],['Account Status',a.banned?'BANNED':(activeStatus(a)?'ACTIVE':'INACTIVE')],['Current Plan',planName(a)],['Cycle Day',c?(c.completedDays||0)+' / 45':'—'],['Package Balance',c?money(c.packageBalance):money(0)],['Earned Reward',c?money(c.earnedReward):money(0)],['Total Assets',c?money(Number(c.packageBalance||0)+Number(c.earnedReward||0)):money(0)],['Wallet Network',w.network||'—'],['Wallet Address',w.address||'Not registered']];
+ $('detailGrid').innerHTML=details.map(x=>`<div class="detail"><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join('');
+ $('detailControls').innerHTML=`<button class="btn green" data-detail-activate>Activate Selected Plan</button><button class="btn" data-detail-freeze>${a.frozen?'Unfreeze Account':'Freeze Account'}</button><button class="btn ${a.banned?'green':'red'}" data-detail-ban>${a.banned?'Unban':'Ban Account'}</button><button class="btn ${a.isTestAccount?'gold':''}" data-detail-test>${a.isTestAccount?'Test Account ✓':'Mark as Test Account'}</button><button class="btn red" data-detail-delete>Delete Customer</button>`;
+ $('detailPlans').innerHTML=Object.values(PLANS).map(p=>{const en=cfg().customerAccess?.[cid]?.plans?.[p.id]!==false;return `<button class="btn small toggle ${en?'on':'off'}" data-detail-plan="${p.id}">${p.name}: ${en?'ON':'OFF'}</button>`}).join('');
+ $('detailControls').querySelector('[data-detail-activate]').onclick=()=>{const pick=prompt('Enter plan number to activate: 1 Basic, 2 Plus, 3 Pro, 4 Premium, 5 Gold',String(a.activePlanId||1));if(PLANS[pick])activatePlan(cid,Number(pick))};
+ $('detailControls').querySelector('[data-detail-freeze]').onclick=()=>{a.frozen=!a.frozen;saveUserAccount(u,a);render();openCustomer(cid)};
+ $('detailControls').querySelector('[data-detail-ban]').onclick=()=>toggleBan(cid);
+ $('detailControls').querySelector('[data-detail-delete]').onclick=()=>deleteCustomer(cid);
+ $('detailControls').querySelector('[data-detail-test]').onclick=()=>{if(!a.isTestAccount){if(!confirm('Mark this customer as a TEST ACCOUNT? This browser-demo flag is not a server-side security control.'))return;setTestAccount(u.username,true)}else setTestAccount(u.username,false)};
+ document.querySelectorAll('[data-detail-plan]').forEach(b=>b.onclick=()=>{const id=b.dataset.detailPlan,x=cfg();x.customerAccess=x.customerAccess||{};x.customerAccess[cid]=x.customerAccess[cid]||{};x.customerAccess[cid].plans=x.customerAccess[cid].plans||{};x.customerAccess[cid].plans[id]=x.customerAccess[cid].plans[id]===false;saveCfg(x);openCustomer(cid);renderCustomers()});
+ $('customerModal').classList.add('show')}
+function closeCustomer(){$('customerModal').classList.remove('show');selectedCustomerId=null}
+function renderNotifications(){const p=dbPendingPaymentsLoaded?mergedPendingPayments():pendingPaymentItems(),w=pendingWithdrawalItems(),s=supportItems(),total=p.length+w.length+s.length;$('notificationCount').textContent=total;$('notifications').innerHTML=`<div class="noticeItem" data-notice="payments"><strong>💳 New Payment Requests <span class="badgeDot">${p.length}</span></strong><small>Pending deposit/payment verification</small></div><div class="noticeItem" data-notice="withdrawals"><strong>⇧ Withdrawal Requests <span class="badgeDot">${w.length}</span></strong><small>Pending payout approvals</small></div><div class="noticeItem" data-notice="support"><strong>💬 Support Messages <span class="badgeDot">${s.length}</span></strong><small>Pending customer support requests</small></div>`;document.querySelectorAll('[data-notice]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.notice)?.scrollIntoView({behavior:'smooth'}))}
+
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function renderPayments(){
+ const arr=mergedPendingPayments();
+ $('payments').innerHTML=arr.length?arr.map(({u,r,db})=>{
+  const a=u?accountOf(u):{};const row=db||{};
+  const customerId=a.customerId||r.customerId||row.customer_id||'—';
+  const fullName=a.fullName||u?.fullName||'Database Customer';
+  const email=a.email||u?.email||'—';
+  const mobile=a.mobile||u?.mobile||'—';
+  const planId=Number(r.planId||row.plan_id||0);const plan=PLANS[planId];
+  const amount=Number(r.submittedAmount??r.amount??row.amount??0);const required=Number(r.requiredAmount??plan?.amount??row.amount??0);
+  const network=r.network||row.network||'—';const tx=r.transactionId||r.tx||row.transaction_reference||'—';const requestId=r.dbRequestId||row.id||'';
+  return `<div class="req"><b>${esc(fullName)}</b> <span class="pill">${esc(customerId)}</span><div class="meta">Email: ${esc(email)}<br>Mobile: ${esc(mobile)}<br>Plan: ${esc(plan?.name||planId||'Unknown')}<br>Amount: ${money(amount)} / Required: ${money(required)}<br>Network: ${esc(network)}<br>Transaction ID: ${esc(tx)}<br>Source: <b>${db?'Supabase Database':'Local Device'}</b></div><div class="actions"><button class="btn green small" data-pay="${esc(u?.username||'')}|${esc(r.id||'')}|1|${esc(requestId)}">Verify</button><button class="btn red small" data-pay="${esc(u?.username||'')}|${esc(r.id||'')}|0|${esc(requestId)}">Reject</button></div></div>`;
+ }).join(''):'<div class="muted">No pending payments.</div>';
+ document.querySelectorAll('[data-pay]').forEach(b=>{const parts=b.dataset.pay.split('|');b.onclick=()=>verifyPayment(parts[0],parts[1],parts[2]==='1',parts[3]||'')});
+}
+function renderWithdrawals(){
+ const arr=pendingWithdrawalItems();
+ $('withdrawals').innerHTML=arr.length?arr.map(({u,r})=>{const a=accountOf(u);const wallet=r.wallet||a.registeredWallet?.address||'';const gross=Number(r.requested||0);const initialRate=Number(r.rate||0);return `<div class="req">${(a.isTestAccount||r.isTestAccount||r.testWithdrawal)?'<div style="font-weight:800;color:#b7791f;margin-bottom:8px">TEST ACCOUNT — TEST WITHDRAWAL (NO REAL PAYOUT)</div>':''}<b>${esc(a.fullName||u.fullName||r.fullName||'Customer')}</b> <span class="pill">${esc(a.customerId||r.customerId||'')}</span><div class="meta">Email: ${esc(a.email||u.email||'—')}<br>Mobile: ${esc(a.mobile||u.mobile||'—')}<br>Package: ${esc(r.packageName||PLANS[r.planId]?.name||r.planId||'—')}<br>Original package amount: ${money(r.packageAmount||PLANS[r.planId]?.amount||0)}<br>Principal / package balance before request: ${money(r.packageBalanceAtRequest??r.fromPackage??0)}<br>Earned reward: ${money(r.rewardAtRequest??r.fromReward??0)}<br>Total requested (gross): <b>${money(gross)}</b><br>Network: ${esc(r.network||a.registeredWallet?.network||'—')}<br>Wallet: <span id="w-${esc(r.id)}">${esc(wallet)}</span> <button class="btn small copy" data-copy="${esc(wallet)}">Copy Address</button><br>Cycle day: ${esc(r.day??'—')} | Request type: ${esc(r.type||'withdrawal')}<br><span class="meta">Select a deduction rate; the net amount updates before approval.</span></div><div style="margin:10px 0"><label for="tax-${esc(r.id)}">Deduction rate</label><select id="tax-${esc(r.id)}" data-tax-rate="${esc(r.id)}"><option value="0.02" ${initialRate===0.02?'selected':''}>2%</option><option value="0.03" ${initialRate===0.03?'selected':''}>3%</option><option value="0.05" ${initialRate===0.05?'selected':''}>5%</option><option value="0.07" ${initialRate===0.07?'selected':''}>7%</option><option value="0.10" ${initialRate===0.10?'selected':''}>10%</option></select><div class="meta" id="tax-preview-${esc(r.id)}">Deduction: ${money(gross*initialRate)} | Net to send: ${money(gross-gross*initialRate)}</div></div><div class="actions"><button class="btn green small" data-wd="${esc(u.username)}|${esc(r.id)}|1">Approve selected rate</button><button class="btn red small" data-wd="${esc(u.username)}|${esc(r.id)}|0">Reject</button></div><div class="meta">Approval records the selected net amount; the actual wallet transfer must be completed manually, then recorded as paid in your payment process.</div></div>`}).join(''):'<div class="muted">No pending withdrawals.</div>';
+ document.querySelectorAll('[data-tax-rate]').forEach(sel=>{const id=sel.dataset.taxRate;const update=()=>{const r=arr.map(x=>x.r).find(x=>String(x.id)===String(id));const gross=Number(r?.requested||0),rate=Number(sel.value||0),ded=Math.round(gross*rate*100)/100,net=Math.round((gross-ded)*100)/100;const box=document.getElementById('tax-preview-'+id);if(box)box.textContent=`Gross request: ${money(gross)} | Deduction (${Math.round(rate*100)}%): ${money(ded)} | Net to send: ${money(net)}`};sel.addEventListener('change',update);update()});
+ document.querySelectorAll('[data-wd]').forEach(b=>{b.onclick=(e)=>{e.preventDefault();e.stopPropagation();const parts=(b.getAttribute('data-wd')||'').split('|');const username=parts[0]||'',id=parts[1]||'',approve=parts[2]==='1';const rateEl=document.querySelector(`[data-tax-rate="${CSS.escape(id)}"]`);const rate=Number(rateEl?.value||0);if(approve){const r=arr.map(x=>x.r).find(x=>String(x.id)===String(id));const gross=Number(r?.requested||0),ded=Math.round(gross*rate*100)/100,net=Math.round((gross-ded)*100)/100;if(!confirm(`Approve this withdrawal?
+Gross: ${money(gross)}
+Deduction: ${Math.round(rate*100)}% = ${money(ded)}
+Net amount to send: ${money(net)}
+
+This approval does not transfer cryptocurrency automatically.`))return;}if(decideWithdrawal(username,id,approve,rate))b.disabled=true;};});
+ document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='Copied ✓';setTimeout(()=>b.textContent='Copy Address',1200)}catch(e){alert('Copy failed. Select the address manually.')}})
+}
+async function renderSupport(){
+ const host=$('support'); if(!host)return;
+ host.innerHTML='<div class="muted">Loading shared support messages…</div>';
+ try{
+  const {data,error}=await supabaseClient.from('nova_customer_records').select('customer_id,username,email,full_name,payload,updated_at').limit(500);
+  if(error)throw error;
+  const threads=[];
+  for(const row of (data||[])){
+   const payload=row.payload&&typeof row.payload==='object'?row.payload:{};
+   for(const r of (Array.isArray(payload.supportRequests)?payload.supportRequests:[])){
+    if(!r || ['reviewed','resolved'].includes(String(r.status||'').toLowerCase()))continue;
+    threads.push({row,payload,r});
+   }
+  }
+  threads.sort((a,b)=>String(b.r.updatedAt||b.r.createdAt||'').localeCompare(String(a.r.updatedAt||a.r.createdAt||'')));
+  host.innerHTML=threads.length?threads.map(({row,r})=>{
+   const msgs=Array.isArray(r.messages)?r.messages:(r.message?[{from:'customer',text:r.message,createdAt:r.createdAt}]:[]);
+   const transcript=msgs.map(m=>`<div style="margin:6px 0;padding:8px;border-radius:8px;background:${m.from==='admin'?'rgba(24,214,160,.10)':'rgba(255,255,255,.05)'}"><b>${m.from==='admin'?'NOVA+ Support':'Customer'}</b><div style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(m.text||'')}</div><small>${esc(m.createdAt?new Date(m.createdAt).toLocaleString():'')}</small></div>`).join('');
+   return `<div class="req"><b>${esc(row.full_name||r.fullName||row.username||r.username||'Customer')}</b> <span class="pill">${esc(row.username||r.username||'')}</span><div class="meta">Customer ID: ${esc(row.customer_id||r.customerId||'—')}<br>Email: ${esc(row.email||r.email||'—')}<br>Mobile: ${esc(r.mobile||'—')}<br>Plan: ${esc(r.packageName||'—')}<br>Status: ${esc(r.status||'pending')}</div><div style="margin:10px 0">${transcript||'<div>No message text found.</div>'}</div><textarea rows="2" style="width:100%;box-sizing:border-box" placeholder="Type a reply to the customer" data-support-reply="${esc(row.customer_id)}|${esc(r.id)}"></textarea><div class="actions"><button class="btn primary small" data-support-send="${esc(row.customer_id)}|${esc(r.id)}">Send Reply</button><button class="btn small" data-support-close="${esc(row.customer_id)}|${esc(r.id)}">Mark Resolved</button></div></div>`
+  }).join(''):'<div class="muted">No pending support messages in the shared database.</div>';
+  document.querySelectorAll('[data-support-send]').forEach(b=>b.onclick=async()=>{
+   const [cid,rid]=b.dataset.supportSend.split('|');const box=document.querySelector(`[data-support-reply="${CSS.escape(cid+'|'+rid)}"]`);const msg=(box?.value||'').trim();if(!msg){alert('Please type a reply first.');return}
+   b.disabled=true;
+   try{
+    const {data:row,error}=await supabaseClient.from('nova_customer_records').select('customer_id,payload').eq('customer_id',cid).maybeSingle();if(error)throw error;if(!row)throw new Error('Customer record was not found.');
+    const payload=row.payload&&typeof row.payload==='object'?row.payload:{};const arr=Array.isArray(payload.supportRequests)?payload.supportRequests:[];const r=arr.find(x=>String(x.id)===rid);if(!r)throw new Error('Support conversation no longer exists.');
+    r.messages=Array.isArray(r.messages)?r.messages:[];r.messages.push({id:'MSG-'+Date.now(),from:'admin',text:msg,createdAt:new Date().toISOString()});r.updatedAt=new Date().toISOString();r.status='pending';payload.supportRequests=arr;
+    const {error:saveError}=await supabaseClient.from('nova_customer_records').update({payload,updated_at:new Date().toISOString()}).eq('customer_id',cid);if(saveError)throw saveError;
+    await renderSupport();
+   }catch(e){alert('Reply was not saved: '+(e?.message||String(e))+'\nCheck Supabase permissions for admin access to nova_customer_records.');b.disabled=false;}
+  });
+  document.querySelectorAll('[data-support-close]').forEach(b=>b.onclick=async()=>{
+   const [cid,rid]=b.dataset.supportClose.split('|');b.disabled=true;
+   try{const {data:row,error}=await supabaseClient.from('nova_customer_records').select('customer_id,payload').eq('customer_id',cid).maybeSingle();if(error)throw error;if(!row)throw new Error('Customer record was not found.');const payload=row.payload&&typeof row.payload==='object'?row.payload:{};const arr=Array.isArray(payload.supportRequests)?payload.supportRequests:[];const r=arr.find(x=>String(x.id)===rid);if(!r)throw new Error('Support conversation no longer exists.');r.status='resolved';r.reviewedAt=new Date().toISOString();r.updatedAt=new Date().toISOString();payload.supportRequests=arr;const {error:saveError}=await supabaseClient.from('nova_customer_records').update({payload,updated_at:new Date().toISOString()}).eq('customer_id',cid);if(saveError)throw saveError;await renderSupport();}
+   catch(e){alert('Could not update support status: '+(e?.message||String(e))+'\nCheck Supabase permissions for admin access to nova_customer_records.');b.disabled=false;}
+  });
+ }catch(e){host.innerHTML='<div class="muted">Could not load shared support messages: '+esc(e?.message||String(e))+'</div><div class="meta">This can mean the current Supabase permissions do not allow the Admin portal to read customer records. Do not open public write access to fix this.</div>';}
+}
+async function persistTestAccountToShared(u,a){
+ const cid=String(a.customerId||u.customerId||''); if(!cid) throw new Error('Customer ID is missing; cannot sync this test change to Supabase.');
+ const {data:row,error:readErr}=await supabaseClient.from('nova_customer_records').select('customer_id,payload,username,email,full_name').eq('customer_id',cid).maybeSingle();
+ if(readErr) throw readErr; if(!row) throw new Error('Customer shared record was not found in Supabase.');
+ const payload=row.payload&&typeof row.payload==='object'?row.payload:{};
+ payload.isTestAccount=!!a.isTestAccount; payload.testAccountMarkedAt=a.testAccountMarkedAt||null;
+ // Persist both supported cycle layouts. The customer portal reads cycles from plans[id].cycles.
+ if(Array.isArray(a.cycles)) payload.cycles=a.cycles;
+ if(a.plans&&typeof a.plans==='object') payload.plans=a.plans;
+ if(a.activePlanId!==undefined) payload.activePlanId=a.activePlanId;
+ if(Array.isArray(a.notifications)) payload.notifications=a.notifications;
+ const {error}=await supabaseClient.from('nova_customer_records').update({payload,updated_at:new Date().toISOString()}).eq('customer_id',cid);
+ if(error) throw error;
+}
+function renderTestAccounts(){
+ const box=$('testAccounts'); if(!box)return;
+ const list=users().filter(u=>!!accountOf(u).isTestAccount);
+ box.innerHTML=list.length?list.map(u=>{const a=accountOf(u),c=activeCycle(a);return `<div class="req"><b>${esc(a.fullName||u.fullName||u.username||'Customer')}</b> <span class="pill">${esc(a.customerId||'—')}</span><div class="meta">Username: ${esc(u.username||'—')}<br>Email: ${esc(a.email||u.email||'—')}<br>Cycle: ${esc(c?`${c.completedDays||0}/45 — ${c.status}`:'No active cycle')}</div><div class="actions"><button class="btn green small" data-test-complete="${esc(u.username||'')}">Complete 45-Day Test</button><button class="btn red small" data-test-remove="${esc(u.username||'')}">Remove Test Flag</button></div></div>`}).join(''):'<div class="muted">No test accounts designated. Open a customer profile and select “Mark as Test Account”.</div>';
+ box.querySelectorAll('[data-test-complete]').forEach(b=>b.onclick=()=>completeTestCycle(b.dataset.testComplete));
+ box.querySelectorAll('[data-test-remove]').forEach(b=>b.onclick=()=>setTestAccount(b.dataset.testRemove,false));
+}
+async function setTestAccount(username,flag){
+ const u=users().find(x=>String(x.username||'')===String(username||''));if(!u)return;
+ const a=accountOf(u);a.isTestAccount=!!flag;a.testAccountMarkedAt=flag?new Date().toISOString():null;saveUserAccount(u,a);render();renderTestAccounts();if(selectedCustomerId===(a.customerId||''))openCustomer(selectedCustomerId);
+ try{await persistTestAccountToShared(u,a);alert(flag?'Test Account flag saved to the shared customer record.':'Test Account flag removed from the shared customer record.');}
+ catch(e){alert('The change was saved only in this browser, not confirmed in Supabase. '+(e?.message||String(e))+' Check admin permissions for nova_customer_records.');}
+}
+function completeTestCycle(username){
+ const u=users().find(x=>String(x.username||'')===String(username||''));if(!u)return;const a=accountOf(u);
+ if(!a.isTestAccount){alert('This account is not marked as a test account.');return;}
+ const c=activeCycle(a);if(!c){alert('No active cycle was found for this test account.');return;}
+ if(!confirm('Complete the 45-day cycle for this TEST ACCOUNT only? This sets the cycle to day 45 and applies the configured full-cycle reward in this browser demo.'))return;
+ const p=PLANS[c.planId]||{};c.completedDays=45;c.status='completed';c.endAt=new Date().toISOString();c.testCycleCompleted=true;c.testCycleCompletedAt=c.endAt;
+ if(Number.isFinite(Number(p.reward)))c.earnedReward=Number(p.reward);
+ a.notifications=Array.isArray(a.notifications)?a.notifications:[];a.notifications.push({type:'test_cycle_completed',message:'Your 45-day test cycle has been completed successfully by Admin.',createdAt:c.endAt,read:false});
+ saveUserAccount(u,a);render();renderTestAccounts();persistTestAccountToShared(u,a).then(()=>alert('Test cycle completion was saved to the shared Supabase customer record, including the plan cycle data. Refresh the customer portal or sign out and back in to verify it.')).catch(e=>alert('Cycle completed only in this browser; Supabase sync failed: '+(e?.message||String(e))));
+}
+async function render(){renderStats();renderGlobal();renderCustomers();renderPayments();renderWithdrawals();renderSupport();renderNotifications();renderTestAccounts();if(!dbPendingPaymentsLoaded){await loadDbPendingPayments();const arr=mergedPendingPayments();$('payments').innerHTML=arr.length?arr.map(({u,r,db})=>{const a=u?accountOf(u):{},row=db||{};const customerId=a.customerId||r.customerId||row.customer_id||'—';const fullName=a.fullName||u?.fullName||'Database Customer';const email=a.email||u?.email||'—';const mobile=a.mobile||u?.mobile||'—';const planId=Number(r.planId||row.plan_id||0);const plan=PLANS[planId];const amount=Number(r.submittedAmount??r.amount??row.amount??0);const required=Number(r.requiredAmount??plan?.amount??row.amount??0);const network=r.network||row.network||'—';const tx=r.transactionId||r.tx||row.transaction_reference||'—';const requestId=r.dbRequestId||row.id||'';return `<div class="req"><b>${esc(fullName)}</b> <span class="pill">${esc(customerId)}</span><div class="meta">Email: ${esc(email)}<br>Mobile: ${esc(mobile)}<br>Plan: ${esc(plan?.name||planId||'Unknown')}<br>Amount: ${money(amount)} / Required: ${money(required)}<br>Network: ${esc(network)}<br>Transaction ID: ${esc(tx)}<br>Source: <b>${db?'Supabase Database':'Local Device'}</b></div><div class="actions"><button class="btn green small" data-pay="${esc(u?.username||'')}|${esc(r.id||'')}|1|${esc(requestId)}">Verify</button><button class="btn red small" data-pay="${esc(u?.username||'')}|${esc(r.id||'')}|0|${esc(requestId)}">Reject</button></div></div>`}).join(''):'<div class="muted">No pending payments.</div>';document.querySelectorAll('[data-pay]').forEach(b=>{const parts=b.dataset.pay.split('|');b.onclick=()=>verifyPayment(parts[0],parts[1],parts[2]==='1',parts[3]||'')})}}
+async function enterAdminFromSession(user){
+  if(!user)return false;
+  const {data:adminRow,error:adminError}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();
+  if(adminError||!adminRow){await supabaseClient.auth.signOut();return false}
+  localStorage.removeItem(ADMIN_SESSION);
+  $('loginView').classList.add('hidden');
+  $('forgotView').classList.add('hidden');
+  $('recoveryView').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  render();
+  return true;
+}
+function showLogin(){
+  $('app').classList.add('hidden');
+  $('forgotView').classList.add('hidden');
+  $('recoveryView').classList.add('hidden');
+  $('loginView').classList.remove('hidden');
+}
+$('adminLoginForm').onsubmit=async e=>{
+  e.preventDefault();
+  const email=$('adminUsername').value.trim().toLowerCase(),p=$('adminPassword').value;
+  if(!email||!p){$('loginError').textContent='Admin username and password are required.';return}
+  $('loginError').textContent='';
+  if(email===ADMIN_USER && p===ADMIN_PASS){
+    localStorage.setItem(ADMIN_SESSION,JSON.stringify({username:ADMIN_USER,loggedInAt:new Date().toISOString(),demo:true}));
+    $('loginView').classList.add('hidden');
+    $('forgotView').classList.add('hidden');
+    $('recoveryView').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    render();
+    return;
+  }
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:p});
+  if(error||!data.user){$('loginError').textContent='Invalid login. Use username admin and password NOVA ADMIN.';return}
+  const ok=await enterAdminFromSession(data.user);
+  if(!ok)$('loginError').textContent='This account is not authorized as an administrator.';
+};
+$('forgotPasswordBtn').onclick=()=>{
+  $('loginView').classList.add('hidden');
+  $('resetEmail').value=$('adminUsername').value.trim();
+  $('resetMessage').textContent='';
+  $('forgotView').classList.remove('hidden');
+};
+$('backToLoginBtn').onclick=showLogin;
+$('forgotForm').onsubmit=async e=>{
+  e.preventDefault();
+  const email=$('resetEmail').value.trim().toLowerCase();
+  if(!email){$('resetMessage').textContent='Enter the admin email address.';return}
+  $('resetMessage').textContent='Sending reset link…';
+  const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:ADMIN_REDIRECT_URL});
+  $('resetMessage').textContent=error?error.message:'Reset link sent. Check your email and open “Reset password” to return here.';
+};
+$('recoveryForm').onsubmit=async e=>{
+  e.preventDefault();
+  const p=$('newAdminPassword').value,c=$('confirmAdminPassword').value;
+  $('recoveryError').textContent='';$('recoverySuccess').textContent='';
+  if(p.length<6){$('recoveryError').textContent='Password must be at least 6 characters.';return}
+  if(p!==c){$('recoveryError').textContent='Passwords do not match.';return}
+  const {data,error}=await supabaseClient.auth.updateUser({password:p});
+  if(error){$('recoveryError').textContent=error.message;return}
+  $('newAdminPassword').value='';$('confirmAdminPassword').value='';
+  $('recoverySuccess').textContent='Password updated successfully.';
+  $('continueAdminBtn').classList.remove('hidden');
+  if(data?.user) $('continueAdminBtn').onclick=async()=>{const ok=await enterAdminFromSession(data.user);if(!ok)showLogin()};
+};
+$('logoutBtn').onclick=async()=>{await supabaseClient.auth.signOut();localStorage.removeItem(ADMIN_SESSION);showLogin();$('adminPassword').value=''};
+$('refreshBtn').onclick=render;$('closeCustomerModal').onclick=closeCustomer;$('customerModal').onclick=e=>{if(e.target.id==='customerModal')closeCustomer()};
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+  if(event==='PASSWORD_RECOVERY'){
+    $('loginView').classList.add('hidden');
+    $('forgotView').classList.add('hidden');
+    $('app').classList.add('hidden');
+    $('recoveryView').classList.remove('hidden');
+  }
+});
+(async()=>{
+  // NOVA+ demo Admin Portal: open the dashboard directly without requiring login.
+  // Supabase authentication is still available for database operations where permitted,
+  // but the demo dashboard itself is intentionally accessible without a login screen.
+  const recovery=window.location.hash.includes('type=recovery');
+  if(recovery){
+    $('loginView').classList.add('hidden');$('forgotView').classList.add('hidden');
+    $('app').classList.add('hidden');$('recoveryView').classList.remove('hidden');
+    return;
+  }
+  $('loginView').classList.add('hidden');
+  $('forgotView').classList.add('hidden');
+  $('recoveryView').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  await render();
+})();
+</script>
+</body>
+</html>
