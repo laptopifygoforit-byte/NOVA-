@@ -322,7 +322,7 @@ async function persistAccountStateToShared(u,a){
  if(readErr)throw readErr;if(!row)throw new Error('Customer shared record was not found in Supabase.');
  const payload=row.payload&&typeof row.payload==='object'?row.payload:{};
  // Persist the review result and related cycle balances together in the shared customer row.
- for(const key of ['withdrawals','plans','cycles','activePlanId','referralBalance','isTestAccount','testAccountMarkedAt','notifications','registeredWallet','frozenRecoveryRequest','recoveryRequests','recoveryRequest','recoveryRequestStatus','frozen','packageState','freezeShortfall','freezeReason','recoveryApproved','banned','status','accountStatus','banReason','removalReason','emailVerified']){
+ for(const key of ['withdrawals','plans','cycles','activePlanId','referralBalance','referredByReferralId','referralAttributionLockedAt','referralAssignmentSource','referralAssignedAt','referralAssignedBy','isTestAccount','testAccountMarkedAt','notifications','registeredWallet','frozenRecoveryRequest','recoveryRequests','recoveryRequest','recoveryRequestStatus','frozen','packageState','freezeShortfall','freezeReason','recoveryApproved','banned','status','accountStatus','banReason','removalReason','emailVerified']){
   if(a[key]!==undefined)payload[key]=a[key];
  }
  const {error}=await supabaseClient.from('nova_customer_records').update({payload,updated_at:new Date().toISOString()}).eq('customer_id',cid);
