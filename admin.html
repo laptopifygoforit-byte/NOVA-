@@ -140,27 +140,15 @@ table{width:100%;border-collapse:collapse;min-width:980px}th,td{text-align:left;
 </div>
 
 <div class="panel" id="referralTestingCenter">
-<h2>🧪 Referral Testing Center — Isolated Test Mode</h2>
-<div class="note" style="margin-bottom:12px">یہاں موجودہ کسٹمرز کو صرف ٹیسٹ کے لیے منتخب کیا جاتا ہے۔ اصل Referral ID، Referred By، Package، Balance، Assets، Tasks یا Withdrawal ریکارڈ میں کوئی تبدیلی نہیں ہوگی۔ تمام ٹیسٹ بونس اور ٹیم ریوارڈ صرف اسی Admin براؤزر کے الگ Test Ledger میں رہیں گے؛ یہ رقم نکلوائی نہیں جا سکتی۔</div>
+<h2>👥 Live Referral Team Assignment</h2>
+<div class="note" style="margin-bottom:12px">یہاں منتخب Team Leader کے نیچے صرف وہ موجودہ کسٹمر شامل کیے جا سکتے ہیں جن کا Referred By پہلے سے خالی ہے۔ پہلے سے کسی ریفرر کے ساتھ منسلک اکاؤنٹ فہرست میں شامل نہیں ہوگا۔ اسائنمنٹ Supabase کے customer record میں محفوظ ہوگی اور Customer Portal Referral Dashboard اسے پڑھے گا۔</div>
 <div class="grid2">
- <div class="field"><label for="rtReferrer">Test Referrer / Sponsor</label><select id="rtReferrer"><option value="">Select existing customer</option></select></div>
- <div class="field"><label>Test Clock</label><div class="controls"><button class="btn" id="rtHalfDay" type="button">Simulate ½ Day</button><button class="btn primary" id="rtFullDay" type="button">Simulate 1 Day</button><button class="btn" id="rtResetClock" type="button">Reset Test Clock</button></div></div>
+ <div class="field"><label for="rtReferrer">Team Leader</label><select id="rtReferrer"><option value="">Select Team Leader</option></select></div>
+ <div class="field"><label>Selected members</label><div class="note" id="rtSelectionCount">0 / 10 selected</div></div>
 </div>
-<div class="stats" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:12px">
- <div class="stat"><small>Selected Test Members</small><strong id="rtMemberCount">0 / 5</strong></div>
- <div class="stat"><small>Direct Test Bonuses</small><strong id="rtDirectTotal">$0.00</strong></div>
- <div class="stat"><small>Test Team Reward / Day</small><strong id="rtTeamDaily">$0.00</strong></div>
- <div class="stat"><small>Simulated Test Earnings</small><strong id="rtEarned">$0.00</strong></div>
-</div>
-<div class="note" id="rtClockLabel">Simulated time: 0 days</div>
-<div id="rtSlots" class="grid2" style="margin-top:10px"></div>
-<div class="controls" style="margin-top:12px"><button class="btn primary" id="rtSave" type="button">Save Test Setup</button><button class="btn red" id="rtClear" type="button">Clear This Test Team</button></div>
-<div class="panel" style="margin-top:14px;background:#081827">
- <h2 style="font-size:16px">Test Ledger & Withdrawal Preview</h2>
- <div id="rtLedger" class="note">No test activity yet.</div>
- <div class="controls" style="margin-top:10px"><button class="btn" id="rtWithdrawalPreview" type="button">Calculate Test Withdrawal Preview</button></div>
- <div id="rtWithdrawalResult" class="note" style="margin-top:8px"></div>
-</div>
+<div class="field" style="margin-top:12px"><label>Unassigned existing customers (maximum 10)</label><div id="rtSlots" class="grid2"><div class="muted">Loading customers…</div></div></div>
+<div class="controls" style="margin-top:12px"><button class="btn primary" id="rtSave" type="button">Assign Selected Customers</button><button class="btn" id="rtClear" type="button">Clear Selection</button></div>
+<div class="note" id="rtStatus" style="margin-top:10px">No changes made yet.</div>
 </div>
 
 <div class="grid2">
@@ -697,66 +685,38 @@ function renderReferralOverview(){
  $('referralOverviewBody').innerHTML=rows.length?rows.map(({u,a})=>`<tr><td>${esc(a.fullName||u.fullName||u.username||'Customer')}<br><span class="muted">${esc(u.username||'')}</span></td><td>${esc(a.referralId||'Not assigned')}</td><td>${esc(a.referredByReferralId||'—')}</td><td>${money(a.referralBalance||0)}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">No customer records are loaded.</td></tr>';
 }
 
-// Referral Testing Center: all assignments and credits stay in an isolated local test ledger.
-const RT_KEY='novaReferralTestingCenter_v1';
+// Live Referral Team Assignment — writes only previously-unassigned customer attribution.
 const RT_BONUS={1:0,2:5,3:10,4:15,5:25,6:35,7:50};
-function rtRead(){try{return JSON.parse(localStorage.getItem(RT_KEY)||'{}')}catch(e){return {}}}
-function rtWrite(x){localStorage.setItem(RT_KEY,JSON.stringify(x));}
-function rtKey(u){const a=accountOf(u);return String(a.customerId||u.customerId||u.username||u.email||'');}
-function rtPlanId(u){const a=accountOf(u);let id=Number(a.activePlanId||a.planId||0);if(PLANS[id])return id;
- const p=a.plans||{};for(const [k,v] of Object.entries(p)){if(v&&(v.status==='active'||v.active)&&PLANS[Number(k)])return Number(k);}
- return 0;
-}
-function rtCustomerLabel(u){const a=accountOf(u);return (a.fullName||u.fullName||u.username||'Customer')+' · '+(u.username||a.customerId||u.customerId||'');}
-function rtBonus(id){return Number(RT_BONUS[id]||0);}
+function rtKey(u){const a=accountOf(u);return String(a.customerId||u.customerId||'');}
+function rtLabel(u){const a=accountOf(u);return (a.fullName||u.fullName||u.username||'Customer')+' · '+(u.username||rtKey(u));}
+function rtPlanId(u){const a=accountOf(u);let c=activeCycle(a);let id=Number(c?.planId||a.activePlanId||a.planId||0);if(PLANS[id])return id;for(const [k,p] of Object.entries(a.plans||{})){const ac=(p?.cycles||[]).find(x=>x&&x.status==='active');if(ac&&PLANS[Number(ac.planId||k)])return Number(ac.planId||k);}return 0;}
 function rtRender(){
- const data=rtRead(),list=users(),sel=$('rtReferrer');if(!sel)return;
- const prev=sel.value||data.referrer||'';
- sel.innerHTML='<option value="">Select existing customer</option>'+list.map(u=>`<option value="${esc(rtKey(u))}">${esc(rtCustomerLabel(u))}</option>`).join('');
- if(prev&&list.some(u=>rtKey(u)===prev))sel.value=prev;
- data.referrer=sel.value||data.referrer||'';
- const ref=list.find(u=>rtKey(u)===data.referrer);
- const members=Array.isArray(data.members)?data.members.slice(0,5):[];
- const host=$('rtSlots');
- host.innerHTML='';
- for(let i=0;i<5;i++){
-  const chosen=members[i]||'';
-  const options=list.filter(u=>rtKey(u)!==data.referrer && (!members.includes(rtKey(u))||rtKey(u)===chosen));
-  host.insertAdjacentHTML('beforeend',`<div class="req"><b>Test Member Slot ${i+1}</b><div class="field"><label>Existing customer (test-only mapping)</label><select data-rt-slot="${i}"><option value="">Empty slot</option>${options.map(u=>`<option value="${esc(rtKey(u))}" ${rtKey(u)===chosen?'selected':''}>${esc(rtCustomerLabel(u))}</option>`).join('')}</select></div><div class="meta" id="rtInfo${i}"></div></div>`);
- }
- let direct=0,dailyBasis=0,eligible=0;
- members.forEach(k=>{const u=list.find(x=>rtKey(x)===k);if(!u)return;const pid=rtPlanId(u);direct+=rtBonus(pid);if(pid){dailyBasis+=(Number(PLANS[pid].reward||0)/45);eligible++;}});
- const teamDaily=members.length===5&&eligible===5?dailyBasis*.10:0;
- const earned=Number(data.earned||0),clock=Number(data.clock||0);
- $('rtMemberCount').textContent=members.length+' / 5';
- $('rtDirectTotal').textContent=money(direct);
- $('rtTeamDaily').textContent=money(teamDaily);
- $('rtEarned').textContent=money(earned);
- $('rtClockLabel').textContent='Simulated time: '+clock+' day(s) · '+(clock%1?'half-day step':'full-day mark');
- $('rtLedger').innerHTML=`Test Referrer: <b>${esc(ref?rtCustomerLabel(ref):'Not selected')}</b><br>Simulated direct referral bonuses: <b>${money(direct)}</b><br>Team Level 1: <b>${members.length===5?money(teamDaily)+' per simulated day':'Locked — five test member slots are required'}</b><br>Test earnings credited by clock: <b>${money(earned)}</b><br><span class="pill gold">TEST ONLY · NON-WITHDRAWABLE</span>`;
- members.forEach((k,i)=>{const u=list.find(x=>rtKey(x)===k),pid=u?rtPlanId(u):0;const info=$('rtInfo'+i);if(info)info.textContent=u?(PLANS[pid]?PLANS[pid].name+' · daily package reward '+money(PLANS[pid].reward/45)+' · one-time test referral bonus '+money(rtBonus(pid)):'No active package detected — package reward basis is $0.00'):'Select a customer';});
- document.querySelectorAll('[data-rt-slot]').forEach(x=>x.onchange=rtCapture);
- rtWrite(data);
+ const host=$('rtSlots'),leader=$('rtReferrer');if(!host||!leader)return;
+ const list=users(),prev=leader.value;
+ const leaders=list.filter(u=>String(accountOf(u).referralId||'').trim());
+ leader.innerHTML='<option value="">Select Team Leader</option>'+leaders.map(u=>`<option value="${esc(rtKey(u))}">${esc(rtLabel(u))} · ${esc(accountOf(u).referralId)}</option>`).join('');
+ if(prev&&leaders.some(u=>rtKey(u)===prev))leader.value=prev;
+ const candidates=list.filter(u=>!String(accountOf(u).referredByReferralId||'').trim()&&rtKey(u)!==leader.value);
+ host.innerHTML=candidates.length?candidates.map(u=>{const a=accountOf(u),pid=rtPlanId(u),p=PLANS[pid];return `<label class="req" style="display:flex;gap:9px;align-items:flex-start;cursor:pointer"><input type="checkbox" data-rt-member="${esc(rtKey(u))}" style="width:18px;height:18px;flex:0 0 auto"><span><b>${esc(rtLabel(u))}</b><span class="meta" style="display:block">${esc(p?.name||'No active package')} · ${p?money(RT_BONUS[pid]||0)+' direct bonus':'No active package'} · No existing referrer</span></span></label>`}).join(''):'<div class="muted">No unassigned customers are available. Customers with an existing referrer are intentionally excluded.</div>';
+ host.querySelectorAll('[data-rt-member]').forEach(x=>x.addEventListener('change',()=>{const chosen=host.querySelectorAll('[data-rt-member]:checked');if(chosen.length>10){x.checked=false;alert('You can assign up to 10 members at a time.');}rtCount();}));rtCount();
 }
-function rtCapture(){const data=rtRead();data.referrer=$('rtReferrer')?.value||'';data.members=Array.from(document.querySelectorAll('[data-rt-slot]')).map(x=>x.value).filter(Boolean).slice(0,5);data.members=[...new Set(data.members)];rtWrite(data);rtRender();}
-function rtAdvance(amount){
- const data=rtRead(),list=users(),members=data.members||[];if(!data.referrer){alert('Select a Test Referrer first.');return;}
- if(members.length!==5){alert('Team Level 1 test reward is locked until all five test member slots are filled.');return;}
- let daily=0;for(const k of members){const u=list.find(x=>rtKey(x)===k),pid=u?rtPlanId(u):0;if(!pid){alert('One selected test member has no active package. Select members with an active package to calculate the team reward.');return;}daily+=Number(PLANS[pid].reward||0)/45;}
- const team=daily*.10;data.clock=Number(data.clock||0)+amount;data.earned=Number(data.earned||0)+team*amount;data.log=Array.isArray(data.log)?data.log:[];data.log.push({step:amount,team,at:new Date().toISOString()});rtWrite(data);rtRender();
+function rtCount(){const n=document.querySelectorAll('[data-rt-member]:checked').length;const el=$('rtSelectionCount');if(el)el.textContent=n+' / 10 selected';}
+async function rtAssign(){
+ const leaderKey=$('rtReferrer')?.value;const selected=[...document.querySelectorAll('[data-rt-member]:checked')].map(x=>x.dataset.rtMember);
+ const status=$('rtStatus');if(!leaderKey){alert('Please select a Team Leader.');return;}if(!selected.length){alert('Please select at least one unassigned customer.');return;}if(selected.length>10){alert('Maximum 10 customers can be assigned at once.');return;}
+ const list=users(),leader=list.find(u=>rtKey(u)===leaderKey);if(!leader||!accountOf(leader).referralId){alert('Selected Team Leader or Referral ID is not available.');return;}
+ const rid=String(accountOf(leader).referralId);const targets=selected.map(k=>list.find(u=>rtKey(u)===k)).filter(Boolean);
+ if(targets.length!==selected.length){alert('One or more selected customer records are no longer available. Refresh and try again.');return;}
+ if(targets.some(u=>String(accountOf(u).referredByReferralId||'').trim())){alert('A selected customer already has a referrer. No assignments were made. Refresh the list and try again.');return;}
+ if(!confirm(`Assign ${targets.length} customer(s) to ${rtLabel(leader)}? Existing referral relationships will not be changed.`))return;
+ const done=[];
+ try{
+  for(const u of targets){const a=accountOf(u);a.referredByReferralId=rid;a.referralAttributionLockedAt=new Date().toISOString();a.referralAssignmentSource='admin_team_assignment';a.referralAssignedAt=new Date().toISOString();a.referralAssignedBy='admin';u.account=a;saveUsers(list);await persistAccountStateToShared(u,a);done.push(u.username||rtKey(u));}
+  status.textContent=`Saved ${done.length} referral assignment(s) to Supabase: ${done.join(', ')}. Existing approved deposits are not retroactively credited by the deposit trigger; review direct-bonus eligibility separately.`;
+  alert('Team assignment saved to Supabase.');rtRender();await renderReferralOverview();
+ }catch(e){status.textContent='Saved '+done.length+' before an error. '+(e?.message||String(e))+' Refresh and verify each record before retrying.';alert('Assignment was only partially saved. '+(e?.message||String(e)));}
 }
-function initReferralTestingCenter(){
- if(!$('rtReferrer'))return;
- $('rtReferrer').onchange=rtCapture;
- document.querySelectorAll('[data-rt-slot]').forEach(x=>x.onchange=rtCapture);
- $('rtSave').onclick=()=>{rtCapture();alert('Test setup saved separately. No customer account was changed.');};
- $('rtHalfDay').onclick=()=>rtAdvance(.5);
- $('rtFullDay').onclick=()=>rtAdvance(1);
- $('rtResetClock').onclick=()=>{if(!confirm('Reset simulated clock and test earnings?'))return;const d=rtRead();d.clock=0;d.earned=0;d.log=[];rtWrite(d);rtRender();};
- $('rtClear').onclick=()=>{if(!confirm('Clear this isolated test team and its test ledger?'))return;rtWrite({referrer:$('rtReferrer').value,members:[],clock:0,earned:0,log:[]});rtRender();};
- $('rtWithdrawalPreview').onclick=()=>{const d=rtRead(),bonus=(d.members||[]).reduce((s,k)=>{const u=users().find(x=>rtKey(x)===k);return s+rtBonus(u?rtPlanId(u):0)},0);const total=bonus+Number(d.earned||0);$('rtWithdrawalResult').textContent='Simulation only — direct test bonuses '+money(bonus)+' + simulated team earnings '+money(d.earned||0)+' = '+money(total)+'. This is a preview only; no withdrawal request or real balance is created.';};
- rtRender();
-}
+function initReferralTestingCenter(){if(!$('rtReferrer'))return;$('rtReferrer').onchange=rtRender;$('rtSave').onclick=rtAssign;$('rtClear').onclick=()=>{document.querySelectorAll('[data-rt-member]').forEach(x=>x.checked=false);rtCount();};rtRender();}
 
 async function render(){renderStats();renderGlobal();renderCustomerRules();renderCustomers();renderReferralOverview();renderTeamLevelOne();renderPayments();renderWithdrawals();renderSupport().then(()=>renderNotifications());renderRepeatRequests();renderFrozenCustomers();renderRecoveryRequests();renderNotifications();renderTestAccounts();initReferralTestingCenter();if(!dbPendingPaymentsLoaded){await loadDbPendingPayments();const arr=mergedPendingPayments();$('payments').innerHTML=arr.length?arr.map(({u,r,db})=>{const a=u?accountOf(u):{},row=db||{};const customerId=a.customerId||r.customerId||row.customer_id||'—';const fullName=a.fullName||u?.fullName||'Database Customer';const email=a.email||u?.email||'—';const mobile=a.mobile||u?.mobile||'—';const planId=Number(r.planId||row.plan_id||0);const plan=PLANS[planId];const amount=Number(r.submittedAmount??r.amount??row.amount??0);const required=Number(r.requiredAmount??plan?.amount??row.amount??0);const network=r.network||row.network||'—';const tx=r.transactionId||r.tx||row.transaction_reference||'—';const requestId=r.dbRequestId||row.id||'';return `<div class="req"><b>${esc(fullName)}</b> <span class="pill">${esc(customerId)}</span><div class="meta">Email: ${esc(email)}<br>Mobile: ${esc(mobile)}<br>Plan: ${esc(plan?.name||planId||'Unknown')}<br>Amount: ${money(amount)} / Required: ${money(required)}<br>Network: ${esc(network)}<br>Transaction ID: ${esc(tx)}<br>Source: <b>${db?'Supabase Database':'Local Device'}</b></div><div class="actions"><button class="btn green small" data-pay="${esc(u?.username||'')}|${esc(r.id||'')}|1|${esc(requestId)}">Verify</button><button class="btn red small" data-pay="${esc(u?.username||'')}|${esc(r.id||'')}|0|${esc(requestId)}">Reject</button></div></div>`}).join(''):'<div class="muted">No pending payments.</div>';document.querySelectorAll('[data-pay]').forEach(b=>{const parts=b.dataset.pay.split('|');b.onclick=()=>verifyPayment(parts[0],parts[1],parts[2]==='1',parts[3]||'')})}}
 async function enterAdminFromSession(user){
